@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.RecommendationBonusInfoModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.RecommendationBonusInfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="recommendationId" property="recommendationId" jdbcType="INTEGER" />
+    <result column="userId" property="userId" jdbcType="INTEGER" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="auditProcess" property="auditProcess" jdbcType="TINYINT" />
+    <result column="auditStatus" property="auditStatus" jdbcType="TINYINT" />
+    <result column="settingId" property="settingId" jdbcType="INTEGER" />
+    <result column="firstCallCount" property="firstCallCount" jdbcType="TINYINT" />
+    <result column="secondCallCount" property="secondCallCount" jdbcType="TINYINT" />
+    <result column="pendingCallCount" property="pendingCallCount" jdbcType="TINYINT" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="version" property="version" jdbcType="SMALLINT" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, recommendationId, userId, amount, auditProcess, auditStatus,
+    settingId, firstCallCount, secondCallCount, pendingCallCount, createTime, version, 
+    deleted
+  </sql>
+
+
+  <sql id="Criteria_where_clause">
+    <where>
+      <if test="id != null" >
+        and id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="recommendationId != null" >
+        and recommendationId = #{recommendationId,jdbcType=INTEGER}
+      </if>
+      <if test="userId != null" >
+        and userId = #{userId,jdbcType=INTEGER}
+      </if>
+      <if test="amount != null" >
+        and amount = #{amount,jdbcType=DECIMAL}
+      </if>
+      <if test="auditProcess != null" >
+        and auditProcess = #{auditProcess,jdbcType=TINYINT}
+      </if>
+      <if test="auditStatus != null" >
+        and auditStatus = #{auditStatus,jdbcType=TINYINT}
+      </if>
+      <if test="settingId != null" >
+        and settingId = #{settingId,jdbcType=INTEGER}
+      </if>
+      <if test="firstCallCount != null" >
+        and firstCallCount = #{firstCallCount,jdbcType=TINYINT}
+      </if>
+      <if test="secondCallCount != null" >
+        and secondCallCount = #{secondCallCount,jdbcType=TINYINT}
+      </if>
+      <if test="pendingCallCount != null" >
+        and pendingCallCount = #{pendingCallCount,jdbcType=TINYINT}
+      </if>
+      <if test="createTime != null" >
+        and createTime = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="version != null" >
+        and version = #{version,jdbcType=SMALLINT}
+      </if>
+      <if test="deleted != null" >
+        and deleted = #{deleted,jdbcType=TINYINT}
+      </if>
+    </where>
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from recommendationBonusInfo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+  <select id="selectListByParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from recommendationBonusInfo
+    <include refid="Criteria_where_clause" />
+  </select>
+
+  <!--获得所有有满足条件的推荐补贴用户-->
+  <!--<select id="getSuitableRecoBonusAllUser"  resultType="com.topjet.manage.domain.model.RecommendRelationshipModel" >-->
+    <!--select rrs.id,rrs.recommendedUserId,rrs.recommendUserId from-->
+    <!--recommendRelationship rrs where rrs.deleted = 0-->
+    <!--and rrs.recommendedUserId in (select uur.id from userDB.userInfo uur where uur.`useStatus` = 2 and uur.userAuthStatus = 3 and ((uur.userType = 1 AND (SELECT  COUNT(*) FROM truckDB.driverTruckInfo`  WHERE driverId = uur.id AND auditStatus = 2 and deleted = 0)>0 )-->
+    <!--OR ((uur.userType = 2) AND (select (select count(*) from orderDB.goodsInfo where userId=uur.id))>0)))-->
+    <!--and rrs.recommendUserId not IN (select  bi.userId from blockedBonusInfo bi where bi.deleted = 0 and bi.type =4 and bi.orderId = 0 and rrs.id = bi.recommendationId  )-->
+    <!--and rrs.recommendUserId not in (select  ri.userId from recommendationBonusInfo ri where ri.deleted = 0 and ri.recommendationId = rrs.id)-->
+  <!--</select>-->
+
+  <!--获得所有有满足条件的推荐补贴用户-->
+  <select id="getSuitableRecoBonusAllUser"  resultType="com.topjet.manage.domain.model.RecommendRelationshipModel" >
+    SELECT a.id,a.`recommendedUserId`,a.`recommendUserId`,
+    CASE
+    WHEN d.userType=1 AND (SELECT COUNT(*) FROM truckDB.driverTruckInfo WHERE driverId=d.id AND auditStatus=2 AND deleted=0)>0 THEN 1
+    WHEN d.userType>1 AND (SELECT Count(*) FROM orderDB.goodsInfo WHERE userId = d.id)>0 THEN 1
+    END AS isff
+    FROM userDB.recommendRelationship a LEFT JOIN manageDB.recommendationBonusInfo b ON a.id=b.`recommendationId`
+    LEFT JOIN manageDB.blockedBonusInfo c ON a.id=c.`recommendationId` AND c.`deleted`=0
+    INNER JOIN userDB.userInfo d ON d.id=a.recommendedUserId AND d.useStatus=2 AND d.userAuthStatus=3
+    WHERE a.deleted = 0 AND b.id IS NULL AND c.id IS NULL HAVING isff=1
+  </select>
+
+</mapper>

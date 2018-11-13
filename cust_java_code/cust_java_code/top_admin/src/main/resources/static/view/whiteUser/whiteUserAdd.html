@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>交运配货网-后台管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="" rel="stylesheet">
+    <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="../../bootstrap/css/bootstrap-table.min.css" rel="stylesheet"/>
+    <link href="../../css/flat-ui.min.css" rel="stylesheet"/>
+    <link href="../../css/easyui.css" rel="stylesheet"/>
+    <link href="../../css/demo.css" rel="stylesheet"/>
+    <link href="../../css/font-awesome.min.css" rel="stylesheet"/>
+    <link href="../../css/jquery.mCustomScrollbar.css" rel="stylesheet"/>
+    <link href="../../css/bootstrap-datetimepicker.css" rel="stylesheet"/>
+    <link href="../../less/modules/buttons.less" rel="stylesheet"/>
+    <link rel="shortcut icon" href="../../img/faviconindex.ico"/>
+    <link href="../../bootstrap/formValidation/formValidation.css"/>
+
+    <script src="../../resource/jquery-1.11.3.min.js"></script>
+    <script src="../../js/common/utils.js"></script>
+    <script src="../../js/bootbox.min.js"></script>
+    <script type="text/javascript" src="../../bootstrap/formValidation/formValidation.js"></script>
+    <script type="text/javascript" src="../../bootstrap/formValidation/bootstrap.js"></script>
+    <script type="text/javascript" src="../../bootstrap/formValidation/validData.js"></script>
+    <script src="../../js/vendor/jquery.easyui.min.js"></script>
+    <script src="../../js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../../js/flat-ui.min.js"></script>
+    <script src="../../js/application.js"></script>
+    <script src="../../js/bootstrap-datetimepicker.min.js"></script>
+    <script src="../../js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="../../js/echarts.min.js"></script>
+    <script src="../../js/common/index.js"></script>
+    <script src="../../js/common/ajaxCall.js"></script>
+</head>
+<body>
+<div class="modal-body  fontsize-14" id="myModal">
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>手机号码:</label>
+                <input type="text" id="mobile" name="mobile" maxlength="11" class="form-control input-sm"  onblur="checkMobile()" required="required">
+            </div>
+        </div>
+    <div class="line10"></div>
+    <div id="userData" class="col-xs-6">
+        <div class="form-group" id="dataContent">
+
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="modal-footer margin-top-15">
+    <button type="button" id="submitButton"  disabled="disabled" onclick="submit()"  class="btn btn-primary center-block">　提　交　
+    </button>
+</div>
+
+<script type="text/javascript">
+ var  uid;
+    function submit() {
+        var json = {
+            'userId':uid,
+            'mobile': $("#mobile").val(),
+        }
+        var url = getRootPath() + '/whiteUserAction/insertWhiteUser.do';
+        $.ajaxDefaultCall(url, json, function () {
+            window.parent.location.href = getRootPath()+'/view/whiteUser/whiteUserList.html'})
+         }
+    
+
+
+
+
+    function checkMobile(){
+        var mobile=$("#mobile").val();
+        if( mobile ==""){
+            bootbox.alert({
+                size: 'small',
+                message: "请输入手机号码!",
+            });
+            return false;
+        }
+        if( !(/^1[3|4|5|7|8][0-9]\d{4,8}$/.test($("#mobile").val()))){
+            bootbox.alert({
+                size: 'small',
+                message: "请输入格式正确的手机号码!",
+            });
+            $("#mobile").val("");
+            return false;
+        }
+        $.ajax({
+            type: "POST",
+            url : getRootPath() + '/whiteUserAction/checkMobile.do',
+            data: {"mobile":mobile},
+            success: function(data){
+                if (data == null ||  data =="") {
+                    bootbox.alert({
+                        size: 'small',
+                        message: "该手机号非平台注册手机号，请重新输入!",
+                    });
+                    $("#mobile").val("");
+                    return false;
+                }else{
+                    //是平台用户 则展示基本信息  按钮变亮
+                    uid = data.id;
+                    var type ="";
+                    var userStatus ="";
+                    if(data.userType==1){
+                        type="司机/车主";
+                    }else if(data.userType==2){
+                        type="货主";
+                    }
+
+                    if(data.useStatus==0){
+                        userStatus="未认证";
+                    }else if(data.useStatus==1){
+                        userStatus="待审核";
+                    }else if(data.useStatus==2){
+                        userStatus="审核通过";
+                    }else if(data.useStatus==3){
+                        userStatus="资料修改待审核";
+                    }else if(data.useStatus==4){
+                        userStatus="认证失败";
+                    }
+
+                   var str="";
+                        str +="<div class='p'>";
+                        str += "姓名: "+'<span>'+data.username+'</span><br>';
+                        str += "用户类型: "+'<span>'+type+'</span><br>';
+                        str += "实名认证状态: "+'<span>'+userStatus+'</span><br>';
+                        str += '</div>';
+                    $("#dataContent").html(str);
+                    $('#submitButton').removeAttr("disabled");
+                }
+            }
+        })
+    }
+
+
+
+
+
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>交运配货</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="../../../resource/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../../resource/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../../resource/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="../../../resource/bootstrap.css">
+    <script type="text/javascript" src="../../../js/common/modal.js"></script>
+    <script type="text/javascript" src="../../../js/common/utils.js"></script>
+    <script type="text/javascript" src="../../../js/common/ajaxCall.js"></script>
+    <script type="text/javascript" src="../../../js/common/dateformate.js"></script>
+    <!-- bootstrap-table 表格-->
+    <script type="text/javascript" src="../../../resource/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../../resource/bootstrap-table-zh-CN.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../../resource/bootstrap-table.css">
+    <link rel="stylesheet" type="text/css" href="../../../css/demo.css">
+    <link rel="stylesheet/less" type="text/css" href="../../../less/modules/buttons.less">
+    <script type="text/javascript" src="../../../js/bootbox.min.js" ></script>
+</head>
+<body onresize="auto()">
+<div class="contentBox" style="padding:10px">
+    <div class="fixed-table-toolbar">
+        <div class="columns columns-left btn-group pull-right">
+            <button id="submit" type="button" class="btn btn-primary btn-sm"  onclick="add()"
+                     data-backdrop="false">新增用户
+            </button>
+        </div>
+    </div>
+    <table id='table' class="table table-striped table-bordered table-hover table-condensed"></table>
+</div>
+<script type="text/javascript">
+    $(function () {
+        var columns = [
+            {
+                field: 'nickName',
+                title: '用户名',
+                align: 'center',
+                sortable: true,
+            }, {
+                field: 'email',
+                title: '邮箱',
+                align: 'center',
+            },{
+                field: 'roleStr',
+                title: '所属部门',
+                align: 'center',
+            },{
+                field: 'createTime',
+                title: '创建时间',
+                align: 'center',
+                sortable: true,
+                formatter: function (value, row, index) {
+                    return formatViewDate(new Date(value),"yyyy-MM-dd HH:mm");
+                }
+            },{
+                field: 'updateTime',
+                title: '修改时间',
+                align: 'center',
+                sortable: true,
+                formatter: function (value, row, index) {
+                    return formatViewDate(new Date(value),"yyyy-MM-dd HH:mm");
+                }
+            }, {
+                field: 'action',
+                title: '操作',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    return [
+                        '<button type="button" class="btn btn-success  btn-xs" onclick="edit(' + row.id + ')">修改</button>',
+                        '<button type="button" class="btn btn-danger  btn-xs" onclick="removeUser(' + row.id + ')">刪除</button>'
+                    ].join(' ');
+                }
+            },
+        ];
+        var url=getRootPath()+'/sysUser/list.do';
+        setTableInfo('table', columns, url, getQueryParams, 'toolbar');
+    });
+    function getQueryParams() {
+        var json = {};
+        return json;
+    };
+    function authorize(id) {
+        var url = getRootPath()+ '/sysUser/userAuthorize.do?id=' + id;
+        modalEdit(url, '授权');
+    };
+    function add() {
+        var url = getRootPath()+'/sysUser/userDetail.do';
+        location.href = url;
+    };
+    function edit(id) {
+        var url = getRootPath()+'/sysUser/userDetail.do?&id=' + id;
+        location.href = url;
+    };
+    function removeUser(id) {
+        bootbox.confirm("确认删除?", function (result) {
+            if (result) {
+                var url =getRootPath()+ '/sysUser/delete.do';
+                var data = {'id': id};
+                $.ajaxDefaultCall(url, data,function () {
+                    location.href=location.href;
+                });
+            };
+        });
+    };
+    //自适应高度方法
+    function auto() {
+        $("#contentmenu").css("height", window_h = $(window).height() - 53);
+        if ($(".iframeId").length > 0) {
+            $(".iframeId").css("height", window_h = $(window).height() - 98);
+        }
+    };
+    $(window).resize(function () {
+        auto()
+    });
+
+/*var fuc=function () {
+    var url1=getRootPath()+'/sysUser/getCurrUserType.do';
+    $.ajax({
+        type: 'post',
+        url: url1,
+        dataType: "json",
+        success: function (data) {
+           if(data==3)
+           {
+               $("#submit").hide();
+           }
+        }
+    });
+}
+    fuc();*/
+
+
+</script>
+</body>
+</html>

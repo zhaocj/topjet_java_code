@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>车辆管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="../../resource/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap.css">
+    <script type="text/javascript" src="../../js/common/modal.js"></script>
+    <script type="text/javascript" src="../../js/common/utils.js"></script>
+    <script type="text/javascript" src="../../js/common/ajaxCall.js"></script>
+    <script type="text/javascript" src="../../js/common/dateformate.js"></script>
+    <!-- bootstrap-table 表格-->
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap-table.css">
+    <script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../css/demo.css">
+    <link rel="stylesheet" type="text/css" href="../../less/modules/buttons.less">
+
+    <script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+    <script type="text/javascript" src="../../js/bootbox.min.js"></script>
+
+</head>
+<body onresize="auto()">
+<form class="form-inline queryParameters-margin">
+    <div class="fixed-table-toolbar">
+        <div class="eachBox">
+            <ul>
+                <li>
+                    <label for="mobile">手机号码：</label>
+                    <input type="text" name="mobile" id="mobile" onkeyup="this.value=this.value.replace(/\D/g,'')"
+                           onafterpaste="this.value=this.value.replace(/\D/g,'')" placeholder="输入车主手机号">
+                </li>
+                <li>
+                    <label for="plateNo">车辆号：</label>
+                    <input type="text" name="plateNo" id="plateNo" placeholder="输入车辆车牌号" onblur="checkPlateNo()">
+                   <!-- <label for="plateNo2" type="hidden">车辆号：</label>
+                    <input type="hidden" name="plateNo2" id="plateNo2" placeholder="输入车辆车牌号">
+                    <label for="plateNo3" type="hidden">车辆号：</label>
+                    <input type="hidden" name="plateNo3" id="plateNo3" placeholder="输入车辆车牌号">-->
+                </li>
+                <li>
+                    <label for="trucktypedisplayname">车型名称：</label>
+                    <select name="TruckTypedisplayName" id="TruckTypedisplayName">
+                        <option value="">请选择车型</option>
+                    </select>
+                </li>
+                <li>
+                    <label for="auditStatus">认证状态：</label>
+                    <select name="auditStatus" id="auditStatus">
+                        <option value="">不限</option>
+                        <option value="1">未认证</option>
+                        <option value="2">已认证</option>
+                        <option value="3">认证中</option>
+                        <option value="4">认证失败</option>
+                    </select>
+                </li>
+                <div class="line10"></div>
+                <li>
+                    <label for="startDate">开始时间：</label>
+                    <input type="date" name="startDate" id="startDate" placeholder="请选择开始时间">
+                </li>
+                <li>
+                    <label for="endDate">截至时间：</label>
+                    <input type="date" name="endDate" id="endDate" placeholder="请选择结束时间">
+                </li>
+                <li>
+                    <label for="auditUser">审核人：</label>
+                    <input type="text" name="auditUser" id="auditUser" placeholder="输入审核人姓名">
+                </li>
+
+            </ul>
+            <div class="clearfix "></div>
+        </div>
+        <div id="toolbar" class="columns columns-left btn-group pull-right">
+            <button type="button" class="btn btn-info btn-sm" onclick="tableQuery();">查询</button>
+        </div>
+    </div>
+</form>
+<table id='table' class="table table-striped table-bordered table-hover table-condensed"></table>
+<script type="text/javascript" src="../../js/common/truckType.js"></script>
+<script type="text/javascript">
+
+
+    $(function () {
+        var columns = [
+            {
+                field: 'username',
+                title: '车主姓名',
+                align: 'center',
+                sortable: true,
+                formatter: function (value, row,index) {
+                    if(value==null){
+                        var a = '<a href="#"></a>';
+                    }else{
+                        var a = '<a  href="#" onclick="modifiedInfo(\''
+                                + row.uid+ '\',\'车辆管理\',\'' + row.reditRemark + '\')">'+value+'</a>';
+                    }
+                    return a;
+                }
+            },
+            {
+                field: 'mobile',
+                title: '手机',
+                align: 'center',
+                sortable: true,
+            }, {
+                field: 'createTime',
+                title: '添加车辆时间',
+                align: 'center',
+                sortable: true,
+/*                formatter: function (value, row) {
+                    return formatDate(new Date(value),"yyyy-MM-dd HH:mm");
+                }*/
+            }, {
+                field: 'plateNo',
+                title: '车牌号',
+                align: 'center',
+                sortable: true/*,
+                formatter: function (value, row, index) {
+                    return row.plateNo1+row.plateNo2+row.plateNo3;
+                }*/
+            },
+            {
+                field: 'typeAndLength',
+                title: '车型车长',
+                align: 'center',
+                sortable: true
+
+            },
+            {
+                field: 'orderCount',
+                title: '运输次数',
+                align: 'center',
+                sortable: true
+            },
+           /* {
+                field: 'truckAge',
+                title: '年限',
+                align: 'center',
+                sortable: true,
+                formatter: function (value, row) {
+                    return value + "年";
+                }
+            },*/ {
+                field: 'truckColor',
+                title: '车牌颜色',
+                align: 'center',
+                sortable: true,
+                formatter: function (value, row) {
+                    if (value == 1) {
+                        var a = '<span style="color:#31708f">蓝牌</span>';
+                        return a;
+                    } else if (value == 2) {
+                        var a = '<span  style="color:#DEDE10">黄牌</span>';
+                        return a;
+                    }
+                }
+            }, {
+                field: 'auditStatus',
+                title: '认证状态',
+                align: 'center',
+                sortable: true,
+                formatter: function (value, row) {
+                    if (value == 0) {
+                        return "无需认证";
+                    }else    if (value == 1) {
+                        return "未认证";
+                    } else if (value == 2) {
+                        return "已认证";
+                    } else if (value == 3) {
+                        return "认证中";
+                    } else if (value == 4) {
+                        return "认证失败";
+                    }
+                }
+            },
+            {
+                field: 'auditName',
+                title: '审核人',
+                sortable: true,
+                align: 'center'
+            },
+            {
+                field: '',
+                title: '操作',
+                align: 'center',
+                formatter: function (value, row, index) {
+                        return [
+                            '<button type="button" class="btn btn-primary btn-xs" onclick="getTruckDetails(\'' + row.id + '\',\'车辆管理\')">车辆详情</button>'
+                        ].join(' ');
+                }
+                /*data-toggle="modal" data-target="#myModal"*/
+            }
+        ];
+        $("#startDate").val(getDate7());
+        var url = getRootPath() + '/truck/list.do';
+        setTableInfo('table', columns, url, getQueryParams, 'toolbar');
+    })
+
+    function getQueryParams() {
+        var json = {
+            'mobile': $('#mobile').val(),
+            'start': $('#startDate').val(),
+            'end': $('#endDate').val(),
+            'auditUser': $('#auditUser').val(),
+            'plateNo': $('#plateNo').val(),
+            'type': ($('#TruckTypedisplayName option:selected').text() == '请选择车型' || $('#TruckTypedisplayName option:selected').text() == '不限') ? "" : $('#TruckTypedisplayName option:selected').text(),
+            'auditStatus': $('#auditStatus').val()
+        };
+        return json;
+    }
+
+    function checkPlateNo(){
+        var maxlenght = 7;
+        var truckPlateNo = $("#plateNo").val();
+        if(truckPlateNo.length == 0){
+            return true;
+        }
+        if(truckPlateNo.length != maxlenght){
+            alert("车牌号只能输入7个字符");
+            return false;
+        }
+        if(/^[A-Z]+$/.test(truckPlateNo.substring(1,2)) && /^[\u4e00-\u9fa5]+$/.test(truckPlateNo.substring(0,1))){
+            return true;
+        }else{
+            alert("不是正确的车牌号，请重新输入！");
+            return false;
+        }
+    }
+
+
+
+    //自适应高度方法
+    function auto() {
+        $("#contentmenu").css("height", window_h = $(window).height() - 53);
+        if ($(".iframeId").length > 0) {
+            $(".iframeId").css("height", window_h = $(window).height() - 98);
+        }
+    }
+    $(window).resize(function () {
+        auto()
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>交运配货网-后台管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="" rel="stylesheet">
+    <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="../../bootstrap/css/bootstrap-table.min.css" rel="stylesheet"/>
+    <link href="../../css/flat-ui.min.css" rel="stylesheet"/>
+    <link href="../../css/easyui.css" rel="stylesheet"/>
+    <link href="../../css/demo.css" rel="stylesheet"/>
+    <link href="../../css/font-awesome.min.css" rel="stylesheet"/>
+    <link href="../../css/jquery.mCustomScrollbar.css" rel="stylesheet"/>
+    <link href="../../css/bootstrap-datetimepicker.css" rel="stylesheet"/>
+    <link href="../../less/modules/buttons.less" rel="stylesheet"/>
+    <link rel="shortcut icon" href="../../img/faviconindex.ico"/>
+    <link href="../../bootstrap/formValidation/formValidation.css"/>
+
+    <script src="../../resource/jquery-1.11.3.min.js"></script>
+    <script src="../../js/common/utils.js"></script>
+    <script src="../../js/bootbox.min.js"></script>
+    <script type="text/javascript" src="../../bootstrap/formValidation/formValidation.js"></script>
+    <script type="text/javascript" src="../../bootstrap/formValidation/bootstrap.js"></script>
+    <script type="text/javascript" src="../../bootstrap/formValidation/validData.js"></script>
+    <script src="../../js/vendor/jquery.easyui.min.js"></script>
+    <script src="../../js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../../js/flat-ui.min.js"></script>
+    <script src="../../js/application.js"></script>
+    <script src="../../js/bootstrap-datetimepicker.min.js"></script>
+    <script src="../../js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="../../js/echarts.min.js"></script>
+    <script src="../../js/common/index.js"></script>
+    <script src="../../js/common/ajaxCall.js"></script>
+</head>
+<body>
+<div class="modal-body  fontsize-14" id="myModal">
+    <form id="myForm">
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>推送方式</label>
+                <select id="sendType" name="sendType" data-toggle="select" class="form-control select select-default select-sm">
+                    <option value="1">APP推送</option>
+                    <option value="2">短信推送</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>推送范围</label>
+                <select id="memberType" name="sendType" data-toggle="select" onchange="forbidden(this.value)" class="form-control select select-default select-sm">
+                    <option value="1">所有用户</option>
+                    <option value="2">ios、android货主</option>
+                    <option value="3">ios货主</option>
+                    <option value="4">android货主</option>
+                    <option value="5">ios、android司机</option>
+                    <option value="6">ios司机</option>
+                    <option value="7">android司机</option>
+                    <option value="8">单人推送</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-xs-6"  style="display:none;">
+            <div class="form-group">
+                <label>会员注册开始时间</label>
+                <input type="text" name="registrationStartTime" id="registrationStartTime" onchange="changeChoice1(this.value)" class="form-control input-sm" onblur="validDate()"  placeholder="XX时间之后注册的用户(默认不限)"><!--不能小于当前时间不能开启-->
+            </div>
+        </div>
+        <div class="col-xs-6"  style="display:none;">
+            <div class="form-group">
+                <label>会员注册结束时间</label>
+                <input type="text" name="registrationEndTime" id="registrationEndTime" onchange="changeChoice1(this.value)" class="form-control input-sm"  onblur="validDate()" placeholder="XX时间之后注册的用户(默认不限)"><!--不能小于当前时间不能开启-->
+            </div>
+        </div>
+        <div class="col-xs-6"  style="display:none;">
+            <div class="form-group">
+                <label>签收次数</label>
+                <input type="text" id="transactionCount" name="transactionCount" onchange="changeChoice1(this.value)" class="form-control input-sm"   placeholder="大于多少签收数(默认不限)">
+            </div>
+        </div>
+        <div class="col-xs-6"  style="display:none;">
+        <div class="form-group">
+            <label>注册后几天无登陆</label>
+            <input type="text" id="unlogDayNum" name="unlogDayNum" onchange="changeChoice(this.value)" class="form-control input-sm"   placeholder="用户注册后几天未登陆">
+        </div>
+    </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>会员手机号</label>
+                <input type="text" id="mobile" name="mobile" onblur='checkMobile()' class="form-control input-sm"   placeholder="会员手机号">
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label>推送详情</label>
+                <textarea class="form-control" id="content"  name="content" rows="3"   cols="50" required  placeholder="推送消息内容描述"></textarea>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="clearfix"></div>
+<div class="modal-footer margin-top-15">
+    <button type="button" id="myButton" onclick="submitCreateClick()" class="btn btn-primary center-block">　提　交　
+    </button>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        if($('#memberType').val()!=8){
+            $('#mobile').attr("disabled",true);
+        }
+    });
+    $("#registrationStartTime,#registrationEndTime").datetimepicker({
+        format: "yyyy-mm-dd hh:ii",
+        todayBtn: true,
+        autoclose: true,
+        todayHighlight: true,
+        showMeridian: true,
+        pickerPosition: "bottom-left",
+        language: 'zh-CN',//中文，需要引用zh-CN.js包
+        startView: 2,//月视图
+        minView: 0//日期时间选择器所能够提供的最精确的时间选择视图
+    });
+
+    function validDate() {
+        var beginDate = StringToDate($('#registrationStartTime').val());
+        var endDate = StringToDate($('#registrationEndTime').val());
+        if (endDate <= beginDate) {
+            bootbox.alert({
+                size: 'small',
+                message: "结束日期不能小于开始日期!",
+            });
+            $('#endDate').val($("endDateOlder").val());
+            return false;
+        }
+    }
+
+    function submitCreateClick() {
+        validDate();
+        var bt = $('#myButton').button('loading');
+        if (!$.topjectIsValidate('myForm')) {
+            bt.button('reset');
+            return;
+        }else if($("#memberType").val()==8 && $('#mobile').val().length==0){
+            bootbox.alert({
+                size: 'small',
+                message: "请输入用户手机号!",
+            });
+            bt.button('reset');
+            return;
+        }
+        var jsonBeginDate = {};
+        var jsonEndDate = {};
+        if (!isNull($('#registrationStartTime').val())) {
+            jsonBeginDate = {"registrationStartTime": StringToDate($('#registrationStartTime').val())};
+        }
+        if (!isNull($('#registrationEndTime').val())) {
+            jsonEndDate = {"registrationEndTime": StringToDate($('#registrationEndTime').val())};
+        }
+
+        var json = {
+            'sendType': $("#sendType").val(),
+            'memberType': $("#memberType").val(),
+            'transactionCount': $('#transactionCount').val(),
+            'content': $('#content').val(),
+            'mobile':$('#mobile').val(),
+            'unlogDayNum':$('#unlogDayNum').val(),
+        }
+        var data = $.extend({}, json, jsonBeginDate, jsonEndDate);
+        var url = getRootPath() + '/messageSend/create.do';
+        $.ajaxDefaultCall(url, data, function () {window.parent.location.href = getRootPath()+'/view/messageSend/list.html'})
+    }
+    function forbidden(value) {
+        if(value!=8){
+            $('#mobile').attr("disabled",true);
+            $('#mobile').val("");
+            $('#registrationStartTime').attr("disabled",false);
+            $('#registrationEndTime').attr("disabled",false);
+            $('#transactionCount').attr("disabled",false);
+            $('#unlogDayNum').attr("disabled",false);
+        }else{
+            $('#mobile').attr("disabled",false);
+            $('#registrationStartTime').attr("disabled",true);
+            $('#registrationEndTime').attr("disabled",true);
+            $('#transactionCount').attr("disabled",true);
+            $('#unlogDayNum').attr("disabled",true);
+            $('#registrationStartTime').val("");
+            $('#registrationEndTime').val("");
+            $('#transactionCount').val("");
+            $('#unlogDayNum').val("");
+        }
+    }
+
+    function changeChoice(value){
+        if(value == ""){
+            $('#registrationStartTime').attr("disabled",false);
+            $('#registrationEndTime').attr("disabled",false);
+            $('#transactionCount').attr("disabled",false);
+        }else{
+            $('#mobile').attr("disabled",true);
+            $('#registrationStartTime').attr("disabled",true);
+            $('#registrationEndTime').attr("disabled",true);
+            $('#transactionCount').attr("disabled",true);
+            $('#registrationStartTime').val("");
+            $('#registrationEndTime').val("");
+            $('#transactionCount').val("");
+        }
+    }
+
+    function changeChoice1(value) {
+        var v1 = $('#registrationStartTime').val();
+        var v2 = $('#registrationEndTime').val();
+        var v3 = $('#transactionCount').val();
+        if(v1 =="" && v2=="" && v3==""){
+            $('#unlogDayNum').attr("disabled",false);
+        }else{
+            $('#mobile').attr("disabled",true);
+            $('#unlogDayNum').attr("disabled",true);
+            $('#unlogDayNum').val("");
+            $('#mobile').val("");
+        }
+    }
+
+    function checkMobile(){
+        if(!(/^1[3|4|5|7|8][0-9]\d{4,8}$/.test($("#mobile").val()))){
+            $("#mobile").val("");
+            return false;
+        }
+        var mobile=$("#mobile").val()+"";
+        $.ajax({
+            type: "POST",
+            url : getRootPath() + '/stationManage/checkMobile.do',
+            data: mobile,
+            contentType:"application/json",
+            success: function(data){
+                if (data.success == "false") {
+                    bootbox.alert({
+                        size: 'small',
+                        message: "该手机号非平台注册手机号，请重新输入!",
+                    });
+                    $("#mobile").val("");
+                    return false;
+                }else{
+                    $('#userId').val(data.userId);
+                }
+            }
+        })
+    }
+
+
+    $(function () {
+        $.topjectValidate('myForm');
+    })
+
+</script>
+</body>
+</html>

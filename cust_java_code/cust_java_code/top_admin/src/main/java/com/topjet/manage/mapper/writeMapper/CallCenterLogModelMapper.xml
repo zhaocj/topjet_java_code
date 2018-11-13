@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.writeMapper.CallCenterLogModelMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.CallCenterLogModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="callNo" property="callNo" jdbcType="VARCHAR" />
+    <result column="callSheetId" property="callSheetId" jdbcType="VARCHAR" />
+    <result column="calledNo" property="calledNo" jdbcType="VARCHAR" />
+    <result column="callID" property="callID" jdbcType="VARCHAR" />
+    <result column="callType" property="callType" jdbcType="VARCHAR" />
+    <result column="recordFile" property="recordFile" jdbcType="VARCHAR" />
+    <result column="ring" property="ring" jdbcType="TIMESTAMP" />
+    <result column="begin" property="begin" jdbcType="TIMESTAMP" />
+    <result column="end" property="end" jdbcType="TIMESTAMP" />
+    <result column="queueTime" property="queueTime" jdbcType="TIMESTAMP" />
+    <result column="queue" property="queue" jdbcType="VARCHAR" />
+    <result column="agent" property="agent" jdbcType="VARCHAR" />
+    <result column="exten" property="exten" jdbcType="VARCHAR" />
+    <result column="agentName" property="agentName" jdbcType="VARCHAR" />
+    <result column="actionID" property="actionID" jdbcType="VARCHAR" />
+    <result column="callState" property="callState" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="VARCHAR" />
+    <result column="fileServer" property="fileServer" jdbcType="VARCHAR" />
+    <result column="queueName" property="queueName" jdbcType="VARCHAR" />
+    <result column="ivrkey" property="ivrkey" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="district" property="district" jdbcType="VARCHAR" />
+    <result column="webcallActionID" property="webcallActionID" jdbcType="VARCHAR" />
+    <result column="ringTime" property="ringTime" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, callNo, callSheetId, calledNo, callID, callType, recordFile, ring, begin, end, 
+    queueTime, queue, agent, exten, agentName, actionID, callState, state, fileServer, 
+    queueName, ivrkey, province, district, webcallActionID, ringTime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from callCenterLog
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from callCenterLog
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.topjet.manage.domain.model.CallCenterLogModel" >
+    insert into callCenterLog (id, callNo, callSheetId, 
+      calledNo, callID, callType, 
+      recordFile, ring, begin, 
+      end, queueTime, queue, 
+      agent, exten, agentName, 
+      actionID, callState, state, 
+      fileServer, queueName, ivrkey, 
+      province, district, webcallActionID, 
+      ringTime)
+    values (#{id,jdbcType=INTEGER}, #{callNo,jdbcType=VARCHAR}, #{callSheetId,jdbcType=VARCHAR}, 
+      #{calledNo,jdbcType=VARCHAR}, #{callID,jdbcType=VARCHAR}, #{callType,jdbcType=VARCHAR}, 
+      #{recordFile,jdbcType=VARCHAR}, #{ring,jdbcType=TIMESTAMP}, #{begin,jdbcType=TIMESTAMP}, 
+      #{end,jdbcType=TIMESTAMP}, #{queueTime,jdbcType=TIMESTAMP}, #{queue,jdbcType=VARCHAR}, 
+      #{agent,jdbcType=VARCHAR}, #{exten,jdbcType=VARCHAR}, #{agentName,jdbcType=VARCHAR}, 
+      #{actionID,jdbcType=VARCHAR}, #{callState,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, 
+      #{fileServer,jdbcType=VARCHAR}, #{queueName,jdbcType=VARCHAR}, #{ivrkey,jdbcType=VARCHAR}, 
+      #{province,jdbcType=VARCHAR}, #{district,jdbcType=VARCHAR}, #{webcallActionID,jdbcType=VARCHAR}, 
+      #{ringTime,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.topjet.manage.domain.model.CallCenterLogModel" >
+    insert into callCenterLog
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="callNo != null" >
+        callNo,
+      </if>
+      <if test="callSheetId != null" >
+        callSheetId,
+      </if>
+      <if test="calledNo != null" >
+        calledNo,
+      </if>
+      <if test="callID != null" >
+        callID,
+      </if>
+      <if test="callType != null" >
+        callType,
+      </if>
+      <if test="recordFile != null" >
+        recordFile,
+      </if>
+      <if test="ring != null" >
+        ring,
+      </if>
+      <if test="begin != null" >
+        begin,
+      </if>
+      <if test="end != null" >
+        end,
+      </if>
+      <if test="queueTime != null" >
+        queueTime,
+      </if>
+      <if test="queue != null" >
+        queue,
+      </if>
+      <if test="agent != null" >
+        agent,
+      </if>
+      <if test="exten != null" >
+        exten,
+      </if>
+      <if test="agentName != null" >
+        agentName,
+      </if>
+      <if test="actionID != null" >
+        actionID,
+      </if>
+      <if test="callState != null" >
+        callState,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="fileServer != null" >
+        fileServer,
+      </if>
+      <if test="queueName != null" >
+        queueName,
+      </if>
+      <if test="ivrkey != null" >
+        ivrkey,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="district != null" >
+        district,
+      </if>
+      <if test="webcallActionID != null" >
+        webcallActionID,
+      </if>
+      <if test="ringTime != null" >
+        ringTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="callNo != null" >
+        #{callNo,jdbcType=VARCHAR},
+      </if>
+      <if test="callSheetId != null" >
+        #{callSheetId,jdbcType=VARCHAR},
+      </if>
+      <if test="calledNo != null" >
+        #{calledNo,jdbcType=VARCHAR},
+      </if>
+      <if test="callID != null" >
+        #{callID,jdbcType=VARCHAR},
+      </if>
+      <if test="callType != null" >
+        #{callType,jdbcType=VARCHAR},
+      </if>
+      <if test="recordFile != null" >
+        #{recordFile,jdbcType=VARCHAR},
+      </if>
+      <if test="ring != null" >
+        #{ring,jdbcType=TIMESTAMP},
+      </if>
+      <if test="begin != null" >
+        #{begin,jdbcType=TIMESTAMP},
+      </if>
+      <if test="end != null" >
+        #{end,jdbcType=TIMESTAMP},
+      </if>
+      <if test="queueTime != null" >
+        #{queueTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="queue != null" >
+        #{queue,jdbcType=VARCHAR},
+      </if>
+      <if test="agent != null" >
+        #{agent,jdbcType=VARCHAR},
+      </if>
+      <if test="exten != null" >
+        #{exten,jdbcType=VARCHAR},
+      </if>
+      <if test="agentName != null" >
+        #{agentName,jdbcType=VARCHAR},
+      </if>
+      <if test="actionID != null" >
+        #{actionID,jdbcType=VARCHAR},
+      </if>
+      <if test="callState != null" >
+        #{callState,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="fileServer != null" >
+        #{fileServer,jdbcType=VARCHAR},
+      </if>
+      <if test="queueName != null" >
+        #{queueName,jdbcType=VARCHAR},
+      </if>
+      <if test="ivrkey != null" >
+        #{ivrkey,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="district != null" >
+        #{district,jdbcType=VARCHAR},
+      </if>
+      <if test="webcallActionID != null" >
+        #{webcallActionID,jdbcType=VARCHAR},
+      </if>
+      <if test="ringTime != null" >
+        #{ringTime,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.topjet.manage.domain.model.CallCenterLogModel" >
+    update callCenterLog
+    <set >
+      <if test="callNo != null" >
+        callNo = #{callNo,jdbcType=VARCHAR},
+      </if>
+      <if test="callSheetId != null" >
+        callSheetId = #{callSheetId,jdbcType=VARCHAR},
+      </if>
+      <if test="calledNo != null" >
+        calledNo = #{calledNo,jdbcType=VARCHAR},
+      </if>
+      <if test="callID != null" >
+        callID = #{callID,jdbcType=VARCHAR},
+      </if>
+      <if test="callType != null" >
+        callType = #{callType,jdbcType=VARCHAR},
+      </if>
+      <if test="recordFile != null" >
+        recordFile = #{recordFile,jdbcType=VARCHAR},
+      </if>
+      <if test="ring != null" >
+        ring = #{ring,jdbcType=TIMESTAMP},
+      </if>
+      <if test="begin != null" >
+        begin = #{begin,jdbcType=TIMESTAMP},
+      </if>
+      <if test="end != null" >
+        end = #{end,jdbcType=TIMESTAMP},
+      </if>
+      <if test="queueTime != null" >
+        queueTime = #{queueTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="queue != null" >
+        queue = #{queue,jdbcType=VARCHAR},
+      </if>
+      <if test="agent != null" >
+        agent = #{agent,jdbcType=VARCHAR},
+      </if>
+      <if test="exten != null" >
+        exten = #{exten,jdbcType=VARCHAR},
+      </if>
+      <if test="agentName != null" >
+        agentName = #{agentName,jdbcType=VARCHAR},
+      </if>
+      <if test="actionID != null" >
+        actionID = #{actionID,jdbcType=VARCHAR},
+      </if>
+      <if test="callState != null" >
+        callState = #{callState,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="fileServer != null" >
+        fileServer = #{fileServer,jdbcType=VARCHAR},
+      </if>
+      <if test="queueName != null" >
+        queueName = #{queueName,jdbcType=VARCHAR},
+      </if>
+      <if test="ivrkey != null" >
+        ivrkey = #{ivrkey,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="district != null" >
+        district = #{district,jdbcType=VARCHAR},
+      </if>
+      <if test="webcallActionID != null" >
+        webcallActionID = #{webcallActionID,jdbcType=VARCHAR},
+      </if>
+      <if test="ringTime != null" >
+        ringTime = #{ringTime,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.topjet.manage.domain.model.CallCenterLogModel" >
+    update callCenterLog
+    set callNo = #{callNo,jdbcType=VARCHAR},
+      callSheetId = #{callSheetId,jdbcType=VARCHAR},
+      calledNo = #{calledNo,jdbcType=VARCHAR},
+      callID = #{callID,jdbcType=VARCHAR},
+      callType = #{callType,jdbcType=VARCHAR},
+      recordFile = #{recordFile,jdbcType=VARCHAR},
+      ring = #{ring,jdbcType=TIMESTAMP},
+      begin = #{begin,jdbcType=TIMESTAMP},
+      end = #{end,jdbcType=TIMESTAMP},
+      queueTime = #{queueTime,jdbcType=TIMESTAMP},
+      queue = #{queue,jdbcType=VARCHAR},
+      agent = #{agent,jdbcType=VARCHAR},
+      exten = #{exten,jdbcType=VARCHAR},
+      agentName = #{agentName,jdbcType=VARCHAR},
+      actionID = #{actionID,jdbcType=VARCHAR},
+      callState = #{callState,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR},
+      fileServer = #{fileServer,jdbcType=VARCHAR},
+      queueName = #{queueName,jdbcType=VARCHAR},
+      ivrkey = #{ivrkey,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      district = #{district,jdbcType=VARCHAR},
+      webcallActionID = #{webcallActionID,jdbcType=VARCHAR},
+      ringTime = #{ringTime,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

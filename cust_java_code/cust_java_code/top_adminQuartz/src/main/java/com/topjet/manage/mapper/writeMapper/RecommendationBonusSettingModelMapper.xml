@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.writeMapper.RecommendationBonusSettingModelMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.RecommendationBonusSettingModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="amountPerPerson" property="amountPerPerson" jdbcType="DECIMAL" />
+    <result column="maxAmountPerDay" property="maxAmountPerDay" jdbcType="DECIMAL" />
+    <result column="bonusCount" property="bonusCount" jdbcType="SMALLINT" />
+    <result column="createBy" property="createBy" jdbcType="INTEGER" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateBy" property="updateBy" jdbcType="INTEGER" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="version" property="version" jdbcType="SMALLINT" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, amountPerPerson, maxAmountPerDay, bonusCount, createBy, createTime, updateBy, 
+    updateTime, version, deleted
+  </sql>
+
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from manageDB.recommendationBonusSetting
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.topjet.manage.domain.model.RecommendationBonusSettingModel" >
+    insert into manageDB.recommendationBonusSetting
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="amountPerPerson != null" >
+        amountPerPerson,
+      </if>
+      <if test="maxAmountPerDay != null" >
+        maxAmountPerDay,
+      </if>
+      <if test="bonusCount != null" >
+        bonusCount,
+      </if>
+      <if test="createBy != null" >
+        createBy,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="updateBy != null" >
+        updateBy,
+      </if>
+      <if test="updateTime != null" >
+        updateTime,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="amountPerPerson != null" >
+        #{amountPerPerson,jdbcType=DECIMAL},
+      </if>
+      <if test="maxAmountPerDay != null" >
+        #{maxAmountPerDay,jdbcType=DECIMAL},
+      </if>
+      <if test="bonusCount != null" >
+        #{bonusCount,jdbcType=SMALLINT},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=SMALLINT},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="update" parameterType="com.topjet.manage.domain.model.RecommendationBonusSettingModel" >
+    update manageDB.recommendationBonusSetting
+    <set >
+      <if test="amountPerPerson != null" >
+        amountPerPerson = #{amountPerPerson,jdbcType=DECIMAL},
+      </if>
+      <if test="maxAmountPerDay != null" >
+        maxAmountPerDay = #{maxAmountPerDay,jdbcType=DECIMAL},
+      </if>
+      <if test="bonusCount != null" >
+        bonusCount = #{bonusCount,jdbcType=SMALLINT},
+      </if>
+      <if test="createBy != null" >
+        createBy = #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        updateBy = #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=SMALLINT},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>

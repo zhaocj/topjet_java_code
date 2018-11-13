@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>交运配货</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../../bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../../bootstrap/css/bootstrap-table.min.css">
+    <link rel="stylesheet" type="text/css" href="../../css/flat-ui.min.css">
+    <link rel="stylesheet" type="text/css" href="../../css/demo.css">
+    <link rel="stylesheet/less" type="text/css" href="../../css/easyui.css">
+    <link rel="stylesheet/less" type="text/css" href="../../css/font-awesome.min.css">
+    <link rel="stylesheet/less" type="text/css" href="../../css/jquery.mCustomScrollbar.css">
+    <link rel="stylesheet/less" type="text/css" href="../../css/bootstrap-datetimepicker.css">
+
+    <script type="text/javascript" src="../../resource/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../js/common/modal.js"></script>
+    <script type="text/javascript" src="../../js/common/utils.js"></script>
+    <script type="text/javascript" src="../../js/common/ajaxCall.js"></script>
+    <script type="text/javascript" src="../../js/common/dateformate.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+    <script type="text/javascript" src="../../js/bootbox.min.js"></script>
+    <script type="text/javascript" src="../../js/application.js"></script>
+    <script type="text/javascript" src="../../js/flat-ui.min.js"></script>
+    <script type="text/javascript" src="../../js/common/jquery.cityselect.js"></script>
+</head>
+<body onresize="auto()">
+<div class="contentBox" style="padding:10px">
+    <!--<div class="columns columns-left btn-group pull-right">
+        <button type="button" class="btn btn-primary btn-sm margin-left-10" onClick="alert('同步成功')">点击生效</button>
+    </div>-->
+    <div class="fixed-table-toolbar">
+        <div class="navmenu" id="navTitle"><a href="#" onclick="javascript:history.back(-1); return false">跑马灯管理</a> /
+            IOS接货版
+        </div>
+        <input id="appType" type="hidden" name="appType" value="">
+    </div>
+    <div class="columns columns-left btn-group pull-right">
+        <button type="button" class="btn btn-info btn-sm margin-left-10"
+                onclick="add()">新增公告
+        </button>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content"></div>
+    </div>
+</div>
+
+<div id='modalEdit' class='modal fade' tabindex='-1' role='dialog' aria-labelledby='myLargeModalLabel'
+     aria-hidden="true">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class='modal-title' id='myModalLabel'>编辑</h4>
+                <div class='modal-body'>
+                    <iframe id='editIframeId' scrolling='no' onLoad='setIframeSizeMax()' frameborder='0'
+                            src=''></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<table id='table'></table>
+<script type="text/javascript">
+    $(function () {
+        var columns = [
+            {
+                field: 'rank',
+                title: '显示顺序',
+                align: 'center',
+                sortable: true
+            },
+            {
+                field: 'createTime',
+                title: '添加日期',
+                align: 'center',
+                sortable: true,
+                formatter: function (value, row, index) {
+                    return formatViewDate(new Date(value), "yyyy-MM-dd HH:mm");
+                }
+            },
+            {
+                field: 'beginDate',
+                title: '生效日期',
+                align: 'center',
+                sortable: true,
+                formatter: function (value, row, index) {
+                    return formatViewDate(new Date(value), "yyyy-MM-dd HH:mm");
+                }
+            }, {
+                field: 'endDate',
+                title: '失效日期',
+                align: 'center',
+                sortable: true,
+                formatter: function (value, row, index) {
+                    return formatViewDate(new Date(value), "yyyy-MM-dd HH:mm");
+                }
+            },
+            {
+                field: 'title',
+                title: '标题',
+                sortable: true,
+                align: 'center'
+            },
+            {
+                field: 'appType',
+                title: '推送范围',
+                sortable: true,
+                align: 'center',
+                formatter: function (value, row, index) {
+                    if (value == '1') {
+                        return "Android接货版";
+                    } else if (value == '2') {
+                        return "Android发货版";
+                    } else if (value == '3') {
+                        return "IOS接货版";
+                    } else if (value == '4') {
+                        return "IOS发货版";
+                    }
+                }
+            },
+            {
+                field: 'valid',
+                title: '状态',
+                align: 'center',
+                sortable: true,
+                formatter: function (value, row, index) {
+                    if (value == '0') {
+                        return "未开启";
+                    } else if (value == '1') {
+                        if(new Date(row.beginDate).getTime()<new Date().getTime() && new Date(row.endDate).getTime()>new Date().getTime()){
+                            return "开启";
+                        }else{
+                            return "过期或时间未到";
+                        }
+                    }
+                }
+            },
+            {
+                field: 'action',
+                title: '操作',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    var deleteFlag = '';
+//                    if (row.valid == 0 || formatDate(new Date(row.beginDate), "yyyy-MM-dd HH:mm") > formatDate(new Date(), "yyyy-MM-dd HH:mm") || formatDate(new Date(row.endDate), "yyyy-MM-dd HH:mm") < formatDate(new Date(), "yyyy-MM-dd HH:mm")) {
+                    if (row.valid == 0 || new Date(row.beginDate > new Date() || new Date(row.endDate) < new Date() )){
+                        deleteFlag = '<button type="button" class="btn btn-danger  btn-xs" onclick="removeAnno(\'' + row.id + '\',\'' + row.version + '\',\''+index+'\')">刪除</button>';
+                    }
+                    return [
+                            '<button type="button" class="btn btn-primary btn-xs" onclick="details(\'' + row.content.replace(/[\n]/ig, '<br>') + '\',\'' + row.title + '\')">预览</button>',
+                            '<button type="button" class="btn btn-success  btn-xs" onclick="edit(\'' + row.id + '\',\'' + row.version + '\')">修改</button>',
+                        ].join(' ') + deleteFlag;
+                }
+            },
+        ];
+        var url = getRootPath() + '/marqueeAdvert/list.do';
+        setTableInfo('table', columns, url, getQueryParams, 'toolbar')
+    })
+
+    function getQueryParams() {
+        if ($('#appType').val() == "") {
+            var navText = "<a href=\"#\" onclick=\"javascript:history.back(-1); return false\">跑马灯管理</a> /";
+            switch (location.search) {
+                case"?appType=1":
+                    $('#appType').val("1");
+                    navText = navText + "Android接货版";
+                    break;
+                case"?appType=2":
+                    $('#appType').val("2");
+                    navText = navText + "Android发货版";
+                    break;
+                case"?appType=3":
+                    $('#appType').val("3");
+                    navText = navText + "IOS接货版";
+                    break;
+                case"?appType=4":
+                    $('#appType').val("4");
+                    navText = navText + "IOS发货版";
+                    break;
+            }
+            $('#navTitle').html(navText);
+        }
+        var typeValue = $('#appType').val()==4 ||$('#appType').val()==2 ? 1:2;
+        var json = {
+            'appType': $('#appType').val(),
+            'type': typeValue
+        };
+        return json;
+    }
+    function add() {
+        window.location.href = getRootPath() + '/view/marqueeAdvert/addAnno.html?type=' + $('#appType').val();
+    }
+    function edit(id, version) {
+        var url = getRootPath() + '/marqueeAdvert/edit.do?id=' + id+"&type=2";
+        modalEdit(url, '修改公告', 'lg');
+    }
+
+    function details(content, title) {
+        var url = getRootPath() + '/view/marqueeAdvert/detail.html?content=' + encodeURI(content) + '&title=' + encodeURI(title);
+        window.open(url);
+    }
+
+    function removeAnno(id, version,index) {
+        bootbox.confirm("确认删除?", function (result) {
+            if (result) {
+                var url = getRootPath() + '/marqueeAdvert/delete.do?';
+                var data = {'id': id, 'version': version};
+                $.ajaxDefaultCall(url, data, function () {
+                    tableRefresh();
+                    if(index ==0){
+                        window.location.href = getRootPath()+'/view/marqueeAdvert/list.html?appType='+ $('#appType').val();
+                    }
+
+                });
+            }
+        });
+    }
+    function send(id, version) {
+        bootbox.confirm("确认推送?", function (result) {
+            if (result) {
+                var url = getRootPath() + '/marqueeAdvert/send.do?';
+                var data = {'id': id, 'version': version};
+                $.ajaxDefaultCall(url, data, function () {
+                    tableRefresh();
+                });
+            }
+        });
+    }
+
+
+    document.getElementById("sendAnno").onclick = function () {
+        alert(wait);
+        time(this);
+    }
+
+    var appType = $("#appType").val();
+    if (appType != "") {
+        var navText = "<a href=\"#\" onclick=\"javascript:history.back(-1); return false\">公告管理</a> /";
+        if (appType == 4) {
+            navText = navText + "IOS发货版";
+        }else if (appType == 3) {
+            navText = navText + "IOS接货版";
+        } else if (appType == 2) {
+            navText = navText + "Android发货版";
+        } else if (appType == 1) {
+            navText = navText + "Android接货版";
+        }
+        $('#navTitle').html(navText);
+    }
+
+</script>
+
+</body>
+</html>

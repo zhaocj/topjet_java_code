@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.writeMapper.OrderListAdvertModelMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.OrderListAdvertModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="webTitle" property="webTitle" jdbcType="VARCHAR" />
+    <result column="text" property="text" jdbcType="VARCHAR" />
+    <result column="indexNumber" property="indexNumber" jdbcType="INTEGER" />
+    <result column="reorder" property="reorder" jdbcType="INTEGER" />
+    <result column="pictureUrl" property="pictureUrl" jdbcType="VARCHAR" />
+    <result column="pictureKey" property="pictureKey" jdbcType="VARCHAR" />
+    <result column="turnURL" property="turnURL" jdbcType="VARCHAR" />
+    <result column="beginDate" property="beginDate" jdbcType="TIMESTAMP" />
+    <result column="endDate" property="endDate" jdbcType="TIMESTAMP" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="createBy" property="createBy" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="SMALLINT" />
+    <result column="appType" property="appType" jdbcType="TINYINT" />
+    <result column="valid" property="valid" jdbcType="TINYINT" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+    <result column="updateBy" property="updateBy" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, webTitle, text, indexNumber, reorder, pictureUrl,pictureKey, turnURL, beginDate, endDate, createTime,
+    updateTime, createBy, version, appType, valid, deleted, updateBy
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from resourceDB.orderListAdvert
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from orderListAdvert
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.topjet.manage.domain.model.OrderListAdvertModel" >
+    insert into orderListAdvert (id, webTitle, text, 
+      indexNumber, reorder, pictureUrl, pictureKey,
+      turnURL, beginDate, endDate, 
+      createTime, updateTime, createBy, 
+      version, appType, valid, deleted, 
+      updateBy)
+    values (#{id,jdbcType=INTEGER}, #{webTitle,jdbcType=VARCHAR}, #{text,jdbcType=VARCHAR}, 
+      #{indexNumber,jdbcType=INTEGER}, #{reorder,jdbcType=INTEGER}, #{pictureUrl,jdbcType=VARCHAR},#{pictureKey,jdbcType=VARCHAR},
+      #{turnURL,jdbcType=VARCHAR}, #{beginDate,jdbcType=TIMESTAMP}, #{endDate,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=INTEGER}, 
+      #{version,jdbcType=SMALLINT}, #{appType,jdbcType=TINYINT}, #{valid,jdbcType=TINYINT}, #{deleted,jdbcType=TINYINT}, 
+      #{updateBy,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.topjet.manage.domain.model.OrderListAdvertModel" >
+    insert into resourceDB.orderListAdvert
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="webTitle != null" >
+        webTitle,
+      </if>
+      <if test="text != null" >
+        text,
+      </if>
+      <if test="indexNumber != null" >
+        indexNumber,
+      </if>
+      <if test="reorder != null" >
+        reorder,
+      </if>
+      <if test="pictureUrl != null" >
+        pictureUrl,
+      </if>
+      <if test="pictureKey != null" >
+        pictureKey,
+      </if>
+      <if test="turnURL != null" >
+        turnURL,
+      </if>
+      <if test="beginDate != null" >
+        beginDate,
+      </if>
+      <if test="endDate != null" >
+        endDate,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="updateTime != null" >
+        updateTime,
+      </if>
+      <if test="createBy != null" >
+        createBy,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="appType != null" >
+        appType,
+      </if>
+      <if test="valid != null" >
+        valid,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+      <if test="updateBy != null" >
+        updateBy,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="webTitle != null" >
+        #{webTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="text != null" >
+        #{text,jdbcType=VARCHAR},
+      </if>
+      <if test="indexNumber != null" >
+        #{indexNumber,jdbcType=INTEGER},
+      </if>
+      <if test="reorder != null" >
+        #{reorder,jdbcType=INTEGER},
+      </if>
+      <if test="pictureUrl != null" >
+        #{pictureUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="pictureKey != null" >
+        #{pictureKey,jdbcType=VARCHAR},
+      </if>
+      <if test="turnURL != null" >
+        #{turnURL,jdbcType=VARCHAR},
+      </if>
+      <if test="beginDate != null" >
+        #{beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=SMALLINT},
+      </if>
+      <if test="appType != null" >
+        #{appType,jdbcType=TINYINT},
+      </if>
+      <if test="valid != null" >
+        #{valid,jdbcType=TINYINT},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=TINYINT},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.topjet.manage.domain.model.OrderListAdvertModel" >
+    update resourceDB.orderListAdvert
+    <set >
+      <if test="webTitle != null" >
+        webTitle = #{webTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="text != null" >
+        text = #{text,jdbcType=VARCHAR},
+      </if>
+      <if test="indexNumber != null" >
+        indexNumber = #{indexNumber,jdbcType=INTEGER},
+      </if>
+      <if test="reorder != null" >
+        reorder = #{reorder,jdbcType=INTEGER},
+      </if>
+      <if test="pictureUrl != null" >
+        pictureUrl = #{pictureUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="pictureKey != null" >
+        pictureKey = #{pictureKey,jdbcType=VARCHAR},
+      </if>
+      <if test="turnURL != null" >
+        turnURL = #{turnURL,jdbcType=VARCHAR},
+      </if>
+      <if test="beginDate != null" >
+        beginDate = #{beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        endDate = #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        createBy = #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=SMALLINT},
+      </if>
+      <if test="appType != null" >
+        appType = #{appType,jdbcType=TINYINT},
+      </if>
+      <if test="valid != null" >
+        valid = #{valid,jdbcType=TINYINT},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=TINYINT},
+      </if>
+      <if test="updateBy != null" >
+        updateBy = #{updateBy,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.topjet.manage.domain.model.OrderListAdvertModel" >
+    update orderListAdvert
+    set webTitle = #{webTitle,jdbcType=VARCHAR},
+      text = #{text,jdbcType=VARCHAR},
+      indexNumber = #{indexNumber,jdbcType=INTEGER},
+      reorder = #{reorder,jdbcType=INTEGER},
+      pictureUrl = #{pictureUrl,jdbcType=VARCHAR},
+      pictureKey = #{pictureKey,jdbcType=VARCHAR},
+      turnURL = #{turnURL,jdbcType=VARCHAR},
+      beginDate = #{beginDate,jdbcType=TIMESTAMP},
+      endDate = #{endDate,jdbcType=TIMESTAMP},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      createBy = #{createBy,jdbcType=INTEGER},
+      version = #{version,jdbcType=SMALLINT},
+      appType = #{appType,jdbcType=TINYINT},
+      valid = #{valid,jdbcType=TINYINT},
+      deleted = #{deleted,jdbcType=TINYINT},
+      updateBy = #{updateBy,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

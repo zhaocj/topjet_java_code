@@ -1,0 +1,128 @@
+ body{
+	font-family: '微软雅黑', 'Helvetica Neue', sans-serif, SimHei;
+	-webkit-font-smoothing: antialiased;
+	background: #fafafa;
+	font-size:12px}
+ 
+ .margin-right-10{ margin-right:10px !important}
+ .margin-left-10{ margin-left:10px !important}
+ .margin-bottom-50{ margin-bottom:50px}
+ .padding-bottom-50{ padding-bottom:50px}
+ .margin-right-5{ margin-right:5px !important}
+ .width-300{ width:300px !important}
+ 
+ .height-34{ height:36px;}
+ .height-35{ height:35px !important; line-height:0 !important}
+ table thead{ background-color:#ecf0f1}
+ table{ font-size:13px}
+ nav{ min-width:900px !important}
+ h4{ font-size:16px !important}
+ .fontsize-14{ font-size:14px !important}
+ .overFlow{ padding:0 !important; margin:0 !important; height:0 !important; overflow:hidden}
+ .padding-0{ padding: 0 10px}
+ .padding-right-15{ padding-right:15px}
+ .padding-top-15{ padding-top:15px !important}
+ .padding-bottom-15{ padding-bottom:15px !important}
+ .margin-top-15{ margin-top:15px !important;}
+ .margin-top-5{ margin-top:5px !important;}
+ .line1px{ border-bottom:#B3B3B3 1px dotted; width:100% !important}
+label{ font-size:12px; font-weight:bold}
+.stylecolor a{ color:#ECECEC !important}
+
+#conBOX{ width:100%; padding-left:200px; position:relative; background-color:#FFFFFF}
+ /**左导航***/
+ #contentmenu{ position:absolute; background-color:#e9ebec; left:0; width:200px;border-right:#dbdee0 1px solid; overflow:hidden} 
+ #contentmenu ul{ margin:0px; padding:0px;}
+ #contentmenu ul li{padding:0px;  list-style:none; }
+ #contentmenu ul li a{ font-size:14px; color:#7c848d; font-weight:bold;width:200px; padding:0px;line-height:38px; display:block; position:relative;border-bottom:#dbdee0 1px solid;}
+ #contentmenu ul li a:hover , #contentmenu ul li >.avtie{ color:#1abc9c; background-color:#fafafa}
+ #contentmenu ul li a i{ padding-right:10px; padding-left:10px}
+ #contentmenu ul li .childrenMenu{background-color:#e4e5e6; }
+ #contentmenu ul li .childrenMenu{ display:none}
+ #contentmenu ul li .childrenMenu li{ font-size:13px; margin-top:-1px;border-bottom:0;border-top:#dbdee0 1px solid;}
+ #contentmenu ul li .icodown{ position:absolute !important; top:10px; right:0px}
+ #contentmenu ul li .childrenMenu li i{padding-right:10px; padding-left:16px}
+ /**内容***/
+ 
+ #content .nav-title{ width:100%; position:relative; height:39px;border-bottom:#dbdee0 1px solid; overflow:hidden; padding:0 94px 0 30px; background-color:#f6f6f6}
+ #content .nav-title h2{ width:30px; height:38px; position:absolute; top:0; left:0; background-color:#eeefef; padding:9px 0 0 8px; margin:0; display:block; font-size:16px; border-right:#dbdee0 1px solid}
+ #content .nav-title h2 a,#content .nav-title h3 a,#content .nav-title h4 a{ color:#777777}
+ #content .nav-title h3{ width:30px; height:38px; position:absolute; top:0; right:0px; background-color:#eeefef; padding:9px 0 0 8px; margin:0; display:block; font-size:16px; border-left:#dbdee0 1px solid}
+ #content .nav-title h4{ width:64px;  height:38px; position:absolute; top:0; right:30px; background-color:#eeefef; padding:0 6px 0  ; margin:0; display:block; font-size:12px; border-left:#dbdee0 1px solid; line-height:38px; font-weight:normal}
+#content .nav-title ul{  padding:4px 0 0 0; margin:0; overflow:hidden}
+#content .nav-title ul li{ border:#E7E7E7 1px solid; height:34px; display:block; list-style:none; float:left; padding:0 10px; line-height:34px; border-bottom:0px; margin-left:5px; font-size:14px; color:#8B8B8B}
+#content .nav-title ul li i{ font-size:15px; padding-left:6px}
+#content .nav-title ul .avtie{ background-color:#FFFFFF; color:#444}
+
+#content .contentBox{ width:100%; padding:10px; font-size:14px !important}
+ /**easyui style***/
+.tabs-header{height:39px; border:none;border-bottom:#dbdee0 1px solid;background-color:#f6f6f6 !important ; padding-top:0; margin-top:0px}
+.tabs li a.tabs-inner{border:#E7E7E7 1px solid; height:34px !important; display:block; list-style:none; float:left; padding:0 15px; line-height:34px; border-bottom:0px; margin-left:5px; font-size:14px; color:#8B8B8B; background-color:#f6f6f6 !important; border-radius:0}
+.tabs{ height:39px !important; border: none !important; padding-top:4px}
+.tabs-wrap{ height:39px; padding-top:0px; border:none !important; margin-top:0px}
+.tabs-panels{border:none}
+.tabs-scroller-left{ width:30px !important; height:38px; background-color:#eeefef; padding:9px 0 0 8px; margin:0; display:block; font-size:16px; border:none; border-right:#dbdee0 1px solid}
+.tabs li.tabs-selected a.tabs-inner {
+    border-bottom: 0px;background-color:#FFFFFF !important; color:#444
+}
+.tabs{background-color:#f6f6f6 !important }
+.tabs-scroller-right{width:30px !important; height:38px;background-color:#eeefef; padding:9px 0 0 8px; margin:0; display:block; font-size:16px; border:none; border-left:#dbdee0 1px solid}
+.panel-body{ background: none}
+.tabs li a.tabs-close,.tabs li a:hover .tabs-close{font-size:15px; padding-left:6px !important; width:auto; height:auto; display:block; color:#020202; background:none
+}
+.tabs li a.tabs-inner:hover {color: #000;}
+.form-group { margin-bottom: 5px;}
+.styleLine{ padding-left:0px !important;line-height:2 !important; font-size:12px}
+.labelStyle .info{line-height:1.6 !important;}
+.checkbox, .radio{ padding-left:22px}
+
+
+.navmenu{ background-color:#ecf0f5; font-size:12px; color:#B5B5B5; height:28px; width:100%; line-height:28px; padding-left:5px}
+.title-h1{width:100%; font-size:14px; text-align:left; padding-bottom:10px; border-top:#E1E1E1 1px dotted}
+.tableInput input{ margin:0 5px}
+.pagination-info {background-color: inherit;}
+.pagination li > a, .pagination li > span{ min-height:inherit}
+.pagination li{ margin-right:0px}
+.fixed-table-pagination .pagination a{ padding:4px 12px}
+.height40{ height:88px !important}
+.bs-callout {
+    padding: 10px 20px;
+    margin: 10px 0;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+}
+.bs-callout-info {
+    border-left-color: #1b809e;
+}
+.bs-callout-info {
+    border-left-color: #1b809e;
+}
+.bs-callout-danger {
+border-left-color: #ce4844;
+}
+.formationBox{ width:100%; background-color:#FFFFFF; overflow:hidden}
+.formationBox li{ width:25%; display:block; float:left; padding:5px 0 10px}
+.formationBox li span{ font-weight:bold; padding-right:5px}
+.boxtitlenum{height:40px; line-height:40px; padding:0 20px; margin-bottom:15px; font-size:16px}
+.boxtitlenum font{ color:#DB0003; font-weight:bold}
+.window{ background:#f6f6f6 !important}
+.window, .window .window-body {border-color: #dbdee0 ; border-radius:0; width:auto !important}
+.window-body{ background-color:#FFFFFF}
+.panel-title{ color:#7c848d !important}
+.panel-header, .panel-body {border-color:#dbdee0 ;}
+.navbar-nav > li > .dropdown-menu {margin-top:0px !important}
+.navbar-inverse .navbar-nav > .open > .dropdown-menu > li > a {padding: 10px 9px !important; height:40px !important}
+.navbar-unread{ background-color:#FF0004 !important; height:7px; width:7px}
+.badge{background-color: #1abc9c}
+.addRW{ border:#EBE9E9 1px solid !important; line-height:20px; border-radius:4px; background-color:#F9F7F7; margin-bottom:15px}
+.rw_title{ padding:5px 0;}
+.bootstrap-tagsinput{ margin-bottom:10px !important}
+.fhrxx{ width:100%; height:28px;margin:10px 0; text-align:center; font-size:14px; font-weight:bold; border-radius:2px; line-height:28px}
+ .eachBox{ width:100%; background-color:#F4F3F3; border:#ECECEC 1px dotted;padding:10px 0 10px; min-width:810px}
+ .eachBox ul{padding:0; margin:0}
+ .eachBox li{ list-style:none; width:25%; position:relative; padding-left:74px; float:left; padding-right:10px; }
+ .eachBox li label{ width:74px; position:absolute; top:0; left:0; height:32px; line-height:32px;font-size:13px !important; text-align:right; padding-right:4px}
+ .eachBox li input , .eachBox li select{ border:#DBDBDB 1px solid; border-radius:4px; height:32px; line-height:28px; width:100%; padding:2px 5px;font-size:13px !important}
+ .line10{ clear: both;display: block;width:100%; overflow:hidden; margin:0 0 10px; height:10px; border-bottom:#CBCBCB 1px dotted}
+ .eachBox li select option{ padding:5px 10px}

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>推荐补贴明细</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script type="text/javascript" src="../../resource/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="../../resource/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../resource/bootstrap-theme.css">
+	<link rel="stylesheet" type="text/css" href="../../resource/bootstrap.css">
+	<script type="text/javascript" src="../../js/common/modal.js"></script>
+	<script type="text/javascript" src="../../js/common/utils.js"></script>
+	<script type="text/javascript" src="../../js/common/ajaxCall.js"></script>
+	<script type="text/javascript" src="../../js/common/dateformate.js"></script>
+	<!-- bootstrap-table 表格-->
+	<link rel="stylesheet" type="text/css" href="../../resource/bootstrap-table.css">
+	<script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+	<script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../css/demo.css">
+	<link rel="stylesheet" type="text/css" href="../../less/modules/buttons.less">
+	<script type="text/javascript" src="../../js/bootbox.min.js"></script>
+	<script type="text/javascript" src="../../js/common/jquery.cityselect.js"></script>
+	<script type="text/javascript" src="../../js/common/city.min.js"></script>
+</head>
+<body>
+<div class="fixed-table-toolbar">
+	<div class="navmenu"><a href="#"  onclick="javascript:history.back(-1); return false">补贴发放</a> / 推荐补贴明细</div>
+	<div class="columns columns-left btn-group pull-right">
+	</div>
+	<input type="hidden" id="createTime" value="">
+	<input type="hidden" id="billType" value="">
+	<input type="hidden" id="status" value="">
+	<div class="eachBox">
+		<ul>
+			<li>
+				<label>手机号：</label>
+				<input type="text" id="recommendMobile" placeholder="输入手机号码">
+			</li>
+		</ul>
+		<div class="clearfix "></div>
+	</div>
+	<div id="toolbar" class="columns columns-left btn-group pull-right">
+		<button type="button" class="btn btn-info btn-sm" onclick="tableQuery();">查询</button>
+		<button type="button" id="deleteId" class="btn btn-danger btn-sm" onclick="deleteBill();">删除</button>
+	</div>
+</div>
+<table id='table'  class="table table-striped table-bordered table-hover table-condensed"></table>
+<script type="text/javascript">
+$(function () {
+	var columns=[
+					{
+						field : 'ck',
+						checkbox : true,
+						formatter : function(value, row, index) {
+							if (row.status == "1") {
+								return {
+									checked : false
+								};
+							} else {
+								return {
+									disabled: true
+								}
+
+							}
+							return value;
+						}
+					},
+					{
+						field : 'createTime',
+						title : '补贴日期',
+						align : 'center'
+					},
+
+					{
+						field : 'recommendName',
+						title : '推荐人姓名',
+						align : 'center'
+					},
+					{
+						field : 'recommendMobile',
+						title : '推荐人号码',
+						align : 'center'
+					},
+
+					{
+						field : 'amount',
+						title : '补贴金额',
+						align : 'center',
+						formatter : function(value, row,
+								index) {
+								var num = new Number(value);
+								return num.toFixed(2);
+						}
+					}
+		];
+	var url=getRootPath() + '/bonusBillPay/recommendationFeeBounsBillDeatailList.do';
+	setTableInfo('table', columns, url,getQueryParams,'toolbar')
+	})
+	
+   function getQueryParams() {
+	   var param = window.location.search;
+	   var createTime = param.split("&")[0].split("=")[1];
+	   var billType = param.split("&")[1].split("=")[1];
+	   var status = param.split("&")[2].split("=")[1];
+	   /*$("#billType").val(billType);
+	   $("#createTime").val(createTime);
+	   $("#status").val(status);*/
+	   if(status == 3){
+		   $("#deleteId").css('display','none');
+	   }
+ 		var json = {
+ 				'createTime' : createTime,
+ 				'billType' : billType,
+ 				'recommendMobile' : $("#recommendMobile").val(),
+ 				'status' : status
+		};
+		return json;
+	}
+function deleteBill() {
+	checkedItems = $('#table').bootstrapTable('getSelections');
+	if(checkedItems.length==0){
+		bootbox.alert({
+			size : 'small',
+			message :"请勾选",
+		});
+		return
+	}
+	if(checkedItems.length>0){
+		var  checkedItemsJson =JSON.stringify( checkedItems);
+		$.ajax({
+			type : 'post',
+			url : getRootPath() + '/bonusBillPay/deleteBill.do',
+			data : {
+				checkedItems:checkedItemsJson
+			},
+			success : function(data) {
+				bootbox.alert(data.msg);
+				$tableDom.bootstrapTable('refresh');
+			}
+		});
+	}
+}
+</script>
+
+</body>
+</html>

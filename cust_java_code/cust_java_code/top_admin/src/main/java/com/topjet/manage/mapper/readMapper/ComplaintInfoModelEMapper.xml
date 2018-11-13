@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.ComplaintInfoModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.ComplaintInfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="userId" property="userId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="complaintedName" property="complaintedName" jdbcType="VARCHAR" />
+    <result column="complaintedMobile" property="complaintedMobile" jdbcType="VARCHAR" />
+    <result column="complaintedUserId" property="complaintedUserId" jdbcType="INTEGER" />
+    <result column="orderId" property="orderId" jdbcType="INTEGER" />
+    <result column="orderSerialNo" property="orderSerialNo" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="source" property="source" jdbcType="TINYINT" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="createBy" property="createBy" jdbcType="INTEGER" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateBy" property="updateBy" jdbcType="INTEGER" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="version" property="version" jdbcType="SMALLINT" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userId, name, mobile, complaintedName, complaintedMobile, complaintedUserId, 
+    orderId, orderSerialNo, status, source, content, remark, createBy, createTime, updateBy, 
+    updateTime, version, deleted
+  </sql>
+
+  <sql id="Criteria_where_clause">
+    <where>
+      <if test="id != null" >
+        and id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="userId != null" >
+        and userId = #{userId,jdbcType=INTEGER}
+      </if>
+      <if test="name != null" >
+        and name = #{name,jdbcType=VARCHAR}
+      </if>
+      <if test="mobile != null and mobile != ''" >
+        and mobile = #{mobile,jdbcType=VARCHAR}
+      </if>
+      <if test="complaintedName != null" >
+        and complaintedName = #{complaintedName,jdbcType=VARCHAR}
+      </if>
+      <if test="complaintedMobile != null and complaintedMobile != ''" >
+        and complaintedMobile = #{complaintedMobile,jdbcType=VARCHAR}
+      </if>
+      <if test="complaintedUserId != null" >
+        and complaintedUserId = #{complaintedUserId,jdbcType=INTEGER}
+      </if>
+      <if test="orderId != null" >
+        and orderId = #{orderId,jdbcType=INTEGER}
+      </if>
+      <if test="orderSerialNo != null and orderSerialNo != ''" >
+        and orderSerialNo = #{orderSerialNo,jdbcType=VARCHAR}
+      </if>
+      <if test="status != null" >
+        and status = #{status,jdbcType=TINYINT}
+      </if>
+      <if test="source != null" >
+        and source = #{source,jdbcType=TINYINT}
+      </if>
+      <if test="content != null" >
+        and content = #{content,jdbcType=VARCHAR}
+      </if>
+      <if test="remark != null" >
+        and remark = #{remark,jdbcType=VARCHAR}
+      </if>
+      <if test="createBy != null" >
+        and createBy = #{createBy,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null" >
+        and createTime = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="updateBy != null" >
+        and updateBy = #{updateBy,jdbcType=INTEGER}
+      </if>
+      <if test="updateTime != null" >
+        and updateTime = #{updateTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="version != null" >
+        and version = #{version,jdbcType=SMALLINT}
+      </if>
+      <if test="deleted != null" >
+        and deleted = #{deleted,jdbcType=TINYINT}
+      </if>
+    </where>
+  </sql>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from userDB.complaintInfo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+  <select id="selectListByParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from userDB.complaintInfo
+    <include refid="Criteria_where_clause" />
+  </select>
+
+
+  <select id="selectPageListByParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from userDB.complaintInfo
+    <include refid="Criteria_where_clause" />
+    order by id desc
+    limit #{offset}, #{limit}
+  </select>
+
+  <select id="getCountByParam" resultType="java.lang.Integer" parameterType="java.util.Map">
+    select count(id)
+    from userDB.complaintInfo
+    <include refid="Criteria_where_clause" />
+  </select>
+
+  <select id="selectListByPage" resultMap="BaseResultMap" parameterType="com.topjet.manage.domain.model.ComplaintInfoModel">
+    select
+    <include refid="Base_Column_List" />
+    from userDB.complaintInfo
+    <include refid="Criteria_where_clause" />
+    order by id desc
+    limit #{offset}, #{limit}
+  </select>
+
+  <select id="getCountByPage" resultType="java.lang.Integer" parameterType="com.topjet.manage.domain.model.ComplaintInfoModel">
+    select count(id)
+    from userDB.complaintInfo
+    <include refid="Criteria_where_clause" />
+  </select>
+
+
+  <sql id="Base_Column_List1" >
+    ci.id, ci.userId, ci.name,ci.mobile, ci.complaintedName, ci.complaintedMobile, ci.complaintedUserId,
+    ci.orderId, ci.orderSerialNo, ci.status, ci.source, ci.content, ci.remark, ci.createBy, ci.createTime, ci.updateBy,
+    ci.updateTime,ci.version, ci.deleted,ui.idNo as complaintCardID,udi.idNo as complaintedCardID,
+    COALESCE (ui.userType, 1) as complaintType,
+    COALESCE (udi.userType, 2) as complaintedType,
+    a.auditName,a.createTime as auditCreateTime,
+    a.remark as auditRemark
+  </sql>
+
+  <select id="getComplaintDetail" resultType="com.topjet.manage.domain.bean.ComplaintInfoBean" parameterType="java.lang.Integer">
+    select DISTINCT
+    <include refid="Base_Column_List1" />
+    from userDB.complaintInfo ci
+    left JOIN userDB.userInfo ui on ci.userId = ui.id
+    left JOIN userDB.userInfo udi on ci.complaintedUserId = udi.id
+    LEFT JOIN manageDB.orderAuditHistory a on a.createBy = ci.updateBy and a.sourceType=4
+    where ci.id = #{id} GROUP by ci.id
+  </select>
+
+</mapper>

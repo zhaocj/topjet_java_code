@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>车辆管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="../../resource/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap.css">
+    <script type="text/javascript" src="../../js/common/modal.js"></script>
+    <script type="text/javascript" src="../../js/common/utils.js"></script>
+    <script type="text/javascript" src="../../js/common/ajaxCall.js"></script>
+    <script type="text/javascript" src="../../js/common/dateformate.js"></script>
+    <!-- bootstrap-table 表格-->
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap-table.css">
+    <script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../css/demo.css">
+    <link rel="stylesheet" type="text/css" href="../../less/modules/buttons.less">
+    <script type="text/javascript" src="../../js/bootbox.min.js"></script>
+</head>
+<body onresize="auto()">
+<form class="form-inline queryParameters-margin" >
+    <div class="fixed-table-toolbar">
+        <div class="eachBox">
+            <ul>
+                <li>
+                    <label for="mobile">手机号码：</label>
+                    <input type="text" name="mobile" id="mobile" onkeyup="this.value=this.value.replace(/\D/g,'')"
+                           onafterpaste="this.value=this.value.replace(/\D/g,'')" placeholder="输入车主手机号">
+                </li>
+                <li>
+                    <label for="plateNo">车牌号：</label>
+                    <input type="text" name="plateNo" id="plateNo" placeholder="车牌号" onblur="isVehicleNumber(this.value)">
+                </li>
+<!--                <li>
+                    <label for="auditUser">审核人：</label>
+                    <input type="text" name="auditUser" id="auditUser" placeholder="输入审核人姓名">
+                </li>-->
+<!--                <li>
+                    <label for="auditStatus">认证状态：</label>
+                    <select name="auditStatus" id="auditStatus">
+                        <option value="">不限</option>
+                        <option value="2">认证通过</option>
+                        <option value="3">待认证</option>
+                        <option value="4">认证失败</option>
+                    </select>
+                </li>-->
+            </ul>
+            <div class="clearfix "></div>
+        </div>
+        <div id="toolbar" class="columns columns-left btn-group pull-right">
+            <button type="button" class="btn btn-info btn-sm" onclick="tableQuery();">查询</button>
+        </div>
+    </div>
+</form>
+<table id='cartable' class="table table-striped table-bordered table-hover table-condensed"></table>
+
+<script type="text/javascript">
+    $(function () {
+        var columns = [
+            {
+                field: 'name',
+                title: '车主姓名',
+                align: 'center',
+                sortable: true,
+                formatter: function (value, row, index) {
+                    if (value == null) {
+                        var a = '<a href="#"></a>';
+                    } else {
+                        var a = '<a  href="#" onclick="modifiedInfo(\''
+                                + row.uid + '\',\'车辆认证管理\')">' + value + '</a>';
+                    }
+                    return a;
+                }
+            },
+            {
+                field: 'mobile',
+                title: '手机',
+                align: 'center',
+                sortable: true
+            }, {
+                field: 'createTime',
+                title: '提交时间',
+                align: 'center',
+                sortable: true,
+                formatter: function (value, row) {
+                    return formatDate(new Date(value), "yyyy-MM-dd");
+                }
+            }, {
+                field: 'plateNo',
+                title: '车牌号',
+                align: 'center',
+                sortable: true
+            },
+            {
+                field: 'typeAndLength',
+                title: '车型车长',
+                align: 'center',
+                sortable: true
+            },
+            {
+                field: 'assignName',
+                align: 'center',
+                title: '分配人',
+                sortable: true
+            },
+            {
+                field: 'status',
+                title: '操作',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    if (value == 3) {
+                        return [
+                            '<button type="button" class="btn btn-primary btn-xs" onclick="truckAudit(\''
+                            + row.id+ '\')">审核资料</button>'
+                        ].join(' ');
+                    } else {
+                        return [
+                            '<button type="button" class="btn btn-default  btn-xs" onclick="truckAudit(\''
+                            + row.id+ '\',\''+ row.version+ '\')">查看资料</button>'
+                        ].join(' ');
+                    }
+                }
+            }
+        ]
+        var url = getRootPath() + '/truckVerify/list.do';
+        setTableInfo('cartable', columns, url, getQueryParams, 'toolbar');
+    })
+    function getQueryParams() {
+        var plateNo1,plateNo2,plateNo3;
+        if($('#plateNo').val().length > 0){
+            plateNo1 = $('#plateNo').val().charAt(0);
+            plateNo2 = $('#plateNo').val().charAt(1);
+            plateNo3 = $('#plateNo').val().substring(2,7);
+
+        }
+
+        var json = {
+            'mobile': $('#mobile').val(),   //18516638687
+            'auditUser': $('#auditUser').val(),
+            'plateNo': $('#plateNo').val(),   //沪A666666
+            'auditStatus': $('#auditStatus').val(), //1
+            'plateNo1':plateNo1,
+            'plateNo2':plateNo2,
+            'plateNo3':plateNo3
+        };
+        return json;
+    }
+
+    function truckAudit(id) {
+        $.post(getRootPath() + '/memberAudit/auditLock.do', {auditDataId: id + "_4"}, function (data) {
+            if (data.status == "1") {
+                if (!confirm(data.msg + " 正在审核，继续审核？")) {
+                    return;
+                }
+            } else if (data.status == "2") {
+                alert(data.msg);
+            }
+            getTruckVerify(id);
+        });
+    }
+
+    function getTruckVerify(id) {
+        /*var url = getRootPath()+'/truckVerify/checkVersion.do';
+        var dataJson = {
+            id: id,
+        }
+        $.ajax({
+            type:"POST",
+            contentType: "application/x-www-form-urlencoded;charset=utf-8",
+            url:url,
+            data:dataJson,
+            dataType:"json",
+            success:function(data){
+                if(data.status == "05"){
+                    bootbox.alert({
+                        size: 'small',
+                        message: "对应数据不存在",
+                    });
+                    tableRefresh();
+                }else{
+                    location.href = getRootPath() + '/truckVerify/edit.do?id=' + id;
+                }
+            }
+        });*/
+        location.href = getRootPath() + '/truckVerify/edit.do?id=' + id;
+    }
+
+    function isVehicleNumber(vehicleNumber) {
+        var result = false;
+        var express = /^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-Z0-9]{4}[A-Z0-9挂学警港澳]{1}$/;
+        if(vehicleNumber.length!=7 || !express.test(vehicleNumber)){
+            bootbox.alert({
+                size: 'small',
+                message: "请输入正确格式的车牌号",
+            });
+            $('#plateNo').val("");
+        }
+    }
+
+</script>
+</body>
+</html>

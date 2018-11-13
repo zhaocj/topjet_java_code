@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.OwnerTruckInfoModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.OwnerTruckInfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="driverTruckId" property="driverTruckId" jdbcType="INTEGER" />
+    <result column="driverId" property="driverId" jdbcType="INTEGER" />
+    <result column="ownerId" property="ownerId" jdbcType="INTEGER" />
+    <result column="truckId" property="truckId" jdbcType="INTEGER" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, driverTruckId, driverId, ownerId, truckId, createTime, updateTime, deleted
+  </sql>
+
+
+  <sql id="owner_truck_where_clause">
+    WHERE
+    ot.deleted = 0
+    <if test="ownerMobile  != null and ownerMobile != ''">
+      AND ou.mobile = #{ownerMobile}
+    </if>
+    <if test="driverMobile  != null and driverMobile != ''">
+      AND du.mobile = #{driverMobile}
+    </if>
+    <if test="plateNo1  != null and plateNo1 != ''">
+      AND ti.plateNo1 = #{plateNo1}
+    </if>
+    <if test="plateNo2  != null and plateNo2 != ''">
+      AND ti.plateNo2 = #{plateNo2}
+    </if>
+    <if test="plateNo3  != null and plateNo3 != ''">
+      AND ti.plateNo3 = #{plateNo3}
+    </if>
+    <if test="type  != null and type != '' ">
+      AND ttd.displayName = #{type}
+    </if>
+    <if test="length  != null and length != '' ">
+      AND tld.displayName = #{length}
+    </if>
+
+  </sql>
+
+  <sql id="Criteria_where_clause">
+    <where>
+      <if test="ownerId != null and ownerId !='' ">
+        AND ownerId = #{ownerId}
+      </if>
+      <if test="driverTruckId != null and driverTruckId !='' ">
+        AND driverTruckId = #{driverTruckId}
+      </if>
+    </where>
+  </sql>
+
+  <select id="selectListByParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from truckDB.ownerTruckInfo
+    <include refid="Criteria_where_clause" />
+  </select>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from truckDB.ownerTruckInfo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+  <select id="listOwnerTruck" resultType="com.topjet.manage.domain.vo.OwnerTruckListVO"
+          parameterType="com.topjet.manage.domain.vo.OwnerTruckListQuery">
+
+    SELECT
+    ot.id,
+    ou.username AS ownerName,
+    ou.mobile AS ownerMobile,
+    ou.id AS ownerId,
+    ot.createTime AS createTime,
+    CONCAT(ti.plateNo1,ti.plateNo2,ti.plateNo3) AS plateNo,
+    ti.plateColor AS truckColor,
+    du.username AS driverName,
+    du.mobile AS driverMobile,
+    du.id AS driverId,
+    CONCAT(
+    ttd.`displayName`,
+    '/',
+    tld.displayName
+    ) AS typeAndLength,
+    ttd.id AS typeId,
+    (SELECT
+    COUNT(1)
+    FROM orderDB.orderInfo oi
+    WHERE oi.driverId = ot.driverId
+    AND oi.ownerId = ot.ownerId
+    AND orderStatus IN (8 , 9, 10, 11)) AS dealCount,
+    (SELECT remark FROM manageDB.`userAuditHistory` WHERE sourceType=1
+    AND sourceId=ou.id and statusAfter IN (1, 2) ORDER BY createTime DESC LIMIT 1)as reditRemark
+    FROM truckDB.ownerTruckInfo ot
+    INNER JOIN userDB.userInfo ou	ON ot.ownerId = ou.id
+    INNER JOIN truckDB.truckInfo ti ON ti.id = ot.truckId
+    INNER JOIN userDB.userInfo du	ON du.id = ot.driverId
+    LEFT JOIN resourceDB.truckTypeDictionary ttd	ON ti.truckType = ttd.id
+    AND ttd.deleted=0
+    LEFT JOIN resourceDB.truckLengthDictionary tld ON ti.truckLength = tld.id
+    AND ttd.deleted=0
+    <include refid="owner_truck_where_clause"></include>
+    ORDER BY  ot.createTime desc
+    limit #{offset} , #{limit}
+  </select>
+
+
+
+  <select id="countOwnerTruck" resultType="java.lang.Integer" parameterType="com.topjet.manage.domain.vo.OwnerTruckListQuery">
+    SELECT
+    count(*)
+    FROM truckDB.ownerTruckInfo ot
+    INNER JOIN userDB.userInfo ou ON ot.ownerId = ou.id
+    INNER JOIN truckDB.truckInfo ti ON ti.id = ot.truckId
+    INNER JOIN userDB.userInfo du ON du.id = ot.driverId
+    INNER JOIN resourceDB.truckTypeDictionary ttd ON ti.truckType = ttd.id and ttd.deleted=0
+    INNER JOIN resourceDB.truckLengthDictionary tld ON ti.truckLength = tld.id and ttd.deleted=0
+
+    <include refid="owner_truck_where_clause"></include>
+  </select>
+
+</mapper>

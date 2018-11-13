@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <head>
+    <meta charset="utf-8">
+    <title>交运配货网-后台管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../../bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../../bootstrap/css/bootstrap-table.min.css">
+    <link rel="stylesheet" type="text/css" href="../../css/flat-ui.min.css">
+    <link rel="stylesheet" type="text/css" href="../../css/demo.css">
+    <link rel="stylesheet/less" type="text/css" href="../../css/easyui.css">
+    <link rel="stylesheet/less" type="text/css" href="../../css/font-awesome.min.css">
+    <link rel="stylesheet/less" type="text/css" href="../../css/jquery.mCustomScrollbar.css">
+    <link rel="stylesheet/less" type="text/css" href="../../css/bootstrap-datetimepicker.css">
+
+    <script type="text/javascript" src="../../resource/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../js/common/modal.js"></script>
+    <script type="text/javascript" src="../../js/common/utils.js"></script>
+    <script type="text/javascript" src="../../js/common/ajaxCall.js"></script>
+    <script type="text/javascript" src="../../js/common/dateformate.js"></script>
+    <script type="text/javascript" src="../../js/common/dateformate.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+    <script type="text/javascript" src="../../js/bootbox.min.js"></script>
+    <script type="text/javascript" src="../../js/application.js"></script>
+    <script type="text/javascript" src="../../js/flat-ui.min.js"></script>
+    <script type="text/javascript" src="../../js/common/jquery.cityselect.js"></script>   
+    
+    <link rel="stylesheet/less" type="text/css" href="../../bootstrap/formValidation/formValidation.css">
+    <script type="text/javascript" src="../../js/flat-ui.js"></script>
+    <script type="text/javascript" src="../../bootstrap/formValidation/formValidation.js"></script>
+    <script type="text/javascript" src="../../bootstrap/formValidation/bootstrap.js"></script>
+    <script type="text/javascript" src="../../bootstrap/formValidation/validData.js"></script>
+    <script type="text/javascript" src="../../js/common/jquery.cityselect.js"></script>
+    
+</head>
+
+</head>
+<body>
+<div class="modal-body  fontsize-14">
+  <font>请输入正确的平台用户手机号</font><br>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>用户手机号</label>
+                <input type="text" id="mobile" name="mobile" class="form-control input-sm" onblur="getUser(this.value)">
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>姓名</label>
+                <input type="text" id="name" name="name" class="form-control input-sm" disabled>
+            </div>
+        </div>
+
+    <!-- 1 -->
+    <div class="routeinfo">
+            <div class="col-xs-5">
+                <div class="form-group" >
+                    <label>经营路线起始城市</label>
+                </div>
+            </div>
+
+            <div class="col-xs-5">
+                <div class="form-group">
+                    <label>经营路线结束城市</label>
+                </div>
+            </div>
+     </div>
+    
+    <div class="routeinfo" id="route0" style="display: none">
+            <div class="col-xs-5">
+                <div class="form-group" id="resident1">
+                    <span class="bs-docs-example">
+                  <select class="form-control province1" name="province1" style="width:100px;" onchange="getCity(this)">
+                          <option value="0">请选择</option>
+                  </select>
+                  <select class="form-control city1" name="city1" style="width: 100px;">
+                              <option value="0">请选择</option>
+                  </select>
+            </span>
+                </div>
+            </div>
+
+            <div class="col-xs-5">
+                <div class="form-group" id="resident2">
+                    <span class="bs-docs-example">
+                  <select class="form-control province2" name="province2" style="width:100px;" onchange="getCity(this)">
+                          <option value="0">请选择</option>
+                  </select>
+                  <select class="form-control city2" name="city2" style="width: 100px;">
+                              <option value="0">请选择</option>
+                      </select>
+            </span>
+                </div>
+            </div>
+            <div class="col-xs-2  fontsize-18 removeroute" style="margin-top:10px;cursor:pointer;display:none;" onclick="removeRoute(this)">X</div>
+     </div>
+     <!-- 1 -->
+
+     <div class="col-xs-12" id="addDiv">
+        <div style=" width:100%; background-color:#FBFBFB; line-height:20px; font-size:18px; text-align:center; padding:10px 0; cursor:pointer" onclick="addRoute()">添加路线</div>
+     </div>
+
+	<div class="clearfix"></div>
+	<div class="modal-footer margin-top-15">
+	    <button type="button" id="myButton" onclick="submitBroker()" class="btn btn-primary center-block">　提　交　</button>
+	</div>
+
+</div>
+
+<script type="text/javascript">
+		
+    var userId="0",xid="0";
+    var provinceStr;//省
+    var checkRouteInfo;//检查线路重复
+    var flag =0;//默认是修改
+    $(function (){
+    	$.ajax({
+				type : 'post',
+				url : getRootPath()+'/cityAction/getProvince.do?level=1',
+				success : function(data) {
+					var option = "";
+					$.each(data, function(i, n) {
+					    option += "<option value=" + n.adcode + ">" + n.cityName + "</option>";
+					});
+					provinceStr = option;
+					$("#route0 .province1").append(provinceStr);
+    			$("#route0 .province2").append(provinceStr);    			
+    			getBrokerInfo();
+				}
+			});
+    });
+
+
+		function getBrokerInfo(){
+
+			var id = getUrlParam("id");
+
+			if(id=="")return;
+			if(id==-1){
+			    //新增
+                flag=1;
+            }
+			xid=id;
+			$.ajax({
+				type : 'post',
+				url : getRootPath()+'/stationBroker/brokerInfo.do?id='+xid,
+				success : function(data) {
+					var broker = data['broker'];
+					xid = broker['id'];
+					$("#mobile").val(broker['mobile']);
+					$("#name").val(broker['userName']);
+					var route = data['route'];
+					for(var i=0; i<route.length; i++){						
+						var r = route[i];
+						var rid = r['id'];
+						addRoute(rid);
+						var beginCity = r['beginCity'];
+						var beginProvince = getParentId(beginCity);						
+						var endCity = r['endCity'];
+						var endProvince = getParentId(endCity);
+						var obj1 = $("#route_"+rid+" .province1")[0];
+						var obj = $(obj1);
+						obj.val(beginProvince);
+
+						getCity(obj1,beginCity);
+						var obj2 = $("#route_"+rid+" .province2")[0];
+						obj = $(obj2);
+						obj.val(endProvince);
+						getCity(obj2,endCity);
+					}					
+				}    	
+    	});    
+		}
+
+    //城市上级省ID
+    function getParentId(city){
+        return Math.floor(city/10000)*10000;
+    }
+
+    //添加线路
+    var divNum = 1;
+    function addRoute(f){
+    	if(f>0){
+    		var s = '<div class="routeinfo" id="route_'+f+'">'+$("#route0").html()+'</div>';
+    		$("#addDiv").before(s);
+    		$('#route_'+f+' .removeroute').show();
+    	}else{
+    		var s = '<div class="routeinfo" id="route'+divNum+'">'+$("#route0").html()+'</div>';
+    		$("#addDiv").before(s);
+    		$('#route'+divNum+' .removeroute').show();
+    		divNum++;
+    	}
+    }
+    
+    function getCity(object,city){
+    	var obj = $(object).next();
+			$.ajax({
+				type : 'post',
+				url : getRootPath()+'/cityAction/getCity.do?adcode='+object.value,
+				success : function(data) {
+					obj.empty();
+					var cityoption = "<option value=0>请选择</option>";
+					$.each(data, function(i, n) {
+						cityoption += "<option value=" + n.adcode + ">" + n.cityName + "</option>";
+					});
+					obj.append(cityoption); //等同于 $(option).appendTo($("#catagery"));
+					if(city != null){
+						obj.val(city);
+					}
+			}    	
+    	});    
+		}
+
+		//通过电话取用户信息
+		function getUser(mobile){
+			if(mobile.length!=11){				
+				bootbox.alert({
+                size: 'small',
+                message: "请输入正确的平台用户手机号"
+            });
+       	return;
+			}
+			$.ajax({
+				type : 'post',
+				url : getRootPath()+'/stationBroker/userBymobile.do?mobile='+mobile,
+				success : function(data) {
+					if(data==null){
+						bootbox.alert({
+                size: 'small',
+                message: "该手机号不存在"
+            });
+		       	return;
+					}else{
+						$("#name").val(data["username"]);
+						userId = data["id"];
+					}
+				}    	
+    	});    
+		} 
+		
+    function removeRoute(object){
+   		var arr = $(object).parent().attr("id").split('_');
+   		if(arr.length>1){
+   			if(confirm("确定删除路线？")){
+   				$.ajax({
+						type : 'post',
+						url : getRootPath()+'/stationBroker/deleteRoute.do?id='+arr[1],
+						success : function(data) {
+							$(object).parent().remove();
+						}    	
+		    	});
+   			}
+   		}else{
+   			$(object).parent().remove();
+   		}
+   		
+   	}
+		
+    function submitBroker(){
+        var mobile = $.trim($("#mobile").val());
+        if(mobile==""){
+            bootbox.alert({
+       		size: 'small',
+        	message: "请输入正确的平台用户手机号"
+            });
+       	    return;
+        }
+		var routeInfo="";
+		var checkRoute=true;
+        checkRouteInfo = {};
+		$("div[id^=route]").each(function(){
+				var arr = this.id.split('_');
+				var routeId=0;
+				if(arr.length>1){
+					routeId=arr[1];
+				}
+				var province1 = $(this).find(".province1").val();
+				var province2 = $(this).find(".province2").val();
+				var city1 = $(this).find(".city1").val();
+                var cityText1 = $(this).find(".city1").find("option:selected").text();
+				var city2 = $(this).find(".city2").val();
+                var cityText2 = $(this).find(".city2").find("option:selected").text();
+                if(city1>1 && city2>1){
+					routeInfo += ","+routeId+"_"+city1+"_"+city2;
+                    if(typeof(checkRouteInfo[city1+city2])=="undefined"){
+                        checkRouteInfo[city1+city2] = "1";
+                    }else{
+                        checkRouteInfo['checkCity']=cityText1+" -> "+cityText2;
+                    }
+				}else if( province1==0 && province2==0 ){
+					
+				}else{
+					checkRoute = false;
+				}
+			});		
+        if(!checkRoute || routeInfo==""){
+            bootbox.alert({
+       		    size: 'small',
+        	    message: "请选线路城市"
+            });
+       	    return;
+        }
+        var checkCity =  checkRouteInfo['checkCity'];
+        if(typeof(checkCity)!="undefined"){
+            bootbox.alert({
+                size: 'small',
+                message: "线路重复："+checkCity
+            });
+            return;
+        }
+        routeInfo = routeInfo.substring(1);
+
+        $.ajax({
+            type : 'post',
+            url : getRootPath()+'/stationBroker/add.do?userId='+userId+"&routeInfo="+routeInfo+"&id="+xid,
+            data:{"flag":flag},
+            success : function(data) {
+                bootbox.alert({
+                    size: 'small',
+                    message: data['msg']
+                });
+                if(data['status']=="0"){
+                    window.parent.location.reload();
+                }
+			}    	
+    	}); 
+		  
+    }
+				
+		function getUrlParam(name) {
+			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+			 var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+			if (r != null) return unescape(r[2]); return ""; //返回参数值
+		}
+	  
+    
+    
+    
+</script>
+</body>
+</html>

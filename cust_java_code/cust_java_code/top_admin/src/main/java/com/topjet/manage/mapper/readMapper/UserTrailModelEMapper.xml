@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.UserTrailModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.UserTrailModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="userId" property="userId" jdbcType="INTEGER" />
+    <result column="idNo" property="idNo" jdbcType="VARCHAR" />
+    <result column="userName" property="userName" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="userType" property="userType" jdbcType="BIT" />
+    <result column="useStatus" property="useStatus" jdbcType="BIT" />
+    <result column="userAuthStatus" property="userAuthStatus" jdbcType="BIT" />
+    <result column="walletId" property="walletId" jdbcType="INTEGER" />
+    <result column="companyName" property="companyName" jdbcType="VARCHAR" />
+    <result column="businessAddress" property="businessAddress" jdbcType="VARCHAR" />
+    <result column="businessAddressCityId" property="businessAddressCityId" jdbcType="INTEGER" />
+    <result column="registeredCityId" property="registeredCityId" jdbcType="INTEGER" />
+    <result column="residentCityId" property="residentCityId" jdbcType="INTEGER" />
+    <result column="telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="remark1" property="remark1" jdbcType="VARCHAR" />
+    <result column="remark2" property="remark2" jdbcType="VARCHAR" />
+    <result column="businessPhoto" property="businessPhoto" jdbcType="VARCHAR" />
+    <result column="shopFrontPhoto" property="shopFrontPhoto" jdbcType="VARCHAR" />
+    <result column="driverLicencePhoto" property="driverLicencePhoto" jdbcType="VARCHAR" />
+    <result column="operatingPermitsPhoto" property="operatingPermitsPhoto" jdbcType="VARCHAR" />
+    <result column="businessCard" property="businessCard" jdbcType="VARCHAR" />
+    <result column="bigOrders" property="bigOrders" jdbcType="VARCHAR" />
+    <result column="createBy" property="createBy" jdbcType="INTEGER" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    id, userId, idNo, userName, mobile, userType, useStatus, userAuthStatus, walletId, 
+    companyName, businessAddress, businessAddressCityId, registeredCityId, residentCityId, 
+    telephone, remark1, remark2, businessPhoto, shopFrontPhoto, driverLicencePhoto, operatingPermitsPhoto, 
+    businessCard, bigOrders, createBy, createTime
+  </sql>
+
+  <sql id="Criteria_where_clause">
+    <where>
+      <if test="userId != null" >
+        and userId = #{userId,jdbcType=INTEGER}
+      </if>
+      <if test="idNo != null" >
+        and idNo = #{idNo,jdbcType=VARCHAR}
+      </if>
+      <if test="userName != null" >
+        and userName = #{userName,jdbcType=VARCHAR}
+      </if>
+      <if test="mobile != null" >
+        and mobile = #{mobile,jdbcType=VARCHAR}
+      </if>
+      <if test="userType != null" >
+        userType = #{userType,jdbcType=BIT}
+      </if>
+      <if test="useStatus != null" >
+        and useStatus = #{useStatus,jdbcType=BIT}
+      </if>
+      <if test="userAuthStatus != null" >
+        and userAuthStatus = #{userAuthStatus,jdbcType=BIT}
+      </if>
+      <if test="walletId != null" >
+        and walletId = #{walletId,jdbcType=INTEGER}
+      </if>
+      <if test="companyName != null" >
+        and companyName = #{companyName,jdbcType=VARCHAR}
+      </if>
+      <if test="businessAddress != null" >
+        and businessAddress = #{businessAddress,jdbcType=VARCHAR}
+      </if>
+      <if test="businessAddressCityId != null" >
+        and businessAddressCityId = #{businessAddressCityId,jdbcType=INTEGER}
+      </if>
+      <if test="registeredCityId != null" >
+        and registeredCityId = #{registeredCityId,jdbcType=INTEGER}
+      </if>
+      <if test="residentCityId != null" >
+        and residentCityId = #{residentCityId,jdbcType=INTEGER}
+      </if>
+      <if test="telephone != null" >
+        and telephone = #{telephone,jdbcType=VARCHAR}
+      </if>
+      <if test="remark1 != null" >
+        and remark1 = #{remark1,jdbcType=VARCHAR}
+      </if>
+      <if test="remark2 != null" >
+        and remark2 = #{remark2,jdbcType=VARCHAR}
+      </if>
+      <if test="businessPhoto != null" >
+        and businessPhoto = #{businessPhoto,jdbcType=VARCHAR}
+      </if>
+      <if test="shopFrontPhoto != null" >
+        and shopFrontPhoto = #{shopFrontPhoto,jdbcType=VARCHAR}
+      </if>
+      <if test="driverLicencePhoto != null" >
+        and driverLicencePhoto = #{driverLicencePhoto,jdbcType=VARCHAR}
+      </if>
+      <if test="operatingPermitsPhoto != null" >
+        and operatingPermitsPhoto = #{operatingPermitsPhoto,jdbcType=VARCHAR}
+      </if>
+      <if test="businessCard != null" >
+        and businessCard = #{businessCard,jdbcType=VARCHAR}
+      </if>
+      <if test="bigOrders != null" >
+        and bigOrders = #{bigOrders,jdbcType=VARCHAR}
+      </if>
+      <if test="createBy != null" >
+        and createBy = #{createBy,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null" >
+        and createTime = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </where>
+  </sql>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from userTrail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+
+  <select id="selectListByParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from userTrail
+    <include refid="Criteria_where_clause" />
+    order by id desc
+  </select>
+</mapper>

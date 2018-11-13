@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.writeMapper.RegularActivityModelMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.RegularActivityModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="appType" property="appType" jdbcType="INTEGER" />
+    <result column="pictureKey" property="pictureKey" jdbcType="VARCHAR" />
+    <result column="pictureUrl" property="pictureUrl" jdbcType="VARCHAR" />
+    <result column="redirectURL" property="redirectURL" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="beginDate" property="beginDate" jdbcType="TIMESTAMP" />
+    <result column="endDate" property="endDate" jdbcType="TIMESTAMP" />
+    <result column="iconBenginDate" property="iconBenginDate" jdbcType="TIMESTAMP" />
+    <result column="iconEndDate" property="iconEndDate" jdbcType="TIMESTAMP" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="createBy" property="createBy" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="SMALLINT" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, appType, pictureKey, pictureUrl, redirectURL, title, beginDate, endDate, iconBenginDate, 
+    iconEndDate, createTime, updateTime, createBy, version, deleted
+  </sql>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from resourceDB.regularActivity
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.topjet.manage.domain.model.RegularActivityModel" >
+    insert into resourceDB.regularActivity
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="appType != null" >
+        appType,
+      </if>
+      <if test="pictureKey != null" >
+        pictureKey,
+      </if>
+      <if test="pictureUrl != null" >
+        pictureUrl,
+      </if>
+      <if test="redirectURL != null" >
+        redirectURL,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="beginDate != null" >
+        beginDate,
+      </if>
+      <if test="endDate != null" >
+        endDate,
+      </if>
+      <if test="iconBenginDate != null" >
+        iconBenginDate,
+      </if>
+      <if test="iconEndDate != null" >
+        iconEndDate,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="updateTime != null" >
+        updateTime,
+      </if>
+      <if test="createBy != null" >
+        createBy,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="appType != null" >
+        #{appType,jdbcType=INTEGER},
+      </if>
+      <if test="pictureKey != null" >
+        #{pictureKey,jdbcType=VARCHAR},
+      </if>
+      <if test="pictureUrl != null" >
+        #{pictureUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="redirectURL != null" >
+        #{redirectURL,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="beginDate != null" >
+        #{beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iconBenginDate != null" >
+        #{iconBenginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iconEndDate != null" >
+        #{iconEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=SMALLINT},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.topjet.manage.domain.model.RegularActivityModel" >
+    update resourceDB.regularActivity
+    <set >
+      <if test="appType != null" >
+        appType = #{appType,jdbcType=INTEGER},
+      </if>
+      <if test="pictureKey != null" >
+        pictureKey = #{pictureKey,jdbcType=VARCHAR},
+      </if>
+      <if test="pictureUrl != null" >
+        pictureUrl = #{pictureUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="redirectURL != null" >
+        redirectURL = #{redirectURL,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="beginDate != null" >
+        beginDate = #{beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        endDate = #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iconBenginDate != null" >
+        iconBenginDate = #{iconBenginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="iconEndDate != null" >
+        iconEndDate = #{iconEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        createBy = #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=SMALLINT},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

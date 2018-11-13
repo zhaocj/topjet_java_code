@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.CustomerEMapper" >
+
+  <select id="getCustomerPerformance" parameterType="com.topjet.manage.domain.bean.CustomerBean" resultType="com.topjet.manage.domain.bean.CustomerBean">
+    select
+    cui.`name` as customerName,
+    (SELECT COUNT(id) from  manageDB.userAuditHistory  where sourceType =1  and statusAfter in(1,2)  and createBy =cui.`sysUserId`  and deleted=0
+    <include refid="Base_Column_List" />
+    ) as memberAuditCount,
+    (SELECT COUNT(id) from  manageDB.userAuditHistory  where sourceType =2  and statusAfter in(3,4) and createBy =cui.`sysUserId`  and deleted=0
+    <include refid="Base_Column_List" />
+    ) as idAuditCount,
+    (SELECT COUNT(id) from  manageDB.truckAuditHistory  where sourceType =1   and statusAfter in(1,2) and createBy =cui.`sysUserId`  and deleted=0
+    <include refid="Base_Column_List" />
+    ) as truckAuditCount,
+
+    (SELECT COUNT(id) from  manageDB.userAuditHistory  where sourceType =3  and statusAfter in(5,6)  and createBy =cui.`sysUserId`  and deleted=0
+    <include refid="Base_Column_List" />
+    ) as headAuditCount,
+      (SELECT COUNT(id) from manageDB.userAuditHistory  where sourceType =1  and statusAfter =1  and createBy =cui.`sysUserId`  and deleted=0
+      <include refid="Base_Column_List" />
+      ) as memberSuccessCount,
+      (SELECT COUNT(id) from  manageDB.userAuditHistory  where sourceType =2  and statusAfter =3 and createBy =cui.`sysUserId`  and deleted=0
+      <include refid="Base_Column_List" />
+      ) as idSuccessCount,
+      (SELECT COUNT(id) from  manageDB.truckAuditHistory  where sourceType =1  and statusAfter =1 and createBy =cui.`sysUserId`  and deleted=0
+      <include refid="Base_Column_List" />
+      ) as truckSuccessCount,
+      (SELECT COUNT(id) from manageDB.userAuditHistory  where sourceType =3 and statusAfter =5 and createBy =cui.`sysUserId`  and deleted=0
+      <include refid="Base_Column_List" />
+      ) as headSuccessCount
+
+    from  manageDB.callCenterUserInfo  cui
+    <if test="customerName != null and customerName != ''">
+      where  cui.name =#{customerName}
+    </if>
+    order by cui.id DESC
+    limit #{offset}, #{limit}
+</select>
+  <select id="getCustomerCount" parameterType="com.topjet.manage.domain.bean.CustomerBean" resultType="java.lang.Integer">
+ select
+      COUNT(id)
+     from  manageDB.callCenterUserInfo  cui
+    <if test="customerName != null and customerName != ''">
+      where cui.name =#{customerName}
+    </if>
+  </select>
+
+<sql id="Base_Column_List">
+    <if test="beginDate != null">
+        and createTime &gt;= #{beginDate}
+    </if>
+    <if test="endDate != null">
+        and createTime &lt;= #{endDate}
+    </if>
+</sql>
+
+</mapper>

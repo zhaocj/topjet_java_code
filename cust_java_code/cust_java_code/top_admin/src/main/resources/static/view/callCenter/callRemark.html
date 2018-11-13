@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>呼叫中心通话备注</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="" rel="stylesheet">
+  <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="../../bootstrap/css/bootstrap-table.min.css" rel="stylesheet"/>
+  <link href="../../css/flat-ui.min.css" rel="stylesheet"/>
+  <link href="../../css/easyui.css" rel="stylesheet"/>
+  <link href="../../css/demo.css" rel="stylesheet"/>
+  <link href="../../css/font-awesome.min.css" rel="stylesheet"/>
+  <link href="../../css/jquery.mCustomScrollbar.css" rel="stylesheet"/>
+  <link href="../../css/bootstrap-datetimepicker.css" rel="stylesheet"/>
+  <link href="../../less/modules/buttons.less" rel="stylesheet"/>
+  <link rel="shortcut icon" href="../../img/faviconindex.ico"/>
+  <link href="../../bootstrap/formValidation/formValidation.css"/>
+
+  <script src="../../resource/jquery-1.11.3.min.js"></script>
+  <script src="../../js/common/utils.js"></script>
+  <script src="../../js/bootbox.min.js"></script>
+  <script type="text/javascript" src="../../bootstrap/formValidation/formValidation.js"></script>
+  <script type="text/javascript" src="../../bootstrap/formValidation/bootstrap.js"></script>
+  <script type="text/javascript" src="../../bootstrap/formValidation/validData.js"></script>
+  <script src="../../js/vendor/jquery.easyui.min.js"></script>
+  <script src="../../js/jquery.mCustomScrollbar.concat.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="../../js/flat-ui.min.js"></script>
+  <script src="../../js/application.js"></script>
+  <script src="../../js/bootstrap-datetimepicker.min.js"></script>
+  <script src="../../js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+  <script src="../../js/echarts.min.js"></script>
+  <script src="../../js/common/index.js"></script>
+  <script src="../../js/common/ajaxCall.js"></script>
+</head>
+<body >
+<div class="modal-body  fontsize-14" style="width: 300px;margin: 0 auto;">
+  <form id="myForm">
+    <div class="col-xs-6" style="width: 100% !important;">
+      <div class="form-group">
+        <label>业务类型</label>
+        <select id="businessType" style="width:240px">
+          <option value="">请选择</option>
+          <option value="1">注册认证咨询</option>
+          <option value="2">产品使用操作咨询</option>
+          <option value="3">充值及提现到账咨询</option>
+          <option value="4">运营补贴咨询</option>
+          <option value="5">积分兑换咨询</option>
+          <option value="6">招商代理咨询</option>
+          <option value="7">投诉建议</option>
+          <option value="8">其它咨询</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-6" style="width: 100% !important;">
+      <div class="form-group">
+        <label>通话备注</label>
+          <textarea id="callRemark" class="form-control" placeholder="最多输入150个字符"></textarea>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="clearfix"></div>
+<div class="modal-footer margin-top-15">
+  <button type="button" id="myButton" onclick="submit()" class="btn btn-primary center-block">　提　交　</button>
+</div>
+</div>
+<script type="text/javascript">
+  function submit() {
+      window.close();
+    }
+</script>
+</body>
+</html>

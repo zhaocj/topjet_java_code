@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.writeMapper.UserInfoModelMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.UserInfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="idNo" property="idNo" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="userType" property="userType" jdbcType="TINYINT" />
+    <result column="useStatus" property="useStatus" jdbcType="TINYINT" />
+    <result column="iconStatus" property="iconStatus" jdbcType="TINYINT" />
+    <result column="userAuthStatus" property="userAuthStatus" jdbcType="TINYINT" />
+    <result column="sex" property="sex" jdbcType="TINYINT" />
+    <result column="walletId" property="walletId" jdbcType="INTEGER" />
+    <result column="isGuaranteed" property="isGuaranteed" jdbcType="TINYINT" />
+    <result column="isAnonymous" property="isAnonymous" jdbcType="TINYINT" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, idNo, username, mobile, userType, useStatus, userAuthStatus, iconStatus, sex, walletId, isGuaranteed,
+    isAnonymous, createTime, deleted
+  </sql>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from userDB.userInfo
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+
+  <insert id="insert" parameterType="com.topjet.manage.domain.model.UserInfoModel" >
+    insert into userDB.userInfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="idNo != null" >
+        idNo,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="userType != null" >
+        userType,
+      </if>
+      <if test="useStatus != null" >
+        useStatus,
+      </if>
+      <if test="userAuthStatus != null" >
+        userAuthStatus,
+      </if>
+      <if test="iconStatus != null" >
+        iconStatus,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="walletId != null" >
+        walletId,
+      </if>
+      <if test="isGuaranteed != null" >
+        isGuaranteed,
+      </if>
+      <if test="isAnonymous != null" >
+        isAnonymous,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="idNo != null" >
+        #{idNo,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        #{userType,jdbcType=TINYINT},
+      </if>
+      <if test="useStatus != null" >
+        #{useStatus,jdbcType=TINYINT},
+      </if>
+      <if test="userAuthStatus != null" >
+        #{userAuthStatus,jdbcType=TINYINT},
+      </if>
+      <if test="iconStatus != null" >
+        #{iconStatus,jdbcType=TINYINT},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=TINYINT},
+      </if>
+      <if test="walletId != null" >
+        #{walletId,jdbcType=INTEGER},
+      </if>
+      <if test="isGuaranteed != null" >
+        #{isGuaranteed,jdbcType=TINYINT},
+      </if>
+      <if test="isAnonymous != null" >
+        #{isAnonymous,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.topjet.manage.domain.model.UserInfoModel" >
+    update userDB.userInfo
+    <set >
+      <if test="idNo != null" >
+        idNo = #{idNo,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        userType = #{userType,jdbcType=TINYINT},
+      </if>
+      <if test="useStatus != null" >
+        useStatus = #{useStatus,jdbcType=TINYINT},
+      </if>
+      <if test="userAuthStatus != null" >
+        userAuthStatus = #{userAuthStatus,jdbcType=TINYINT},
+      </if>
+      <if test="iconStatus != null" >
+        iconStatus = #{iconStatus,jdbcType=TINYINT},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=TINYINT},
+      </if>
+      <if test="walletId != null" >
+        walletId = #{walletId,jdbcType=INTEGER},
+      </if>
+      <if test="isGuaranteed != null" >
+        isGuaranteed = #{isGuaranteed,jdbcType=TINYINT},
+      </if>
+      <if test="isAnonymous != null" >
+        isAnonymous = #{isAnonymous,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>

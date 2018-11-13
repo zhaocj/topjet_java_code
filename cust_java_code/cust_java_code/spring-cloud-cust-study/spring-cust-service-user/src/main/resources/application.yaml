@@ -1,0 +1,30 @@
+
+spring:
+  application:
+    name: cust-user-service
+  datasource:
+    url: jdbc:mysql://192.168.8.150:3301/userDB?useUnicode=true&characterEncoding=utf8&usrssl=fales
+    username: appUser
+    password: appUser@566560.com
+  zipkin:
+    base-url: http://192.168.8.163:9411
+#日志收集 100%
+  sleuth:
+    sampler:
+      percentage: 1
+
+#
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://192.168.20.231:8761/eureka/
+      #      defaultZone: http://peer1:8761/eureka/
+#日志级别
+#logging:
+#  level:
+#    com.topjet.cloud.user.service.BasicFeignService: debug
+
+server:
+  port: 3234

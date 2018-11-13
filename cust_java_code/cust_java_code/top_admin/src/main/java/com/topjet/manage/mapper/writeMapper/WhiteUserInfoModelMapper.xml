@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.writeMapper.WhiteUserInfoModelMapper" >
+
+
+
+
+<insert id="insert" parameterType="com.topjet.manage.domain.model.WhiteUserInfoModel">
+   insert into userDB.whiteUser(type,userId,mobile,createBy,createTime)values(#{type},#{userId},#{mobile},#{createBy},#{createTime})
+</insert>
+<update id="update" parameterType="java.lang.Integer" >
+   UPDATE  userDB.whiteUser whu set whu.deleted =1 where  whu.id = #{id}
+</update>
+
+</mapper>

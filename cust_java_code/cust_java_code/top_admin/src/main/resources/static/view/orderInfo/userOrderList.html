@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>订单管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="../../resource/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap.css">
+    <script type="text/javascript" src="../../js/common/modal.js"></script>
+    <script type="text/javascript" src="../../js/common/utils.js"></script>
+    <script type="text/javascript" src="../../js/common/ajaxCall.js"></script>
+    <script type="text/javascript" src="../../js/common/dateformate.js"></script>
+    <script type="text/javascript" src="../../js/common/jquery.cityselect.js"></script>
+    <script type="text/javascript" src="../../js/common/city.min.js"></script>
+    <!-- bootstrap-table 表格-->
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap-table.css">
+    <script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../css/demo.css">
+    <link rel="stylesheet" type="text/css" href="../../less/modules/buttons.less">
+
+    <script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+    <script type="text/javascript" src="../../js/bootbox.min.js"></script>
+
+
+</head>
+<body onresize="auto()">
+<form class="form-inline queryParameters-margin">
+    <div class="fixed-table-toolbar">
+        <div class="navmenu" id="navTitle"><a href="#" onclick="javascript:history.back(-1); return false">用户详情</a> / 订单列表</div>
+        <div class="eachBox ">
+            <ul id="resident99">
+                <li>
+                    <label for="mobile">手机号码：</label>
+                    <input type="text" name="mobile" id="mobile" onkeyup="this.value=this.value.replace(/\D/g,'')"
+                           onafterpaste="this.value=this.value.replace(/\D/g,'')" placeholder="输入手机号">
+                </li>
+                <li>
+                    <label for="orderStatus">订单状态：</label>
+                    <select name="orderStatus" id="orderStatus">
+                        <option value="">请选择</option>
+                        <!--<option value="1">货主取消交易</option>-->
+                        <option value="2">货主确认成交</option>
+                        <option value="3">待支付定金</option>
+                        <option value="4">待支付运费</option>
+                        <option value="5">提货中</option>
+                        <option value="6">承运中</option>
+                        <option value="7">已承运</option>
+                        <option value="8">货主已评司机未评价</option>
+                        <option value="9">司机已评货主未评价</option>
+                        <option value="10">双方已评价</option>
+                        <option value="11">订单已退款</option>
+                        <!--<option value="8">待评价/已签收</option>
+                        <option value="9">货主已评价司机未评价</option>
+                        <option value="10">司机已评价货主未评价</option>
+                        <option value="11">已评价</option>
+                        <option value="12">系统到达提货时间撤销/已过期</option>
+                        <option value="13">货主主动撤销</option>
+                        <option value="14">退款导致的撤销</option>-->
+                    </select>
+                </li>
+            </ul>
+            <div class="clearfix "></div>
+        </div>
+        <div id="toolbar" class="columns columns-left btn-group pull-right">
+            <button type="button" class="btn btn-info btn-sm" onclick="tableQuery();">查询</button>
+        </div>
+    </div>
+</form>
+<table id='table' class="table table-striped table-bordered table-hover table-condensed "></table>
+
+<script type="text/javascript">
+    $(function () {
+        var columns = [
+            {
+                field: 'orderNo',
+                title: '订单号',
+                align: 'center',
+                width:'7%',
+                sortable: true,
+                formatter: function (value, row,index) {
+                    var a = '<a  href="#" onclick="getCommentDetails(\''
+                        + row.id+ '\',\'订单管理\')">'+value+'</a>';
+                    return a;
+                }
+            }, {
+                field: 'createDate',
+                title: '创建时间',
+                sortable: true,
+                width:'10%',
+                align: 'center'
+            }, {
+                field: 'username',
+                title: '创建人',
+                width:'4%',
+                align: 'center',
+                sortable: true,
+                formatter: function (value, row,index) {
+                    var a = '<a  href="#" onclick="modifiedInfo(\''
+                        + row.uid+ '\',\'订单管理\',\'' + row.reditRemark + '\')">'+value+'</a>';
+                    return a;
+                }
+            },{
+                field: 'mobile',
+                title: '手机号',
+                width:'7%',
+                sortable: true,
+                align: 'center'
+            },{
+                field: 'orderStatus',
+                title: '订单状态',
+                width:'10%',
+                sortable: true,
+                align: 'center',
+                formatter: function (value, row) {
+                    if (value == 1) {
+                        return "货主取消交易";
+                    } else if (value == 2) {
+                        return "货主确认成交";
+                    } else if (value == 3) {
+                        return "待支付定金";
+                    } else if (value == 4) {
+                        return "待支付运费";
+                    } else if (value == 5) {
+                        return "提货中";
+                    } else if (value == 6) {
+                        return "承运中";
+                    } else if (value == 7) {
+                        return "已承运";
+                    } else if (value == 8) {
+                        return "货主已评司机未评价";
+                    } else if (value == 9) {
+                        return "司机已评货主未评价";
+                    } else if (value == 10) {
+                        return "双方已评价";
+                    } else if (value == 11) {
+                        return "订单已退款";
+                    }/* else if (value == 12) {
+                     return "系统到达提货时间撤销";
+                     } else if (value == 13) {
+                     return "货主主动撤销";
+                     } else if (value == 14) {
+                     return "退款导致的撤销";
+                     }*/
+                }
+            },{
+                field: 'freightFee',
+                title: '总金额',
+                width:'5%',
+                sortable: true,
+                align: 'center',
+                formatter: function (value, row) {
+                    var freightFee =parseFloat(value).toFixed(2);
+                    return freightFee;
+                }
+            },{
+                field: 'deliveryFee',
+                title: '到付金额(状态) (托管)',
+                sortable: true,
+                width:'8%',
+                align: 'center',
+                formatter: function (value, row) {
+                    var deliveryFeeStatus;
+                    var isDeliveryFeeManaged;
+                    var deliveryFee =parseFloat(value).toFixed(2);
+                    if(row.deliveryFeeStatus==1){
+                        deliveryFeeStatus= "未托管";
+                    }else if(row.deliveryFeeStatus==2){
+                        deliveryFeeStatus= "已托管";
+                    }else if(row.deliveryFeeStatus==3){
+                        deliveryFeeStatus= "已支付";
+                    }else if(row.deliveryFeeStatus==4){
+                        deliveryFeeStatus= "退款中";
+                    }else if(row.deliveryFeeStatus==5){
+                        deliveryFeeStatus= "已退款";
+                    }else{
+                        deliveryFeeStatus= "不托管";
+                    }
+                    if(row.deliveryFeeStatus==0){
+                        isDeliveryFeeManaged="否";
+                    }else{
+                        isDeliveryFeeManaged="是";
+                    }
+                    return deliveryFee+" "+"("+deliveryFeeStatus+")"+" "+"("+isDeliveryFeeManaged+")";
+                }
+            },{
+                field: 'backFee',
+                title: '回单付金额',
+                sortable: true,
+                width:'5%',
+                align: 'center',
+                formatter: function (value, row) {
+                    var backFee =parseFloat(value).toFixed(2);
+                    return backFee;
+                }
+            },{
+                field: 'aheadFee',
+                title: '提付金额 (状态) (托管)',
+                sortable: true,
+                width:'8%',
+                align: 'center',
+                formatter: function (value, row) {
+                    var aheadFeeStatus;
+                    var isAheadFeeManaged;
+                    var aheadFee =parseFloat(value).toFixed(2);
+                    if(row.aheadFeeStatus==1){
+                        aheadFeeStatus= "未托管";
+                    }else if(row.aheadFeeStatus==2){
+                        aheadFeeStatus= "已托管";
+                    }else if(row.aheadFeeStatus==3){
+                        aheadFeeStatus= "已支付";
+                    }else if(row.aheadFeeStatus==4){
+                        aheadFeeStatus= "退款中";
+                    }else if(row.aheadFeeStatus==5){
+                        aheadFeeStatus= "已退款";
+                    }
+                    else{
+                        aheadFeeStatus= "不托管";
+                    }
+                    if(row.aheadFeeStatus==0){
+                        isAheadFeeManaged="否";
+                    }else{
+                        isAheadFeeManaged="是";
+                    }
+                    return aheadFee+"  "+"("+aheadFeeStatus+")"+"  "+"("+isAheadFeeManaged+")";
+                }
+            },{
+                field: 'departCity',
+                title: '提货地址',
+                sortable: true,
+                width:'10%',
+                align: 'center'
+            },{
+                field: 'destinationCity',
+                title: '收货地址',
+                sortable: true,
+                width:'10%',
+                align: 'center'
+            },{
+                field: 'sysName',
+                title: '操作人',
+                width:'7%',
+                sortable: true,
+                align: 'center'
+            },{
+                field: 'isHidden',
+                title: '操作',
+                width:'10%',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    var s = '<button type="button" class="btn btn-primary btn-xs" onclick="getCommentDetails(\''
+                        + row.id+ '\',\'订单管理\')">订单详情</button>&nbsp;'
+                    return s;
+                }
+            }
+        ];
+        getDefaultParams();
+        var url = getRootPath() + '/order/list.do';
+        setTableInfo('table', columns, url, getQueryParams, 'toolbar');
+    })
+    function getQueryParams() {
+        var departCityId = "";
+        var destinationCityId = "";
+        if ($('#resident1').val() != "" && $('#resident1').val() != null) {
+            departCityId = $('#resident1').val();
+        }
+        if ($('#resident2').val() != "" && $('#resident2').val() != null) {
+            departCityId = $('#resident2').val();
+        }
+        if ($('#resident3').val() != "" && $('#resident3').val() != null) {
+            departCityId = $('#resident3').val();
+        }
+        if ($('#resident4').val() != "" && $('#resident4').val() != null) {
+            destinationCityId = $('#resident4').val();
+        }
+        if ($('#resident5').val() != "" && $('#resident5').val() != null) {
+            destinationCityId = $('#resident5').val();
+        }
+        if ($('#resident6').val() != "" && $('#resident6').val() != null) {
+            destinationCityId = $('#resident6').val();
+        }
+        var json = {
+            'mobile': $('#mobile').val(),
+            'orderStatus': $('#orderStatus').val(),
+        };
+        return json;
+    }
+    function shows(userId,version) {
+        bootbox.confirm("是否显示。", function(result) {
+            if(result){
+                var url = getRootPath()+'/order/isHidden.do';
+                var data={'id':userId,"version":version,'isHidden':0};
+                $.ajaxDefaultCall(url,data,function () {
+                    $tableDom.bootstrapTable('refresh');
+                });
+            }
+        });
+    };
+    function doshows(userId,version) {
+        bootbox.confirm("是否隐藏。", function(result) {
+            if(result){
+                var url = getRootPath()+'/order/isHidden.do';
+                var data={'id':userId,"version":version,'isHidden':1};
+                $.ajaxDefaultCall(url,data,function () {
+                    $tableDom.bootstrapTable('refresh');
+                });
+            }
+        });
+    };
+
+    function getDefaultParams() {
+        var param = window.location.search;
+        var mobile = param.split("=")[1];
+        $("#mobile").val(mobile);
+    };
+
+
+
+
+
+
+    //自适应高度方法
+    function auto() {
+        $("#contentmenu").css("height", window_h = $(window).height() - 53);
+        if ($(".iframeId").length > 0) {
+            $(".iframeId").css("height", window_h = $(window).height() - 98);
+        }
+    }
+    $(window).resize(function () {
+        auto()
+    });
+    $("#resident98").citySelect({
+        prov: '',
+        city: ''
+    });
+    $("#resident99").citySelect({
+        prov: '',
+        city: ''
+    });
+</script>
+</body>
+</html>

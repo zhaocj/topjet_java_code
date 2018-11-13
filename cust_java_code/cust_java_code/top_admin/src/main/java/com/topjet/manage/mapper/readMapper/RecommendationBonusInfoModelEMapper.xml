@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.RecommendationBonusInfoModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.RecommendationBonusInfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="recommendationId" property="recommendationId" jdbcType="INTEGER" />
+    <result column="userId" property="userId" jdbcType="INTEGER" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="auditProcess" property="auditProcess" jdbcType="TINYINT" />
+    <result column="auditStatus" property="auditStatus" jdbcType="TINYINT" />
+    <result column="settingId" property="settingId" jdbcType="INTEGER" />
+    <result column="firstCallCount" property="firstCallCount" jdbcType="TINYINT" />
+    <result column="secondCallCount" property="secondCallCount" jdbcType="TINYINT" />
+    <result column="pendingCallCount" property="pendingCallCount" jdbcType="TINYINT" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="version" property="version" jdbcType="SMALLINT" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, recommendationId, userId, amount, auditProcess, auditStatus,
+    settingId, firstCallCount, secondCallCount, pendingCallCount, createTime, version, 
+    deleted
+  </sql>
+
+  <sql id="Criteria_where_clause">
+    <where>
+      <if test="id != null" >
+        and id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="recommendationId != null" >
+        and recommendationId = #{recommendationId,jdbcType=INTEGER}
+      </if>
+      <if test="userId != null" >
+        and userId = #{userId,jdbcType=INTEGER}
+      </if>
+      <if test="amount != null" >
+        and amount = #{amount,jdbcType=DECIMAL}
+      </if>
+      <if test="auditProcess != null" >
+        and auditProcess = #{auditProcess,jdbcType=TINYINT}
+      </if>
+      <if test="auditStatus != null" >
+        and auditStatus = #{auditStatus,jdbcType=TINYINT}
+      </if>
+      <if test="settingId != null" >
+        and settingId = #{settingId,jdbcType=INTEGER}
+      </if>
+      <if test="firstCallCount != null" >
+        and firstCallCount = #{firstCallCount,jdbcType=TINYINT}
+      </if>
+      <if test="secondCallCount != null" >
+        and secondCallCount = #{secondCallCount,jdbcType=TINYINT}
+      </if>
+      <if test="pendingCallCount != null" >
+        and pendingCallCount = #{pendingCallCount,jdbcType=TINYINT}
+      </if>
+      <if test="createTime != null" >
+        and createTime = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="version != null" >
+        and version = #{version,jdbcType=SMALLINT}
+      </if>
+      <if test="deleted != null" >
+        and deleted = #{deleted,jdbcType=TINYINT}
+      </if>
+    </where>
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from manageDB.recommendationBonusInfo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+
+
+  <!-- 查询条件 -->
+  <sql id="Example_Where_Clause">
+    WHERE 1=1 and rbi.deleted=0 AND rr.deleted=0
+    AND ur.deleted=0 AND
+    urd.deleted=0
+    <trim suffixOverrides=",">
+      <if test="startTime != null and startTime != ''">
+        and DATE_FORMAT(rbi.createTime,'%Y-%m-%d') &gt;=
+        DATE_FORMAT(#{startTime},'%Y-%m-%d')
+      </if>
+      <if test="endTime != null and endTime != ''">
+        and DATE_FORMAT(rbi.createTime,'%Y-%m-%d') &lt;=
+        DATE_FORMAT(#{endTime},'%Y-%m-%d')
+      </if>
+      <if test="recommendMobile != null and recommendMobile != ''">
+        and rr.recommendMobile = #{recommendMobile}
+      </if>
+      <if test="recommendedMobile != null and recommendedMobile != ''">
+        and rr.recommendedMobile= #{recommendedMobile}
+      </if>
+      <if test="recommendedIMEI != null and recommendedIMEI != ''">
+        and uoi.registeredIMEI = #{recommendedIMEI}
+      </if>
+      and rbi.auditStatus = #{auditStatus}
+      <if test="isValid != null and isValid != '' and isValid==1">
+        and urd.id in (select uur.id from userDB.userInfo uur where uur.id = urd.id and ((uur.userType = 1 AND (SELECT  COUNT(*) FROM truckDB.`driverTruckInfo`  WHERE driverId = uur.id AND auditStatus = 2)>0 )
+        OR (urd.userType = 2  AND (SELECT (SELECT COUNT(id) FROM orderDB.goodsInfo where userId = uur.id)) >0)))
+      </if>
+      <if test="isValid != null and isValid != '' and isValid==0">
+        and   urd.id not in (select uur.id from userDB.userInfo uur where uur.id = urd.id and ((uur.userType = 1  AND (SELECT  COUNT(*) FROM truckDB.`driverTruckInfo`  WHERE driverId = uur.id AND auditStatus = 2)>0 )
+        OR (urd.userType = 2  AND (SELECT (SELECT COUNT(id) FROM orderDB.goodsInfo where userId = uur.id))>0)))
+      </if>
+      <if test="isFirstCallCount != null and isFirstCallCount != '' and isFirstCallCount==0">
+        and rbi.firstCallCount =0
+      </if>
+      <if test="isFirstCallCount != null and isFirstCallCount != '' and isFirstCallCount==1">
+        and rbi.firstCallCount > 0
+      </if>
+      <if test="isSecondCallCount != null and isSecondCallCount != '' and isSecondCallCount==0">
+        and rbi.secondCallCount =0
+      </if>
+      <if test="isSecondCallCount != null and isSecondCallCount != '' and isSecondCallCount==1">
+        and rbi.secondCallCount > 0
+      </if>
+      <if test="flag != null and flag != '' and flag == 1">
+        <choose>
+          <when test="auditCycle != null and auditCycle != '' and auditCycle == 1">
+            and rbi.id in (select ti.sourceId from manageDB.taskInfo ti left join manageDB.taskBucketInfo tb on ti.bucketId = tb.id where tb.deleted = 0 and tb.invalid = 1 and tb.TYPE = 8 and tb.sysUserId =#{sysUserId} )
+          </when>
+          <when test="auditCycle != null and auditCycle != '' and auditCycle ==2">
+            and rbi.id in (select ti.sourceId from manageDB.taskInfo ti left join manageDB.taskBucketInfo tb on ti.bucketId = tb.id where tb.deleted = 0 and tb.invalid = 1 and tb.TYPE = 9 and tb.sysUserId =#{sysUserId} )
+          </when>
+        </choose>
+      </if>
+      <if test="auditName != null and auditName != ''">
+        and aa.auditName = #{auditName}
+      </if>
+    </trim>
+  </sql>
+
+
+  <!-- 查询条件 -->
+  <sql id="Example_Where_Clause1">
+    WHERE 1=1 and rbi.deleted=0 AND rr.deleted=0
+    AND ur.deleted=0 AND
+    urd.deleted=0
+    <trim suffixOverrides=",">
+      <if test="startTime != null and startTime != ''">
+        and DATE_FORMAT(rbi.createTime,'%Y-%m-%d') &gt;=
+        DATE_FORMAT(#{startTime},'%Y-%m-%d')
+      </if>
+      <if test="endTime != null and endTime != ''">
+        and DATE_FORMAT(rbi.createTime,'%Y-%m-%d') &lt;=
+        DATE_FORMAT(#{endTime},'%Y-%m-%d')
+      </if>
+      <if test="recommendMobile != null and recommendMobile != ''">
+        and rr.recommendMobile = #{recommendMobile}
+      </if>
+      <if test="recommendedMobile != null and recommendedMobile != ''">
+        and rr.recommendedMobile= #{recommendedMobile}
+      </if>
+      <if test="recommendedIMEI != null and recommendedIMEI != ''">
+        and uoi.registeredIMEI = #{recommendedIMEI}
+      </if>
+      <choose>
+        <when test="auditStatus ==0">
+          and rbi.auditStatus in(1,2,3)
+        </when>
+        <when test="auditStatus !=0">
+          and rbi.auditStatus = #{auditStatus}
+        </when>
+      </choose>
+      <if test="isValid != null and isValid != '' and isValid==1">
+        and urd.id in (select uur.id from userDB.userInfo uur where uur.id = urd.id and ((uur.userType = 1 AND (SELECT  COUNT(*) FROM truckDB.`driverTruckInfo`  WHERE driverId = uur.id AND auditStatus = 2)>0 )
+        OR (urd.userType = 2  AND (SELECT (SELECT COUNT(id) FROM orderDB.goodsInfo where userId = uur.id)) >0)))
+      </if>
+      <if test="isValid != null and isValid != '' and isValid==0">
+        and urd.id not in (select uur.id from userDB.userInfo uur where uur.id = urd.id and ((uur.userType = 1  AND (SELECT  COUNT(*) FROM truckDB.`driverTruckInfo`  WHERE driverId = uur.id AND auditStatus = 2)>0 )
+        OR (urd.userType = 2  AND (SELECT (SELECT COUNT(id) FROM orderDB.`` where userId = uur.id))>0)))
+      </if>
+      <if test="isFirstCallCount != null and isFirstCallCount != '' and isFirstCallCount==0">
+        and rbi.firstCallCount =0
+      </if>
+      <if test="isFirstCallCount != null and isFirstCallCount != '' and isFirstCallCount==1">
+        and rbi.firstCallCount > 0
+      </if>
+      <if test="isSecondCallCount != null and isSecondCallCount != '' and isSecondCallCount==0">
+        and rbi.secondCallCount =0
+      </if>
+      <if test="isSecondCallCount != null and isSecondCallCount != '' and isSecondCallCount==1">
+        and rbi.secondCallCount > 0
+      </if>
+      <if test="flag != null and flag != '' and flag == 1">
+        <choose>
+          <when test="auditCycle != null and auditCycle != '' and auditCycle == 1">
+            and rbi.id in (select ti.sourceId from taskInfo ti left join manageDB.taskBucketInfo tb on ti.bucketId = tb.id where tb.deleted = 0 and tb.invalid = 1 and tb.TYPE = 8 and tb.sysUserId =#{sysUserId} )
+          </when>
+          <when test="auditCycle != null and auditCycle != '' and auditCycle ==2">
+            and rbi.id in (select ti.sourceId from taskInfo ti left join manageDB.taskBucketInfo tb on ti.bucketId = tb.id where tb.deleted = 0 and tb.invalid = 1 and tb.TYPE = 9 and tb.sysUserId =#{sysUserId} )
+          </when>
+        </choose>
+      </if>
+      <if test="auditName != null and auditName != ''">
+        and aa.auditName = #{auditName}
+      </if>
+    </trim>
+  </sql>
+
+
+  <select id="listRecommendationBonusInfo" resultType="com.topjet.manage.domain.bean.RecommendationBonusBean" parameterType="Object">
+    SELECT DISTINCT
+    rbi.createTime AS createTime,
+    rbi.auditProcess AS auditProcess,
+    rbi.auditStatus AS auditStatus,
+    rbi.version as version,
+    rbi.id as id,
+    rbi.firstCallCount as firstCallCount,
+    rbi.secondCallCount as secondCallCount,
+    rr.recommendedMobile AS recommendedMobile,
+    rr.recommendMobile AS recommendMobile,
+    urd.username AS recommendedName,
+    urd.idNo AS recommendedIdNo,
+    uoi.registeredIMEI AS recommendedIMEI,
+    ur.username AS recommendName,
+    tb.name AS assignName,
+    (select remark from manageDB.userAuditHistory where id = (select MAX(id) from manageDB.userAuditHistory WHERE sourceType = 5 AND sourceId = rbi.id)) AS firstAuditRemark,
+    (select statusAfter from manageDB.userAuditHistory where id = (select MAX(id) from manageDB.userAuditHistory WHERE sourceType = 5 AND sourceId = rbi.id)) AS firstAuditStatus,
+    (select auditName from manageDB.userAuditHistory where id = (select MAX(id) from manageDB.userAuditHistory WHERE sourceType = 5 AND sourceId = rbi.id)) AS firstAuditUser,
+    rr.recommendUserId,rr.recommendedUserId,
+    urd.userType AS userType,
+    CASE  WHEN urd.userType = 1  AND (SELECT COUNT(*) FROM truckDB.`driverTruckInfo`  WHERE driverId = urd.id AND auditStatus = 2) THEN 1
+    WHEN urd.userType = 2 AND (select (SELECT COUNT(id) FROM orderDB.goodsInfo where userId = urd.id)) THEN 1 ELSE 0 END AS isValid
+    FROM manageDB.recommendationBonusInfo rbi
+    LEFT JOIN userDB.recommendRelationship rr ON rr.id=rbi.recommendationId
+    LEFT JOIN userDB.userInfo ur ON ur.id=rr.recommendUserId
+    LEFT JOIN userDB.userInfo urd ON urd.id=rr.recommendedUserId
+    LEFT JOIN userDB.userOtherInfo uoi ON urd.id = uoi.userId
+    <if test="auditCycle != null and auditCycle != '' and auditCycle == 1">
+      LEFT JOIN manageDB.taskInfo ti on ti.sourceId = rbi.id and ti.type = 8 and ti.deleted = 0 LEFT JOIN manageDB.taskBucketInfo tb on tb.id = ti.bucketId and tb.deleted = 0
+    </if>
+    <if test="auditCycle != null and auditCycle != '' and auditCycle == 2">
+      LEFT JOIN manageDB.taskInfo ti on ti.sourceId = rbi.id and ti.type = 9 and ti.deleted = 0 LEFT JOIN manageDB.taskBucketInfo tb on tb.id = ti.bucketId and tb.deleted = 0
+    </if>
+    <include refid="Example_Where_Clause" />
+    order by rbi.id desc
+    limit #{offset}, #{limit}
+  </select>
+
+
+  <select id="listRecommendationBonusInfos" resultType="com.topjet.manage.domain.bean.RecommendationBonusBean" parameterType="Object">
+    SELECT DISTINCT
+    rbi.createTime AS createTime,
+    rbi.auditProcess AS auditProcess,
+    rbi.auditStatus AS auditStatus,
+    rbi.version as version,
+    rbi.id as id,
+    rbi.firstCallCount as firstCallCount,
+    rbi.secondCallCount as secondCallCount,
+    rr.recommendedMobile AS recommendedMobile,
+    rr.recommendMobile AS recommendMobile,
+    urd.username AS recommendedName,
+    urd.idNo AS recommendedIdNo,
+    uoi.registeredIMEI AS recommendedIMEI,
+    ur.username AS recommendName,
+    tb.name AS assignName,
+    (select remark from manageDB.userAuditHistory where id = (select MAX(id) from manageDB.userAuditHistory WHERE sourceType = 5 AND sourceId = rbi.id)) AS firstAuditRemark,
+    (select statusAfter from manageDB.userAuditHistory where id = (select MAX(id) from manageDB.userAuditHistory WHERE sourceType = 5 AND sourceId = rbi.id)) AS firstAuditStatus,
+    (select auditName from manageDB.userAuditHistory where id = (select MAX(id) from manageDB.userAuditHistory WHERE sourceType = 5 AND sourceId = rbi.id)) AS firstAuditUser,
+    (select statusAfter from manageDB.userAuditHistory where id = (select MAX(id) from manageDB.userAuditHistory WHERE sourceType = 6 AND sourceId = rbi.id)) AS secondAuditStatus,
+    (select remark from manageDB.userAuditHistory where id = (select MAX(id) from manageDB.userAuditHistory WHERE sourceType = 6 AND sourceId = rbi.id)) AS secondAuditRemark,
+    (select auditName from manageDB.userAuditHistory where id = (select MAX(id) from manageDB.userAuditHistory WHERE sourceType = 6 AND sourceId = rbi.id)) AS secondAuditUser,
+    rr.recommendUserId,rr.recommendedUserId,
+    urd.userType AS userType,
+    CASE  WHEN urd.userType = 1  AND (SELECT COUNT(*) FROM truckDB.`driverTruckInfo`  WHERE driverId = urd.id AND auditStatus = 2) THEN 1
+    WHEN urd.userType = 2 AND (select (SELECT COUNT(id) FROM orderDB.goodsInfo where userId = urd.id)) THEN 1 ELSE 0 END AS isValid
+    FROM recommendationBonusInfo rbi
+    LEFT JOIN userDB.recommendRelationship rr ON rr.id=rbi.recommendationId
+    LEFT JOIN userDB.userInfo ur ON ur.id=rr.recommendUserId
+    LEFT JOIN userDB.userInfo urd ON urd.id=rr.recommendedUserId
+    LEFT JOIN userDB.userOtherInfo uoi ON urd.id = uoi.userId
+    <if test="auditCycle != null and auditCycle != '' and auditCycle == 1">
+      LEFT JOIN manageDB.taskInfo ti on ti.sourceId = rbi.id and ti.type = 8 and ti.deleted = 0 LEFT JOIN manageDB.taskBucketInfo tb on tb.id = ti.bucketId and tb.deleted = 0
+    </if>
+    <if test="auditCycle != null and auditCycle != '' and auditCycle == 2">
+      LEFT JOIN manageDB.taskInfo ti on ti.sourceId = rbi.id and ti.type = 9 and ti.deleted = 0 LEFT JOIN manageDB.taskBucketInfo tb on tb.id = ti.bucketId and tb.deleted = 0
+    </if>
+    <include refid="Example_Where_Clause1" />
+    order by rbi.id desc
+    limit #{offset}, #{limit}
+  </select>
+
+
+  <select id="countRecommendationBonusInfo" resultType="java.lang.Integer" parameterType="Object">
+    select count(DISTINCT rbi.id)
+    FROM
+    manageDB.recommendationBonusInfo rbi
+    LEFT JOIN userDB.recommendRelationship rr ON rr.id=rbi.recommendationId
+    LEFT JOIN userDB.userInfo ur ON ur.id=rr.recommendUserId
+    LEFT JOIN userDB.userInfo urd ON urd.id=rr.recommendedUserId
+    <include refid="Example_Where_Clause" />
+  </select>
+
+
+  <select id="countRecommendationBonusInfos" resultType="java.lang.Integer" parameterType="Object">
+    select count(DISTINCT rbi.id)
+    FROM
+    manageDB.recommendationBonusInfo rbi
+    LEFT JOIN userDB.recommendRelationship rr ON rr.id=rbi.recommendationId
+    LEFT JOIN userDB.userInfo ur ON ur.id=rr.recommendUserId
+    LEFT JOIN userDB.userInfo urd ON urd.id=rr.recommendedUserId
+    <include refid="Example_Where_Clause1" />
+  </select>
+
+  <select id="selectListByEntity" parameterType="com.topjet.manage.domain.model.RecommendationBonusInfoModel" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    from manageDB.recommendationBonusInfo
+    <include refid="Criteria_where_clause" />
+    order by id desc
+  </select>
+  
+  <!--推荐补贴管理列表-->
+  <select id="getRecommendationBonusList" parameterType="com.topjet.manage.domain.vo.RecommendationBonusListQuery"
+          resultType="com.topjet.manage.domain.vo.RecommendationBonusListVO">
+    select DISTINCT rb.id,
+    rb.version,
+    DATE_FORMAT(rb.createTime, '%Y-%m-%d') AS createDate,
+    u.username AS recommendName,
+    u.`id` AS recommendId,
+    u.mobile AS recommendMobile,
+    ue.username AS recommendedName,
+    ue.`id` AS recommendedId,
+    ue.mobile AS recommendedMobile,
+    ui.registeredIMEI AS recommendedIEMI,
+    rb.auditStatus as auditStatus,
+    (select uh1.remark from manageDB.userAuditHistory uh1 WHERE rb.id = uh1.sourceId  and uh1.sourceType = 5 and uh1.deleted = 0 LIMIT 1) AS firstAutidRemark,
+    (select uh1.statusAfter from manageDB.userAuditHistory uh1 WHERE rb.id = uh1.sourceId  and uh1.sourceType = 5 and uh1.deleted = 0 LIMIT 1) AS firstAuditStatus,
+    (select uh1.auditName from manageDB.userAuditHistory uh1 WHERE rb.id = uh1.sourceId  and uh1.sourceType = 5 and uh1.deleted = 0 LIMIT 1) AS firstAuditUserName,
+    (SELECT uh2.statusAfter from manageDB.userAuditHistory uh2 WHERE rb.id = uh2.sourceId and uh2.sourceType = 6 and uh2.deleted = 0 LIMIT 1)AS secondAuditStatus,
+    (SELECT uh2.remark from manageDB.userAuditHistory uh2 WHERE rb.id = uh2.sourceId and uh2.sourceType = 6 and uh2.deleted = 0 LIMIT 1)AS secondAuditRemark,
+    (SELECT uh2.auditName from manageDB.userAuditHistory uh2 WHERE rb.id = uh2.sourceId and uh2.sourceType = 6 and uh2.deleted = 0 LIMIT 1)AS secondAuditUserName,
+    ue.userType AS userType,
+    CASE  WHEN ue.userType = 1 AND (SELECT  COUNT(dt.id) FROM truckDB.driverTruckInfo dt  WHERE dt.driverId = ue.id AND dt.auditStatus = 2) THEN 1
+    WHEN (ue.userType = 2 or ue.userType = 3 or ue.userType = 4)
+    AND (select (select count(*) from orderDB.orderInfo where ownerId=ue.id)) THEN 1 ELSE 0 END AS isValid,
+    IFNULL((SELECT ush.remark from manageDB.userAuditHistory ush WHERE u.id = ush.sourceId LIMIT 1),"")AS reditRemark,
+    aa.auditName as auditName
+    <include refid="getRecommendationBonusListSql"/>
+    GROUP BY rb.id
+    order by rb.id DESC
+    limit #{offset},#{limit}
+  </select>
+
+  <!-- 推荐补贴管理total数 -->
+  <select id="getRecommendationBonusListCount" parameterType="com.topjet.manage.domain.vo.RecommendationBonusListQuery"
+          resultType="java.lang.Integer">
+    SELECT
+    count(DISTINCT rb.id)
+    <include refid="getRecommendationBonusListSql"/>
+  </select>
+
+
+  <sql id="getRecommendationBonusListSql">
+    FROM
+    manageDB.recommendationBonusInfo rb
+    LEFT JOIN userDB.recommendRelationship rs ON rb.recommendationId = rs.id
+    LEFT JOIN userDB.userInfo u ON rs.recommendUserId = u.id
+    LEFT JOIN userDB.userInfo ue ON rs.recommendedUserId = ue.id
+    LEFT JOIN userDB.userOtherInfo ui on ui.userId = ue.id
+    LEFT JOIN manageDB.userAuditHistory aa on aa.sourceId = rb.id
+    WHERE 1=1 AND
+    rb.deleted = 0
+    AND rs.deleted = 0
+    AND u.deleted = 0
+    AND ue.deleted = 0
+    <trim suffixOverrides=",">
+      <if test="recommendMobile != null and recommendMobile != ''">
+        AND  u.mobile=#{recommendMobile}
+      </if>
+      <if test="recommendedMobile != null and recommendedMobile != ''">
+        AND  ue.mobile=#{recommendedMobile}
+      </if>
+      <if test="startDate != null">
+        and DATE_FORMAT(rb.createTime,'%Y-%m-%d') &gt;=
+        DATE_FORMAT(#{startDate},'%Y-%m-%d')
+      </if>
+      <if test="endDate != null">
+        and DATE_FORMAT(rb.createTime,'%Y-%m-%d') &lt;=
+        DATE_FORMAT(#{endDate},'%Y-%m-%d')
+      </if>
+      <if test="recommendedIEMI != null and recommendedIEMI != ''">
+        AND  ui.registeredIMEI=#{recommendedIEMI}
+      </if>
+      <if test="firstAuditStatus != null and firstAuditStatus != ''">
+        AND aa.statusAfter=#{firstAuditStatus}
+      </if>
+      <if test="firstAuditStatus == 0">
+        AND aa.statusAfter=#{firstAuditStatus}
+      </if>
+      <if test="secondAuditStatus != null and secondAuditStatus != ''">
+        AND aa.statusAfter=#{secondAuditStatus}
+      </if>
+      <if test="auditName != null and auditName != ''">
+        AND aa.auditName = #{auditName} AND  aa.sourceType in (5,6)
+      </if>
+      <if test="isValid != null and isValid != '' and isValid==1">
+        and ue.id in (select uur.id from userDB.userInfo uur where uur.id = ue.id and ((uur.userType = 1 AND (SELECT  COUNT(*) FROM truckDB.driverTruckInfo df  WHERE df.driverId = uur.id AND df.auditStatus = 2)>0 )
+        OR ((uur.userType = 2 or uur.userType = 3 or uur.userType = 4) AND (select (select count(*) from orderDB.orderInfo od where od.ownerId=uur.id))>0)))
+      </if>
+      <if test="isValid != null and isValid != '' and isValid==0">
+        and ue.id not in (select uur.id from userDB.userInfo uur where uur.id = ue.id and ((uur.userType = 1 AND (SELECT  COUNT(*) FROM truckDB.driverTruckInfo df  WHERE df.driverId = uur.id AND df.auditStatus = 2)>0 )
+        OR ((uur.userType = 2 or uur.userType = 3 or uur.userType = 4) AND (select (select count(*) from orderDB.orderInfo od where od.ownerId=uur.id))>0)))
+      </if>
+    </trim>
+  </sql>
+
+
+
+  <!--待确认推荐补贴回访list -->
+  <select id="queryByPendingList" resultType="com.topjet.manage.domain.bean.RecommendationBonusBean" parameterType="Object">
+    SELECT DISTINCT
+    rbi.createTime AS createTime,
+    rbi.version as version,
+    rbi.id as id,
+    rbi.auditStatus AS auditStatus,
+    rr.recommendedMobile AS recommendedMobile,
+    rr.recommendMobile AS recommendMobile,
+    urd.username AS recommendedName,
+    uoi.registeredIMEI AS recommendedIMEI,
+    ur.username AS recommendName,
+    (select remark from manageDB.userAuditHistory where id = (select MAX(id) from manageDB.userAuditHistory WHERE sourceType = 5 AND sourceId = rbi.id)) AS firstAuditRemark,
+    (select statusAfter from manageDB.userAuditHistory where id = (select MAX(id) from manageDB.userAuditHistory WHERE sourceType = 5 AND sourceId = rbi.id)) AS firstAuditStatus,
+    (select auditName from manageDB.userAuditHistory where id = (select MAX(id) from manageDB.userAuditHistory WHERE sourceType = 5 AND sourceId = rbi.id)) AS firstAuditUser,
+    (select statusAfter from manageDB.userAuditHistory where id = (select MAX(id) from manageDB.userAuditHistory WHERE sourceType = 6 AND sourceId = rbi.id)) AS secondAuditStatus,
+    (select remark from manageDB.userAuditHistory where id = (select MAX(id) from manageDB.userAuditHistory WHERE sourceType = 6 AND sourceId = rbi.id)) AS secondAuditRemark,
+    (select auditName from manageDB.userAuditHistory where id = (select MAX(id) from manageDB.userAuditHistory WHERE sourceType = 6 AND sourceId = rbi.id)) AS secondAuditUser,
+    (select statusAfter from manageDB.userAuditHistory where id = (select MAX(id) from manageDB.userAuditHistory WHERE sourceType = 7 AND sourceId = rbi.id)) AS thirdAuditStatus,
+    (select remark from manageDB.userAuditHistory where id = (select MAX(id) from manageDB.userAuditHistory WHERE sourceType = 7 AND sourceId = rbi.id)) AS thirdAuditRemark,
+    (select createBy from manageDB.userAuditHistory where id = (select MAX(id) from manageDB.userAuditHistory WHERE sourceType = 7 AND sourceId = rbi.id)) AS thirdAuditUser,
+    rbi.firstCallCount,
+    rbi.secondCallCount,
+    rbi.pendingCallCount,
+    rr.recommendUserId,rr.recommendedUserId,
+    urd.userType AS userType,
+    aa.auditName,
+    CASE  WHEN urd.userType = 1  AND (SELECT  COUNT(*) FROM truckDB.`driverTruckInfo`  WHERE driverId = urd.id AND auditStatus = 2) THEN 1
+    WHEN urd.userType = 2  AND (select (SELECT COUNT(id) FROM orderDB.goodsInfo where userId = urd.id)) THEN 1 ELSE 0 END AS isValid
+    FROM
+    manageDB.recommendationBonusInfo rbi
+    LEFT JOIN userDB.recommendRelationship rr ON rr.id=rbi.recommendationId
+    LEFT JOIN userDB.userInfo ur ON ur.id=rr.recommendUserId
+    LEFT JOIN userDB.userInfo urd ON urd.id=rr.recommendedUserId
+    LEFT JOIN userDB.userOtherInfo uoi ON ur.id = uoi.userId
+    LEFT JOIN manageDB.userAuditHistory aa on aa.sourceId = rbi.id
+    <include refid="Example_Where_Clause" />
+    GROUP BY rbi.id
+    order by rbi.id desc
+    limit #{offset}, #{limit}
+  </select>
+
+  <!--待确认推荐补贴回访count -->
+  <select id="queryByPendingCount" resultType="java.lang.Integer" parameterType="Object">
+    select count(DISTINCT rbi.id)
+    FROM manageDB.recommendationBonusInfo rbi
+    LEFT JOIN userDB.recommendRelationship rr ON rr.id=rbi.recommendationId
+    LEFT JOIN userDB.userInfo ur ON ur.id=rr.recommendUserId
+    LEFT JOIN userDB.userInfo urd ON urd.id=rr.recommendedUserId
+    LEFT JOIN manageDB.userAuditHistory aa on aa.sourceId = rbi.id
+    <include refid="Example_Where_Clause" />
+    and rbi.auditStatus = 5
+  </select>
+
+</mapper>

@@ -1,0 +1,216 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>交运配货网后台</title>
+<link href="../../css/login.css" rel="stylesheet" type="text/css" />
+<script src="../../js/vendor/jquery.min.js"></script>
+<script src="../../js/common/utils.js"></script>
+<script type="text/javascript" src="../../resource/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="../../bootstrap/js/bootstrap.js"></script>
+<link rel="stylesheet" type="text/css" href="../../resource/bootstrap.css"/>
+ <script src="../../bootstrap/formValidation/formValidation.js"></script>
+  <script src="../../bootstrap/formValidation/bootstrap.js"></script>
+  <script src="../../bootstrap/formValidation/validData.js"></script>
+  <link href="../../bootstrap/formValidation/formValidation.css" rel="stylesheet"/>
+<link rel="stylesheet" type="text/css" href="../../less/modules/buttons.less">
+	<script type="text/javascript" src="../../js/bootbox.min.js"></script>
+</head>
+
+<body>
+<img id="bg" class="bg" src="../../img/login/login_bg.png" />
+<div>
+	<div class="log_web_width log_content">
+		<div id="logoContent" class="log_title">
+			<img src="../../img/login/code0_indexLogo.png" id="indexLogo" style="height: 114px;">
+			<span id="systemName"></span>
+		</div>
+		
+		 <form class="form-inline" method="post" id="loginFromId">
+			<div class="log_input" title="用户名">
+				<span class="png log_ico log_ico_acnt"></span>
+				<input id="userNameId" name="userName" type="text" value="" placeholder="用户名"/>
+			</div>
+			<div class="log_input" title="密码">
+				<span class="png log_ico log_ico_pwd"></span>
+				<input id="password" name="password" type="password" value="" placeholder="请输入密码" />
+			</div>
+			<!--<input name="login" type="button" id="myButton" value="登录" class="log_submit" onclick="login();" />-->
+			 <button type="button" id="myButton" class="log_submit" onclick="login()" data-loading-text="loading..." autocomplete="off">登录</button>
+			<div style="clear:both;"></div>
+		</form> 
+	</div>
+	<div class="log_footer">
+		<div id="footer" class="log_web_width log_footer_in">上海拓景信息科技有限公司</div>
+	</div>
+</div>
+
+<div class="modal fade" id="dynamicpasswordModal">
+  <div class="modal-dialog">
+    <div class="modal-content" style="background-color: rgba(13, 10, 23, 0.3);">
+    	<div class="modal-header">
+		  <h4 class="modal-title" style="color: #2484de">560动态密码</h4>
+		</div>
+		 <form class="form-inline" method="post" id="verfiedPasswordFormId">
+		  <div class="modal-body text-center">
+			  <img id="dynamicpasswordRQPicture" src=""  width="150" height="150" alt="动态密码二维码,请必须先扫描绑定!" >
+			  <p>
+		    <div class="form-group" >
+			    <label for="RQCodeId"></label>
+			    <input type="password" class="form-control" name="RQCode" id="RQCodeId" placeholder="请输入动态密码"  required>
+		 	 </div>
+		  </div>
+		  <div class="modal-footer">
+		       <button type="button" id="myButton2" class="btn btn-lg btn-block" style="background-color: #2484de" data-loading-text="loading..." onclick="verfiedPassword()" autocomplete="off">确定</button>
+		  </div>
+		</form>
+    </div>
+  </div>
+</div>
+<input type="hidden" id="flag" value="1"/>
+<script type="text/javascript">
+
+	$(function(){
+		$(this).keydown(function(e){
+			if(e.keyCode == 13){
+				if($('#flag').val()=="1"){
+					login();
+					return false;
+				}
+				if($('#flag').val()=="2"){
+					verfiedPassword();
+					return false;
+				}
+				if($('#flag').val()=="3"){
+					$('#flag').val("1");
+				}
+				if($('#flag').val()=="4"){
+					$('#flag').val("2")
+				}
+			}
+		});
+	});
+
+	function login(){
+		var bt=$('#myButton').button('loading');
+		if(!$.topjectIsValidate('loginFromId')){
+			bt.button('reset');
+			return;
+		}
+		var url = getRootPath()+'/login/login.do';
+		$.ajax({
+			type:"POST",
+			contentType: "application/x-www-form-urlencoded;charset=utf-8",
+			url:url,
+			data:$('#loginFromId').serialize(),
+			dataType:"json",
+			cache:false,
+			ansyc:false,
+			traditional:true,
+			success:function(result){
+				if (isNull(result.status)|| result.status=="02") {
+					if (result.msgs == "1") {
+						$('#flag').val("2")
+						$('#loginModal').modal('hide');
+						$('#dynamicpasswordRQPicture').css('display','none');
+						openModal('dynamicpasswordModal');
+					}
+					if (result.msgs == "0") {
+						$('#loginModal').modal('hide');
+                        $('#dynamicpasswordRQPicture').css('display','none');
+//						$("#dynamicpasswordRQPicture").attr("src",result.RQCode);
+						openModal('dynamicpasswordModal');
+					}
+
+					if (result.msgs == "2") {
+						bootbox.alert({
+						 size : 'small',
+						 message :"动态密保服务器异常,请联系管理员!",
+						 });
+						bt.button('reset');
+					}
+					if (isNull(result.msgs) && isNull(result.RQCode)) {
+						window.location = getRootPath()+"/login/main.do";
+					}
+				} else {
+					$('#flag').val("3");
+					bootbox.alert({
+					 size : 'larger',
+					 message :result.msg,
+					 });
+					bt.button('reset');
+
+				}
+			},
+			error:function()
+			{
+			}
+		});
+	}
+
+
+function verfiedPassword(){
+	var bt=$('#myButton2').button('loading');
+	if(!$.topjectIsValidate('verfiedPasswordFormId')){
+		bt.button('reset');
+		return;
+	}
+	var url = getRootPath()+'/login/verfiedPassword.do';
+
+	$.ajax({
+		type:"POST",
+		contentType: "application/x-www-form-urlencoded;charset=utf-8",
+		url:url,
+		data:$('#verfiedPasswordFormId').serialize(),
+		dataType:"json",
+		cache:false,
+		traditional:true,
+		success:function(result){
+			if (result.status=="02") {
+				 window.location = getRootPath()+"/login/main.do";
+				} else {
+				$('#flag').val("4")
+					bootbox.alert({
+						size : 'small',
+						message :result.msg,
+						//message : "状态码:"+data.status+"信息:"+data.msg,
+					});
+					bt.button('reset');
+				return;
+				}
+		},
+    error:function()
+    {
+    	alert("网络异常");
+    }
+	});
+}
+
+
+
+ function openModal(modalId){
+	 $('#'+modalId).modal({
+			backdrop:'static'
+		});
+ }
+
+ $('#loginModal').modal({
+	backdrop:'static'
+});
+ $('.modal-content').css({
+	 'background-color':'rgba(13, 10, 23, 0.3)'
+ });
+
+ $('.modal-footer').css({
+	 'text-align':'center'
+ })
+
+ $(function (){
+	 $.topjectValidate('loginFromId');
+	 $.topjectValidate('verfiedPasswordFormId');
+ });
+
+
+</script>
+</body>
+</html>
+

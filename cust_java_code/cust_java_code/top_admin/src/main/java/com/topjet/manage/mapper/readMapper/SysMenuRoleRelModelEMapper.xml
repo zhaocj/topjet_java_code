@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.SysMenuRoleRelModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.SysMenuRoleRelModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="roleId" property="roleId" jdbcType="INTEGER" />
+    <result column="sysMenuId" property="sysMenuId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, roleId, sysMenuId
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from manageDB.sysMenuRoleRel
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <update id="updateByPrimaryKey" parameterType="com.topjet.manage.domain.model.SysMenuRoleRelModel" >
+    update manageDB.sysMenuRoleRel
+    set roleId = #{roleId,jdbcType=INTEGER},
+      sysMenuId = #{sysMenuId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectListByParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from manageDB.sysMenuRoleRel
+    <where>
+      <if test="roleId != null" >
+        and roleId = #{roleId,jdbcType=INTEGER}
+      </if>
+      <if test="sysMenuId != null" >
+        and sysMenuId = #{sysMenuId,jdbcType=INTEGER}
+      </if>
+      <if test="id != null" >
+        and id = #{id,jdbcType=INTEGER}
+      </if>
+    </where>
+  </select>
+
+</mapper>

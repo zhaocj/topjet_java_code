@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.TruckInfoModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.TruckInfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="plateNo1" property="plateNo1" jdbcType="VARCHAR" />
+    <result column="plateNo2" property="plateNo2" jdbcType="VARCHAR" />
+    <result column="plateNo3" property="plateNo3" jdbcType="VARCHAR" />
+    <result column="truckLength" property="truckLength" jdbcType="INTEGER" />
+    <result column="truckType" property="truckType" jdbcType="INTEGER" />
+    <result column="plateColor" property="plateColor" jdbcType="TINYINT" />
+    <result column="ownerId" property="ownerId" jdbcType="INTEGER" />
+    <result column="truckHeadImg" property="truckHeadImg" jdbcType="VARCHAR" />
+    <result column="driverLicenseImg" property="driverLicenseImg" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, plateNo1, plateNo2, plateNo3, truckLength, truckType, plateColor, ownerId, truckHeadImg, 
+    driverLicenseImg, createTime, deleted, updateTime
+  </sql>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from truckDB.truckInfo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <!--车辆管理列表-->
+  <select id="getTruckList" resultType="com.topjet.manage.domain.vo.TruckListVO"
+          parameterType="com.topjet.manage.domain.vo.TruckListQuery">
+    SELECT
+    t.id,
+    u.username,
+    u.mobile,
+    DATE_FORMAT(t.createTime, '%Y-%m-%d %T') AS createTime,
+    CONCAT(IFNULL(t.plateNo1,''),IFNULL(t.plateNo2,''),IFNULL(t.plateNo3,'')) AS plateNo,
+    t.plateNo1,t.plateNo2,t.plateNo3,
+    CONCAT(ttd.`displayName`,'/',tld.displayName) AS typeAndLength,
+    dt.orderCount as orderCount,
+    t.plateColor AS truckColor,
+    dt.auditStatus AS auditStatus,
+    ah.auditName AS auditName,
+    IFNULL(u.id,"") as uid,
+    dt.id as driverId,
+    IFNULL((SELECT remark FROM manageDB.`userAuditHistory` WHERE sourceType=1 AND sourceId=u.id and statusAfter IN (1, 2) ORDER BY createTime DESC LIMIT 1),"")as reditRemark
+    FROM
+    truckDB.truckInfo t
+    LEFT JOIN userDB.userInfo u ON t.ownerId = u.id and u.deleted=0
+    LEFT JOIN resourceDB.truckTypeDictionary ttd on t.truckType = ttd.id and ttd.deleted=0
+    LEFT JOIN resourceDB.truckLengthDictionary tld on t.truckLength = tld.id and tld.deleted=0
+    LEFT JOIN truckDB.driverTruckInfo dt ON t.id = dt.truckId and dt.deleted=0
+    LEFT JOIN manageDB.truckAuditHistory ah ON ah.sourceId=dt.id AND ah.id=(select a.id from
+    manageDB.truckAuditHistory a where a.sourceId=dt.id AND a.sourceType=1 order by a.createTime desc limit 1)
+    WHERE dt.deleted=0
+    <trim suffixOverrides=",">
+      <if test="startDate != null">
+        and t.createTime &gt;= #{startDate}
+      </if>
+      <if test="endDate != null">
+        and t.createTime &lt;= #{endDate}
+      </if>
+      <if test="auditUser != null and auditUser != ''">
+        AND ah.auditName = #{auditUser}
+      </if>
+      <if test="mobile != null and mobile != ''">
+        AND u.mobile=#{mobile}
+      </if>
+      <if test="type != null and type != ''">
+        AND ttd.`displayName`=#{type}
+      </if>
+      <if test="plateNo != null and plateNo != ''">
+        AND t.plateNo1=#{plateNo1} AND t.plateNo2 = #{plateNo2} AND t.plateNo3 = #{plateNo3}
+      </if>
+      <if test="auditStatus != null and auditStatus != ''">
+        AND dt.auditStatus=#{auditStatus}
+        <if test="auditStatus == '1'">
+          AND (dt.auditStatus=#{auditStatus} OR dt.auditStatus=0)
+        </if>
+        <if test="auditStatus != '1'">
+          AND dt.auditStatus=#{auditStatus}
+        </if>
+      </if>
+      order by dt.createTime DESC
+      limit #{offset}, #{limit}
+    </trim>
+
+  </select>
+
+  <!--车辆列表页数-->
+  <select id="getTruckCount" resultType="java.lang.Integer"
+          parameterType="com.topjet.manage.domain.vo.TruckListQuery">
+    SELECT
+    COUNT(t.id)
+    FROM
+    truckDB.truckInfo t
+    LEFT JOIN userDB.userInfo u ON t.ownerId = u.id and u.deleted=0
+    LEFT JOIN resourceDB.truckTypeDictionary ttd on t.truckType = ttd.id and ttd.deleted=0
+    LEFT JOIN truckDB.driverTruckInfo dt ON t.id = dt.truckId and dt.deleted=0
+    LEFT JOIN manageDB.truckAuditHistory ah ON ah.sourceId=dt.id AND ah.id=(select a.id from
+    manageDB.truckAuditHistory a where a.sourceId=dt.id AND a.sourceType=1 order by createTime desc limit 1)
+    WHERE dt.deleted=0
+    <trim suffixOverrides=",">
+      <if test="startDate != null">
+        and t.createTime &gt;= #{startDate}
+      </if>
+      <if test="endDate != null">
+        and t.createTime &lt;= #{endDate}
+      </if>
+      <if test="auditUser != null and auditUser != ''">
+        AND ah.auditName = #{auditUser}
+      </if>
+      <if test="mobile != null and mobile != ''">
+        AND u.mobile=#{mobile}
+      </if>
+      <if test="type != null and type != ''">
+        AND ttd.`displayName`=#{type}
+      </if>
+      <if test="plateNo != null and plateNo != ''">
+        AND t.plateNo1=#{plateNo1} AND t.plateNo2 = #{plateNo2} AND t.plateNo3 = #{plateNo3}
+      </if>
+      <if test="auditStatus != null and auditStatus != ''">
+        AND dt.auditStatus=#{auditStatus}
+        <if test="auditStatus == '1'">
+          AND (dt.auditStatus=#{auditStatus} OR dt.auditStatus=0)
+        </if>
+        <if test="auditStatus != '1'">
+          AND dt.auditStatus=#{auditStatus}
+        </if>
+      </if>
+    </trim>
+  </select>
+
+  <!--车辆信息详情 根据车牌号查询-->
+  <select id="getTruckInfoByPlatNo" resultType="com.topjet.manage.domain.model.TruckInfoModel"
+          parameterType="com.topjet.manage.domain.model.TruckInfoModel">
+
+
+  </select>
+  <!--根据车牌id查询车辆信息-->
+  <select id="getTruckById" resultType="com.topjet.manage.domain.model.TruckInfoModel" parameterType="java.lang.Integer">
+    select DISTINCT t.id,t.plateNo1,t.plateNo2,t.plateNo3,t.truckLength,t.truckType,
+    t.plateColor,t.ownerId,t.truckHeadImg,t.driverLicenseImg,t.createTime,
+    t.deleted,t.updateTime,dt.id as driverId
+    from truckDB.truckInfo t
+    LEFT JOIN truckDB.driverTruckInfo dt ON t.id = dt.truckId
+    and dt.deleted = 0
+    where t.id = #{id}
+    and t.deleted = 0 and dt.deleted = 0
+    GROUP BY t.id
+  </select>
+  <!--司机车辆信息表DriverTruckInfoModel 根据truckInfo表中的id查询数据-->
+  <select id="findTruckInfoById" parameterType="java.lang.Integer" resultType="com.topjet.manage.domain.model.DriverTruckInfoModel">
+    SELECT dt.id,dt.driverId,dt.truckId,dt.auditStatus,dt.orderCount,dt.auditRemark,dt.createTime,dt.updateTime,dt.deleted
+    FROM truckDB.driverTruckInfo dt WHERE dt.truckId = #{truckId}
+  </select>
+
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.writeMapper.BrokerInfoModelMapper">
+
+	<insert id="insertBroker" parameterType="com.topjet.manage.domain.model.BrokerInfoModel" useGeneratedKeys="true" keyProperty="id">
+		insert into brokerInfo(userId,brokerStatus)values(#{userId},1)
+	</insert>
+
+	<insert id="insertBrokerRouteInfo" parameterType="com.topjet.manage.domain.model.BrokerRouteInfoModel">
+		insert into brokerRouteInfo(brokerId,beginCity,endCity)values(#{brokerId},#{beginCity},#{endCity})
+	</insert>
+
+	<update id="deleteBrokerRouteInfo" parameterType="com.topjet.manage.domain.model.BrokerRouteInfoModel">
+		update brokerRouteInfo set deleted = 1 where
+		<if test="brokerId &gt; 0">
+			brokerId=#{brokerId}
+		</if>
+		<if test="id &gt; 0">
+			id=#{id}
+		</if>
+	</update>
+
+</mapper>

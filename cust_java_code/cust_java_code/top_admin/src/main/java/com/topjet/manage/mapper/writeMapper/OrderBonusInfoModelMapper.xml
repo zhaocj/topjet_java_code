@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.writeMapper.OrderBonusInfoModelMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.OrderBonusInfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="orderId" property="orderId" jdbcType="INTEGER" />
+    <result column="driverId" property="driverId" jdbcType="INTEGER" />
+    <result column="ownerId" property="ownerId" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="driverAmount" property="driverAmount" jdbcType="DECIMAL" />
+    <result column="ownerAmount" property="ownerAmount" jdbcType="DECIMAL" />
+    <result column="auditProcess" property="auditProcess" jdbcType="TINYINT" />
+    <result column="auditStatus" property="auditStatus" jdbcType="TINYINT" />
+    <result column="settingId" property="settingId" jdbcType="INTEGER" />
+    <result column="createBy" property="createBy" jdbcType="INTEGER" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateBy" property="updateBy" jdbcType="INTEGER" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="version" property="version" jdbcType="SMALLINT" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    id, orderId, driverId, ownerId, type, driverAmount, ownerAmount, auditProcess, auditStatus, 
+    settingId, createBy, createTime, updateBy, updateTime, version, deleted
+  </sql>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from orderBonusInfo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <delete id="delete" parameterType="java.lang.Integer" >
+    delete from orderBonusInfo
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+
+  <insert id="insert" parameterType="com.topjet.manage.domain.model.OrderBonusInfoModel" >
+    insert into orderBonusInfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderId != null" >
+        orderId,
+      </if>
+      <if test="driverId != null" >
+        driverId,
+      </if>
+      <if test="ownerId != null" >
+        ownerId,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="driverAmount != null" >
+        driverAmount,
+      </if>
+      <if test="ownerAmount != null" >
+        ownerAmount,
+      </if>
+      <if test="auditProcess != null" >
+        auditProcess,
+      </if>
+      <if test="auditStatus != null" >
+        auditStatus,
+      </if>
+      <if test="settingId != null" >
+        settingId,
+      </if>
+      <if test="createBy != null" >
+        createBy,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="updateBy != null" >
+        updateBy,
+      </if>
+      <if test="updateTime != null" >
+        updateTime,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="driverId != null" >
+        #{driverId,jdbcType=INTEGER},
+      </if>
+      <if test="ownerId != null" >
+        #{ownerId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=TINYINT},
+      </if>
+      <if test="driverAmount != null" >
+        #{driverAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="ownerAmount != null" >
+        #{ownerAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="auditProcess != null" >
+        #{auditProcess,jdbcType=TINYINT},
+      </if>
+      <if test="auditStatus != null" >
+        #{auditStatus,jdbcType=TINYINT},
+      </if>
+      <if test="settingId != null" >
+        #{settingId,jdbcType=INTEGER},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=SMALLINT},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.topjet.manage.domain.model.OrderBonusInfoModel" >
+    update orderBonusInfo
+    <set >
+      <if test="orderId != null" >
+        orderId = #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="driverId != null" >
+        driverId = #{driverId,jdbcType=INTEGER},
+      </if>
+      <if test="ownerId != null" >
+        ownerId = #{ownerId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=TINYINT},
+      </if>
+      <if test="driverAmount != null" >
+        driverAmount = #{driverAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="ownerAmount != null" >
+        ownerAmount = #{ownerAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="auditProcess != null" >
+        auditProcess = #{auditProcess,jdbcType=TINYINT},
+      </if>
+      <if test="auditStatus != null" >
+        auditStatus = #{auditStatus,jdbcType=TINYINT},
+      </if>
+      <if test="settingId != null" >
+        settingId = #{settingId,jdbcType=INTEGER},
+      </if>
+      <if test="createBy != null" >
+        createBy = #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        updateBy = #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=SMALLINT},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+</mapper>

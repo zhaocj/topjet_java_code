@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.topjet.manage.mapper.readMapper.CallCenterCallLogModelEMapper">
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.CallCenterCallLogModel">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="callSheetId" jdbcType="VARCHAR" property="callSheetId" />
+    <result column="originCallNo" jdbcType="VARCHAR" property="originCallNo" />
+    <result column="originCalledNo" jdbcType="VARCHAR" property="originCalledNo" />
+    <result column="callType" jdbcType="VARCHAR" property="callType" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="ringTime" jdbcType="TIMESTAMP" property="ringTime" />
+    <result column="beginTime" jdbcType="TIMESTAMP" property="beginTime" />
+    <result column="endTime" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="businessType" jdbcType="TINYINT" property="businessType" />
+    <result column="agent" jdbcType="VARCHAR" property="agent" />
+    <result column="queue" jdbcType="VARCHAR" property="queue" />
+    <result column="queueName" jdbcType="VARCHAR" property="queueName" />
+    <result column="monitorFilename" jdbcType="VARCHAR" property="monitorFilename" />
+    <result column="agentName" jdbcType="VARCHAR" property="agentName" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="createTime" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="createBy" jdbcType="INTEGER" property="createBy" />
+    <result column="updateTime" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="updateBy" jdbcType="INTEGER" property="updateBy" />
+    <result column="version" jdbcType="SMALLINT" property="version" />
+    <result column="deleted" jdbcType="TINYINT" property="deleted" />
+    <result column="createByName" jdbcType="VARCHAR" property="createByName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, callSheetId, originCallNo, originCalledNo, callType, status, ringTime, beginTime, 
+    endTime, businessType, agent, queue, queueName, monitorFilename, agentName, remark, 
+    createTime, createBy, updateTime, updateBy, version, deleted, createByName
+  </sql>
+
+  <sql id="Criteria_where_clause">
+    <where>
+      <if test="callSheetId != null">
+        and callSheetId = #{callSheetId,jdbcType=VARCHAR}
+      </if>
+      <if test="originCallNo != null">
+        and originCallNo = #{originCallNo,jdbcType=VARCHAR}
+      </if>
+      <if test="originCalledNo != null">
+        and originCalledNo = #{originCalledNo,jdbcType=VARCHAR}
+      </if>
+      <if test="callType != null">
+        and callType = #{callType,jdbcType=VARCHAR}
+      </if>
+      <if test="status != null">
+        and status = #{status,jdbcType=VARCHAR}
+      </if>
+      <if test="ringTime != null">
+        and ringTime = #{ringTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="beginTime != null">
+        and beginTime = #{beginTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="endTime != null">
+        and endTime = #{endTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="businessType != null">
+        and businessType = #{businessType,jdbcType=TINYINT}
+      </if>
+      <if test="agent != null">
+        and agent = #{agent,jdbcType=VARCHAR}
+      </if>
+      <if test="queue != null">
+        and queue = #{queue,jdbcType=VARCHAR}
+      </if>
+      <if test="queueName != null">
+        and queueName = #{queueName,jdbcType=VARCHAR}
+      </if>
+      <if test="monitorFilename != null">
+        and monitorFilename = #{monitorFilename,jdbcType=VARCHAR}
+      </if>
+      <if test="agentName != null">
+        and agentName = #{agentName,jdbcType=VARCHAR}
+      </if>
+      <if test="remark != null">
+        and remark = #{remark,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null">
+        and createTime = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="createBy != null">
+        and createBy = #{createBy,jdbcType=INTEGER}
+      </if>
+      <if test="updateTime != null">
+        and updateTime = #{updateTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="updateBy != null">
+        and updateBy = #{updateBy,jdbcType=INTEGER}
+      </if>
+      <if test="version != null">
+        and ersion = #{version,jdbcType=SMALLINT}
+      </if>
+      <if test="deleted != null">
+        and deleted = #{deleted,jdbcType=TINYINT}
+      </if>
+      <if test="createByName != null">
+        and createByName = #{createByName,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from callCenterCallLog
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <insert id="insert" parameterType="com.topjet.manage.domain.model.CallCenterCallLogModel">
+    insert into callCenterCallLog
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="callSheetId != null">
+        callSheetId,
+      </if>
+      <if test="originCallNo != null">
+        originCallNo,
+      </if>
+      <if test="originCalledNo != null">
+        originCalledNo,
+      </if>
+      <if test="callType != null">
+        callType,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="ringTime != null">
+        ringTime,
+      </if>
+      <if test="beginTime != null">
+        beginTime,
+      </if>
+      <if test="endTime != null">
+        endTime,
+      </if>
+      <if test="businessType != null">
+        businessType,
+      </if>
+      <if test="agent != null">
+        agent,
+      </if>
+      <if test="queue != null">
+        queue,
+      </if>
+      <if test="queueName != null">
+        queueName,
+      </if>
+      <if test="monitorFilename != null">
+        monitorFilename,
+      </if>
+      <if test="agentName != null">
+        agentName,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="createTime != null">
+        createTime,
+      </if>
+      <if test="createBy != null">
+        createBy,
+      </if>
+      <if test="updateTime != null">
+        updateTime,
+      </if>
+      <if test="updateBy != null">
+        updateBy,
+      </if>
+      <if test="version != null">
+        version,
+      </if>
+      <if test="deleted != null">
+        deleted,
+      </if>
+      <if test="createByName != null">
+        createByName,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="callSheetId != null">
+        #{callSheetId,jdbcType=VARCHAR},
+      </if>
+      <if test="originCallNo != null">
+        #{originCallNo,jdbcType=VARCHAR},
+      </if>
+      <if test="originCalledNo != null">
+        #{originCalledNo,jdbcType=VARCHAR},
+      </if>
+      <if test="callType != null">
+        #{callType,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="ringTime != null">
+        #{ringTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="beginTime != null">
+        #{beginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="businessType != null">
+        #{businessType,jdbcType=TINYINT},
+      </if>
+      <if test="agent != null">
+        #{agent,jdbcType=VARCHAR},
+      </if>
+      <if test="queue != null">
+        #{queue,jdbcType=VARCHAR},
+      </if>
+      <if test="queueName != null">
+        #{queueName,jdbcType=VARCHAR},
+      </if>
+      <if test="monitorFilename != null">
+        #{monitorFilename,jdbcType=VARCHAR},
+      </if>
+      <if test="agentName != null">
+        #{agentName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=SMALLINT},
+      </if>
+      <if test="deleted != null">
+        #{deleted,jdbcType=TINYINT},
+      </if>
+      <if test="createByName != null">
+        #{createByName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="update" parameterType="com.topjet.manage.domain.model.CallCenterCallLogModel">
+    update callCenterCallLog
+    <set>
+      <if test="callSheetId != null">
+        callSheetId = #{callSheetId,jdbcType=VARCHAR},
+      </if>
+      <if test="originCallNo != null">
+        originCallNo = #{originCallNo,jdbcType=VARCHAR},
+      </if>
+      <if test="originCalledNo != null">
+        originCalledNo = #{originCalledNo,jdbcType=VARCHAR},
+      </if>
+      <if test="callType != null">
+        callType = #{callType,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="ringTime != null">
+        ringTime = #{ringTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="beginTime != null">
+        beginTime = #{beginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        endTime = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="businessType != null">
+        businessType = #{businessType,jdbcType=TINYINT},
+      </if>
+      <if test="agent != null">
+        agent = #{agent,jdbcType=VARCHAR},
+      </if>
+      <if test="queue != null">
+        queue = #{queue,jdbcType=VARCHAR},
+      </if>
+      <if test="queueName != null">
+        queueName = #{queueName,jdbcType=VARCHAR},
+      </if>
+      <if test="monitorFilename != null">
+        monitorFilename = #{monitorFilename,jdbcType=VARCHAR},
+      </if>
+      <if test="agentName != null">
+        agentName = #{agentName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        createBy = #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        updateBy = #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="version != null">
+        version = #{version,jdbcType=SMALLINT},
+      </if>
+      <if test="deleted != null">
+        deleted = #{deleted,jdbcType=TINYINT},
+      </if>
+      <if test="createByName != null">
+        createByName = #{createByName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="getCallLogList" parameterType="com.topjet.manage.domain.bean.CallCenterCallLogBean" resultType="com.topjet.manage.domain.model.CallCenterCallLogModel">
+    SELECT
+    ccl.id as callCenterLogId ,
+    IFNULL(cccl.id,0)  as id,
+    ccl.callSheetId as callSheetId,
+    ccl.callNo as originCallNo ,
+    ccl.calledNo as originCalledNo,
+    ccl.callType as callType,
+    ccl.state as status,
+    ccl.ring as ringTime ,
+    ccl.`begin` as  beginTime,
+    ccl.`end` as  endTime,
+    cccl.businessType as businessType ,
+    ccl.agent as agent,
+    ccl.queue as queue,
+    cccl.queueName as queueName,
+    ccl.recordFile as monitorFilename,
+    ccl.agentName as agentName,
+    cccl.remark as remark,
+    cccl.createTime as createTime,
+    cccl.createBy as createBy ,
+    cccl.updateTime as updateTime ,
+    cccl.updateBy as  updateBy,
+    IFNULL(cccl.version,0) as  version,
+    cccl.deleted  as deleted,
+    ccl.agentName as createByName
+    from manageDB.callCenterLog   ccl
+    LEFT JOIN manageDB.callCenterCallLog   cccl  on  cccl.callSheetId = ccl.callSheetId  and  cccl.deleted = 0
+    where 1=1
+    <if test="createByName != null and createByName != ''">
+      AND ccl.agentName =#{createByName}
+    </if>
+    <if test="originCallNo != null and originCallNo != ''">
+      AND ccl.callNo = #{originCallNo} OR  ccl.calledNo = #{originCallNo}
+    </if>
+    order by ccl.id DESC
+    limit #{offset}, #{limit}
+  </select>
+
+
+  <select id="getCallLogCount" parameterType="com.topjet.manage.domain.bean.CallCenterCallLogBean" resultType="java.lang.Integer">
+    SELECT  count(ccl.id)
+    from manageDB.callCenterLog   ccl
+    LEFT JOIN manageDB.callCenterCallLog   cccl  on  cccl.callSheetId = ccl.callSheetId  and  cccl.deleted = 0
+    where 1=1
+    <if test="createByName != null and createByName != ''">
+      AND ccl.agentName =#{createByName}
+    </if>
+
+    <if test="originCallNo != null and originCallNo != ''">
+      AND ccl.callNo = #{originCallNo} OR  ccl.calledNo = #{originCallNo}
+    </if>
+  </select>
+
+
+  <select id="selectListByParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from manageDB.callCenterCallLog
+    <include refid="Criteria_where_clause" />
+  </select>
+
+
+
+
+</mapper>

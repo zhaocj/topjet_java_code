@@ -1,0 +1,80 @@
+
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <h4 class="modal-title">修改密码</h4>
+</div>
+<form  id="myForm">
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="pwId">旧密码:</label>
+      <input type="password" name="pw" id="pwId" class="form-control"placeholder="请输入原始密码">
+    </div>
+    <div class="form-group">
+      <label for="pwNewId">新密码:</label>
+      <input class="form-control"  type="password"  name="pwNew" id="pwNewId"  placeholder="请输入新密码">
+    </div>
+    <div class="form-group">
+      <label>确认密码:</label>
+      <input class="form-control" type="password"  name="pwNew2" id="pwNewId2" placeholder="请在次输入密码">
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="myButton" onclick="tijiao()" class="btn btn-primary center-block">　提　交　</button>
+  </div>
+</form>
+<script src="../../js/application.js"></script>
+<script type="text/javascript">
+  function tijiao() {
+    var bt = $('#myButton').button('loading');
+    if ($("#pwId").val() == '') {
+      bootbox.alert({
+        size: 'small',
+        message: "请输入原始密码!",
+      });
+      bt.button('reset');
+      return;
+    }
+    if ($("#pwNewId").val() == '') {
+      bootbox.alert({
+        size: 'small',
+        message: "新密码不能为空!",
+      });
+      bt.button('reset');
+      return;
+    }
+    if ($("#pwNewId").val() != $("#pwNewId2").val()) {
+      bootbox.alert({
+        size: 'small',
+        message: "两次密码不一一致，请重新输入!",
+      });
+      bt.button('reset');
+      return;
+    }
+    var url = getRootPath() + '/login/updatePassword.do';
+   /* $.ajaxDefaultCall(url, $('#myForm').serialize(), function () {
+      window.location.href = getRootPath() + "/view/main/login.html";
+    });*/
+    $.ajax({
+      type: "POST",
+      contentType: "application/x-www-form-urlencoded;charset=utf-8",
+      url: url,
+      data: $('#myForm').serialize(),
+      dataType: "json",
+      cache: false,
+      traditional: true,
+      success: function (data) {
+        if (data.status == '13') {
+          bootbox.alert({
+            size: 'small',
+            message: "旧密码错误,请重新输入",
+          });
+          return;
+        }else{
+          window.location.href = getRootPath() + "/view/main/login.html";
+        }
+      }
+    });
+  }
+
+
+</script>

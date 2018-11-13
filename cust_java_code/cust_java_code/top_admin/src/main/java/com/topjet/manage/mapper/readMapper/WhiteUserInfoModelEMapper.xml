@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.WhiteUserInfoModelEMapper" >
+
+
+
+
+<select id="getUserInfo" parameterType="java.lang.String" resultType="com.topjet.manage.domain.bean.UserInfoBean">
+  select
+  ur.id  as  id,
+   ur.username  as  username,
+   ur.userType  as userType,
+   ur.useStatus  as  useStatus
+  from userDB.userInfo ur
+  where  ur.deleted=0 and ur.mobile = #{mobile}
+</select>
+
+<select id="getWhiteUserList" resultType="com.topjet.manage.domain.bean.WhiteUserBean">
+    select
+    wur.id  as  id,
+    wur.userId  as  userId,
+    wur.createTime  as createTime,
+    ur.mobile  as mobile,
+    wur.deleted  as deleted,
+    ur.username  as  userName,
+    ur.userType  as  userType
+    from userDB.whiteUser wur
+    LEFT  JOIN  userDB.userInfo ur on  wur.userId = ur.id and ur.deleted =0
+    where  wur.deleted=0
+</select>
+
+<select id="getWhiteUserListCount" resultType="java.lang.Integer">
+    select  count(DISTINCT wur.id)
+    from userDB.whiteUser wur
+    LEFT  JOIN  userDB.userInfo ur on  wur.userId = ur.id and ur.deleted =0
+    where  wur.deleted=0
+</select>
+
+    <select id="getWhiteUserInfo" parameterType="com.topjet.manage.domain.model.WhiteUserInfoModel" resultType="com.topjet.manage.domain.model.WhiteUserInfoModel">
+        select
+        wur.id  as  id,
+        wur.type  as  type,
+        wur.userId  as userId,
+        wur.mobile  as  mobile,
+        wur.createBy  as createBy,
+        wur.createTime  as  createTime,
+        wur.deleted  as deleted
+        from userDB.whiteUser wur
+        where  wur.deleted=0 and wur.mobile = #{mobile}
+    </select>
+
+</mapper>

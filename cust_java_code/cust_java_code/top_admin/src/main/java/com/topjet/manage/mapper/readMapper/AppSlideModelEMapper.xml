@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.AppSlideModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.AppSlideModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="link" property="link" jdbcType="VARCHAR" />
+    <result column="isValid" property="isValid" jdbcType="TINYINT" />
+    <result column="createBy" property="createBy" jdbcType="INTEGER" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, type, title, link, content, isValid, createBy, createTime
+  </sql>
+
+
+  <sql id="Criteria_where_clause">
+    <where>
+      <if test="id != null" >
+        and id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="type != null" >
+        and type = #{type,jdbcType=TINYINT}
+      </if>
+      <if test="title != null" >
+        and title = #{title,jdbcType=VARCHAR}
+      </if>
+      <if test="createBy != null" >
+        and createBy = #{createBy,jdbcType=INTEGER}
+      </if>
+      <if test="isValid != null" >
+        and isValid = #{isValid,jdbcType=TINYINT}
+      </if>
+    </where>
+  </sql>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from resourceDB.appSlide
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+  <select id="selectListByParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from resourceDB.appSlide
+    <include refid="Criteria_where_clause" />
+  </select>
+
+  <select id="selectPageListByParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from resourceDB.appSlide
+    <include refid="Criteria_where_clause" />
+    order by id desc
+    limit
+    #{offset}, #{limit}
+  </select>
+
+  <select id="getCountByParam" resultType="java.lang.Integer" parameterType="java.util.Map">
+    select count(id)
+    from resourceDB.appSlide
+    <include refid="Criteria_where_clause" />
+  </select>
+
+
+</mapper>

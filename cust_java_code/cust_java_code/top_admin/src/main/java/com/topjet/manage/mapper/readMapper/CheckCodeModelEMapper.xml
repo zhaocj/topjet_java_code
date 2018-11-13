@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.CheckCodeModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.CheckCodeModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="mobileNo" property="mobileNo" jdbcType="VARCHAR" />
+    <result column="checkCode" property="checkCode" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="checkType" property="checkType" jdbcType="TINYINT" />
+    <result column="isValid" property="isValid" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, mobileNo, checkCode, createTime, checkType, isValid
+  </sql>
+  <sql id="Criteria_where_clause">
+    <where>
+      1=1
+      <if test="id != null" >
+        and id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="mobileNo != null and mobileNo != ''" >
+       and mobileNo = #{mobileNo,jdbcType=VARCHAR}
+      </if>
+      <if test="checkCode != null" >
+        and checkCode = #{checkCode,jdbcType=VARCHAR}
+      </if>
+      <if test="checkType != null" >
+        and checkType = #{checkType,jdbcType=TINYINT}
+      </if>
+      <if test="isValid != null" >
+        and isValid = #{isValid,jdbcType=TINYINT}
+      </if>
+      AND createTime >= (DATE_ADD(NOW(),INTERVAL-1 DAY))
+    </where>
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from baseServicesDB.checkCode
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="delete" parameterType="java.lang.Integer" >
+    delete from checkCode
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+
+  <select id="selectPageListByEntity" resultMap="BaseResultMap" parameterType="com.topjet.manage.domain.model.CheckCodeModel">
+    select
+    <include refid="Base_Column_List" />
+    from baseServicesDB.checkCode
+    <include refid="Criteria_where_clause" />
+    ORDER BY createTime DESC
+    limit #{offset}, #{limit}
+  </select>
+
+  <select id="getCountByEntity" resultType="java.lang.Integer"
+          parameterType="java.util.Map">
+    select count(id)
+    from baseServicesDB.checkCode
+    <include refid="Criteria_where_clause" />
+  </select>
+
+</mapper>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>交运配货</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="../../resource/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap-table.css">
+    <link rel="stylesheet" type="text/css" href="../../css/demo.css">
+    <link rel="stylesheet/less" type="text/css" href="../../less/modules/buttons.less">
+
+    <script type="text/javascript" src="../../js/common/modal.js"></script>
+    <script type="text/javascript" src="../../js/common/utils.js"></script>
+    <script type="text/javascript" src="../../js/common/ajaxCall.js"></script>
+    <script type="text/javascript" src="../../js/common/dateformate.js"></script>
+
+    <script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+    <script type="text/javascript" src="../../js/bootbox.min.js"></script>
+    <script type="text/javascript" src="../../js/common/jquery.cityselect.js"></script>
+</head>
+<body onresize="auto()">
+<div class="contentBox" style="padding:10px">
+    <div class="fixed-table-toolbar" >
+        <div class="navmenu" id="navTitle"><a href="#" onclick="javascript:history.back(-1); return false">帮助中心</a> / 发货版</div>
+        <input id="version" type="hidden"  value="">
+        <div class="eachBox">
+            <ul>
+                <li>
+                    <label for="name">问题类型</label>
+                    <select name="name" id="name">
+                        <option value="">请选择问题类型</option>
+                        <!--<option value="1">账号问题</option>
+                        <option value="2">找车问题</option>
+                        <option value="3">发货问题</option>
+                        <option value="4">钱包问题</option>-->
+                    </select>
+                </li>
+                <!--<li>
+                    <label for="version">版本类型：</label>
+                    <select name="versionType" id="versionStyle">
+                        <option value="">请选择</option>
+                        <option value="1">发货版</option>
+                        <option value="2">接货版</option>
+                    </select>
+                </li>-->
+                <li>
+                    <label for="startDate">开始时间</label>
+                    <input type="date" name="startDate" id="startDate" value="" placeholder="请选择开始时间">
+                </li>
+                <li>
+                    <label for="endDate">结束时间：</label>
+                    <input type="date" name="endDate" id="endDate" value="" placeholder="请选择结束时间">
+                </li>
+            </ul>
+            <div class="clearfix "></div>
+        </div>
+        <div class="columns columns-left btn-group pull-right">
+            <button type="button" onclick="tableQuery()" class="btn btn-info btn-sm" >查询</button>
+        </div>
+        <div class="columns columns-left btn-group pull-right">
+            <button type="button" class="btn btn-primary btn-sm margin-left-10" onclick="add()">添加问题</button>
+        </div>
+    </div>
+</div>
+<table id='table' ></table>
+<script type="text/javascript">
+
+    //页面加载的时候 获取版本号 显示所属问题类型
+    $(document).ready(function(){
+        if($('#version').val()=="")
+        {
+            switch (location.search){
+                case"?version=2"://接货版
+                    $("#name").append("<option value='1'>账号问题</option>" +
+                            "<option value='2'>找货问题</option>" +
+                            "<option value='3'>承运问题</option>" +
+                            "<option value='4'>钱包问题</option>");
+                    break;
+                case"?version=1"://发货版
+                    $("#name").append("<option value='1'>账号问题</option>" +
+                            "<option value='2'>找车问题</option>" +
+                            "<option value='3'>发货问题</option>" +
+                            "<option value='4'>钱包问题</option>");
+                    break;
+            }
+        }
+    });
+
+
+    $(function () {
+        var columns = [
+            {
+                field: 'version',
+                title: '版本类型',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    if (value == 1) {
+                        return "发货版";
+                    }else if(value == 2){
+                        return '接货版';
+                    }
+                    else{
+                        return "";
+                    }
+                }
+            },
+            {
+                field: 'name',
+                align: 'center',
+                title: '问题分类'/*,
+                formatter: function (value, row, index) {
+                    if (value == 1) {
+                        return "账号问题";
+                    }else if(value == 2){
+                        return '找车问题';
+                    }
+                    else if(value == 3){
+                        return '发货问题';
+                    }
+                    else if(value == 4){
+                        return '钱包问题';
+                    }
+                    else{
+                        return "";
+                    }
+                }*/
+            },
+            {
+                field: 'title',
+                title: '问题标题',
+                align: 'center'
+            },
+            {
+                field: 'content',
+                title: '问题答案',
+                align: 'center'/*,
+                formatter: function (value, row, index) {
+                    if (value.length >= 200) {
+                        var a = value.substring(0, 200) + "......";
+                        return a;
+                    } else {
+                        return value
+                    }
+                }*/
+            },
+            {
+                field: 'createTime',
+                title: '创建时间',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    return formatViewDate(new Date(value), "yyyy-MM-dd HH:mm");
+                }
+            },
+            {
+                field: 'hcSortNo',
+                title: '排序',
+                align: 'center'
+            },
+           {
+                field: 'hpSortNo',
+                title: '设为常见问题',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    if (value == 1) {
+                        return "已开启";
+                    } else if(value == 0){
+                        return '已关闭';
+                    }
+                }
+            },
+            {
+                field: 'option',
+                title: '操作',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    var s =['<button type="button" class="btn btn-primary btn-xs" onclick="edit(' + row.helpQuestionID + ','+row.helpCategoryID+')" >修改</button>',
+                            '<button type="button" class="btn btn-danger  btn-xs" onclick="removeAdv('+row.helpQuestionID+')">刪除</button>'].join(' ');
+                    if (row.hpSortNo == 0) {
+                        s=s+'<button type="button" class="btn btn-default btn-xs" onclick="openOrCloseQuestion(' + row.helpQuestionID + ',' + 0 + ')">开启</button>'
+                    }else if(row.hpSortNo == 1) {
+                        s=s+'<button type="button" class="btn btn-info btn-xs" onclick="openOrCloseQuestion(' + row.helpQuestionID + ','+ 1 + ')">关闭</button>'
+                    }
+                    return s;
+                }
+            },
+        ];
+        $("#startDate").val(getDate7());
+        var url = getRootPath() + '/helpCenter/list.do';
+        setTableInfo('table', columns, url, getQueryParams, 'toolbar');
+    });
+
+    function getQueryParams() {
+        if($('#version').val()=="")
+        {
+          var navText="<a href=\"#\" onclick=\"javascript:history.back(-1); return false\">问题管理</a> /";
+            switch (location.search){
+                case"?version=2":
+                    $('#version').val("2");
+                    navText=navText+"接货版";
+                    break;
+                case"?version=1":
+                    $('#version').val("1");
+                    navText=navText+"发货版";
+                    break;
+            }
+            $('#navTitle').html(navText);
+        }
+
+        var endDate = {};
+        var startDate = {};
+        if(!isNull($('#endDate').val())){
+            endDate = {'endDate':StringToDate($('#endDate').val())}
+        }
+        if(!isNull($('#startDate').val())){
+            startDate = {'startDate':StringToDate($('#startDate').val())}
+        }
+        var json = {
+            'version': $('#version').val(),
+            'name':$("#name").val(),
+           // 'versionType':$("#versionStyle").val()
+        };
+        return  $.extend({},startDate,endDate,json);
+    };
+
+    function add() {
+        window.location.href = getRootPath()+'/view/helpCenter/questionAdd.html?version=' + $('#version').val();
+    }
+    function edit(helpQuestionID,helpCategoryID) {
+        window.location.href = getRootPath() + '/helpCenter/questionDetail.do?helpQuestionID='+helpQuestionID+'&helpCategoryID='+helpCategoryID;
+    };
+    function removeAdv(helpQuestionID) {
+        bootbox.confirm("确认删除?", function (result) {
+            if (result) {
+                var url = getRootPath() + '/helpCenter/removeAdv.do';
+                var data = {
+                    'helpQuestionID':helpQuestionID
+                };
+                $.ajaxDefaultCall(url, data,function(){tableRefresh();});
+            }
+        });
+    };
+    var version=$("#version").val();
+    if(version != ""){
+        var navText="<a href=\"#\" onclick=\"javascript:history.back(-1); return false\">问题管理</a> /";
+        if(version==1){
+            navText=navText+"发货版";
+        }else if(version==2){
+            navText=navText+"接货版";
+        }
+        $('#navTitle').html(navText);
+    }
+
+    function openOrCloseQuestion(helpQuestionID,flag) {
+        var url=getRootPath()+'/helpCenter/update.do';
+        var data = {};
+        debugger;
+        if(flag == 1){
+            data = {
+                helpQuestionID:helpQuestionID,
+                flag:flag
+            }
+            bootbox.confirm("确定要关闭吗？", function(result) {
+                if(result){
+                    $.ajaxDefaultCall(url,data,function () {
+                        $tableDom.bootstrapTable('refresh');
+                    });
+                }
+            });
+
+        }else if(flag == 0){
+            data = {
+                helpQuestionID :helpQuestionID,
+                flag:flag
+            }
+            bootbox.confirm("确定要开启吗？", function(result) {
+                if(result){
+                    $.ajaxDefaultCall(url,data,function () {
+                        $tableDom.bootstrapTable('refresh');
+                    });
+                }
+            });
+        }
+    }
+
+
+</script>
+</body>
+</html>

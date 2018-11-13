@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>交运配货网-后台管理</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="" rel="stylesheet">
+  <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="../../bootstrap/css/bootstrap-table.min.css" rel="stylesheet"/>
+  <link href="../../css/flat-ui.min.css" rel="stylesheet"/>
+  <link href="../../css/easyui.css" rel="stylesheet"/>
+  <link href="../../css/demo.css" rel="stylesheet"/>
+  <link href="../../css/font-awesome.min.css" rel="stylesheet"/>
+  <link href="../../css/jquery.mCustomScrollbar.css" rel="stylesheet"/>
+  <link href="../../css/bootstrap-datetimepicker.css" rel="stylesheet"/>
+  <link href="../../less/modules/buttons.less" rel="stylesheet"/>
+  <link rel="shortcut icon" href="../../img/faviconindex.ico"/>
+  <link href="../../bootstrap/formValidation/formValidation.css"/>
+
+  <script src="../../resource/jquery-1.11.3.min.js"></script>
+  <script src="../../js/common/utils.js"></script>
+  <script src="../../js/bootbox.min.js"></script>
+  <script type="text/javascript" src="../../bootstrap/formValidation/formValidation.js"></script>
+  <script type="text/javascript" src="../../bootstrap/formValidation/bootstrap.js"></script>
+  <script type="text/javascript" src="../../bootstrap/formValidation/validData.js"></script>
+  <script src="../../js/vendor/jquery.easyui.min.js"></script>
+  <script src="../../js/jquery.mCustomScrollbar.concat.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="../../js/flat-ui.min.js"></script>
+  <script src="../../js/application.js"></script>
+  <script src="../../js/bootstrap-datetimepicker.min.js"></script>
+  <script src="../../js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+  <script src="../../js/echarts.min.js"></script>
+  <script src="../../js/common/index.js"></script>
+  <script src="../../js/common/ajaxCall.js"></script>
+  <script type="text/javascript" src="../../js/common/truckType.js"></script>
+</head>
+<body >
+<div class="modal-body  fontsize-14">
+  <form id="myForm">
+    <input type="hidden" id="icon" name="icon">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label>车型名称</label>
+        <input type="text" id="displayName" name="displayName" onkeyup="this.value=this.value.substring(0, 20)"  class="form-control input-sm"  onblur="checkDisplayName()" required>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label>车型代码</label>
+        <input type="text" id="code" name="code" class="form-control input-sm"  onkeyup="this.value=this.value.substring(0, 20)" onblur="checkCode()" required>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label>是否可用</label>
+        <select id="valid" name="valid"
+                class="form-control" required>
+          <option value="">请选择</option>
+          <option value="0">不可用</option>
+          <option value="1">可用</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label>排序</label>
+        <input type="text" id="truckOrder" name="truckOrder" class="form-control input-sm"   onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" required>
+      </div>
+    </div>
+   <!-- <div class="col-xs-6">
+      <div class="form-group">
+        <label for="fileId1">上传车辆图标</label>
+        <div class="input-group">
+          <input id="fileId1" type="file" onchange="readFile(this,'icon','fileImageId1')">
+          <img id="fileImageId1" src="" required width="280" height="300"
+               class="topjet-img-size"/>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+    </div>-->
+  </form>
+</div>
+<div class="clearfix"></div>
+<div class="modal-footer margin-top-15">
+  <button type="button" id="myButton" onclick="submit()" class="btn btn-primary center-block">　提　交　</button>
+</div>
+<script type="text/javascript" src="../../js/common/truckType.js"></script>
+<script type="text/javascript">
+
+    function checkCode(){
+        var code = $("#code").val();
+        var regexp =  new RegExp("^[A-Za-z]+$");
+       if(regexp.test(code)){
+            $("#code").val(code.toUpperCase());
+           var url = getRootPath()+'/truckType/checkCode.do';
+           code =$("#code").val();
+           $.ajax({
+               type:"POST",
+               contentType: "application/x-www-form-urlencoded;charset=utf-8",
+               url:url,
+               data:"code="+code,
+               success:function(data){
+                   if(data==false){
+                       bootbox.alert({
+                           size: 'small',
+                           message: "重复的车型代码，请重新输入!",
+                       });
+                       $("#code").val("");
+                   }
+               }
+           });
+            return true;
+        }else {
+            bootbox.alert({
+                size: 'small',
+                message: "只能输入字母，请重输!",
+            });
+            $("#code").val("");
+            return false;
+        }
+
+    }
+
+  function checkDisplayName() {
+      var displayName =$("#displayName").val();
+      var url = getRootPath()+'/truckType/checkDisplayName.do';
+      $.ajax({
+          type:"POST",
+          contentType: "application/x-www-form-urlencoded;charset=utf-8",
+          url:url,
+          data:"displayName="+displayName,
+          success:function(data){
+           if(data==false){
+               bootbox.alert({
+                   size: 'small',
+                   message: "重复的车型名称，请重新输入!",
+               });
+               $("#displayName").val("");
+           }
+          }
+      });
+    }
+
+  function readFile(str, fileIds, fileImageId) {
+      var file = str.files[0];
+      if (!/image\/\w+/.test(file.type)) {
+          bootbox.alert({
+              size: 'small',
+              message: "只能上传图片，请重新上传!",
+          });
+          return false;
+      }
+      var reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function (e) {
+          var imge = e.target.result;
+          $('#' + fileIds).val(imge);
+          $("#" + fileImageId).attr("src", this.result);
+
+      };
+  };
+
+  function submit() {
+      var bt = $('#myButton').button('loading');
+      if (!$.topjectIsValidate('myForm')) {
+          bt.button('reset');
+          return;
+      }
+      var json = {
+             'displayName':$("#displayName").val(),
+             'valid': $("#valid").val(),
+             'code': $("#code").val(),
+             'truckOrder':$("#truckOrder").val()
+            // 'icon': $("#icon").val()
+      }
+      var data =json;
+      var url = getRootPath() +'/truckType/add.do';
+      $.ajaxDefaultCall(url,data,function(){
+          window.parent.location.href =  getRootPath()+'/view/truckManage/truckTypeList.html'});
+  }
+
+  $(function () {
+        $.topjectValidate('myForm');
+    })
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>交运配货网-后台管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet/less" type="text/css" href="../../bootstrap/formValidation/formValidation.css">
+    <script type="text/javascript" src="../../js/flat-ui.js"></script>
+    <script type="text/javascript" src="../../js/application.js"></script>
+    <script type="text/javascript" src="../../bootstrap/formValidation/formValidation.js"></script>
+    <script type="text/javascript" src="../../bootstrap/formValidation/bootstrap.js"></script>
+    <script type="text/javascript" src="../../bootstrap/formValidation/validData.js"></script>
+    <script type="text/javascript" src="createCity.js"></script>
+    <script type="text/javascript" src="../../js/common/jquery.cityselect.js"></script>
+
+</head>
+<body>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">新增城市</h4>
+</div>
+<div class="modal-body  fontsize-14">
+    <form id="myForm">
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>城市名称</label>
+                <input type="text" id="cityName" name="cityName" class="form-control input-sm" required>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>自身级别</label>
+                <select id="level" name="level" data-toggle="select"
+                        class="form-control select select-default select-sm" required>
+                    <option value="">请选择</option>
+                    <option value="2">市</option>
+                    <option value="3">县</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>所属上级编号</label>
+                <div class="clearfix"></div>
+                <span id="example2" class="bs-docs-example">
+              <select id="province" required class="form-control" name="province" style="width: 110px;">
+                      <option value="">请选择</option>
+              </select>  <select id="city" disabled="disabled" class="form-control" name="city" style="width: 130px;">
+                          <option value="">请选择</option>
+                  </select>
+        </span>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>城市编号</label>
+                <input type="text" id="adcode" name="adcode" class="form-control input-sm" required>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>是否直辖市</label>
+                <select id="flag" name="flag" data-toggle="select" class="form-control select select-default select-sm"
+                        required>
+                    <option value="">请选择</option>
+                    <option value="1">是</option>
+                    <option value="2">否</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>高德地图代码</label>
+                <input type="text" id="baiduCityId" name="citycode" class="form-control input-sm">
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>城市经度</label>
+                <input type="text" id="longitude" name="longitude" class="form-control input-sm">
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>城市纬度</label>
+                <input type="text" id="latitude" name="latitude" class="form-control input-sm" >
+            </div>
+        </div>
+        <div class="clearfix"></div>
+       <!-- <div class="col-xs-6">
+            <div class="form-group">
+                <label>中国天气网城市代码</label>
+                <input type="text" name="weatherId" id="weatherId" class="form-control input-sm">
+            </div>
+        </div>-->
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>邮编</label>
+                <input type="text" id="zip" name="zip" class="form-control input-sm">
+            </div>
+        </div>
+    </form>
+</div>
+<div class="clearfix"></div>
+<div class="modal-footer margin-top-15">
+    <button type="button" id="myButton" onclick="submitCreateClick()" class="btn btn-primary center-block">　提　交　
+    </button>
+    <button type="button" id="closeButton" onclick="window.location='list.html'" class="btn btn-primary center-block" style="margin-left: 400px; margin-top: -40px;">　关  闭　
+    </button>
+</div>
+
+<script type="text/javascript">
+
+    $(function () {
+        $.topjectValidate('myForm');
+    })
+
+</script>
+</body>
+</html>

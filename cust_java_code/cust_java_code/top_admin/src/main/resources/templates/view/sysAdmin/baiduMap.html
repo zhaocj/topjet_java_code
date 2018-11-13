@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>交运配货</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style type="text/css"> html{height:100%} body{height:100%;margin:0px;padding:0px} #container{height:100%} </style>
+
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=9DzOnQ7n1qMwAAZ6SZka1p3z9S0MD2Fa"></script>
+    <script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+
+</head>
+<body>
+<div id="container"></div>
+
+<script type="text/javascript">
+    var a = getDistince();
+
+    function getDistince(){
+        var map = new BMap.Map("container"); // 创建地图实例
+        map.centerAndZoom("北京", 12);
+        var output = "从徐汇区到天津驾车需要";
+        /* var pointA = new BMap.Point(106.486654,29.490295);  // 创建点坐标A--大渡口区
+         var pointB = new BMap.Point(106.581515,29.615467);  // 创建点坐标B--江北区
+         alert(map.getDistance(pointA,pointB));*/
+        var searchComplete = function (results){
+            debugger;
+            if (transit.getStatus() != BMAP_STATUS_SUCCESS){
+                return ;
+            }
+            var plan = results.getPlan(0);
+            output += plan.getDuration(true) + "\n";                //获取时间
+            output += "总路程为：" ;
+            output += plan.getDistance(true) + "\n";             //获取距离
+        }
+        var transit = new BMap.DrivingRoute(map, {renderOptions: {map: map},
+            onSearchComplete: searchComplete,
+            onPolylinesSet: function(){
+                setTimeout(function(){alert(output);},"2000");
+            }});
+        transit.search("上海市闵行区", "天津市天津市西青区");
+    }
+</script>
+</body>
+</html>

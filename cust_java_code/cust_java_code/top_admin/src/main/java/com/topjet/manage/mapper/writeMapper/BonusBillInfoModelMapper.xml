@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.writeMapper.BonusBillInfoModelMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.BonusBillInfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="billNo" property="billNo" jdbcType="VARCHAR" />
+    <result column="parentId" property="parentId" jdbcType="INTEGER" />
+    <result column="payerId" property="payerId" jdbcType="INTEGER" />
+    <result column="billType" property="billType" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="sourceId" property="sourceId" jdbcType="INTEGER" />
+    <result column="payeeId" property="payeeId" jdbcType="INTEGER" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="createBy" property="createBy" jdbcType="INTEGER" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="updateBy" property="updateBy" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="SMALLINT" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, billNo, parentId, payerId, billType, status, amount, sourceId, payeeId, createTime,
+    createBy, updateTime, updateBy, version, deleted
+  </sql>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from bonusBillInfo
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.topjet.manage.domain.model.BonusBillInfoModel" >
+    insert into bonusBillInfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="billNo != null" >
+        billNo,
+      </if>
+      <if test="parentId != null" >
+        parentId,
+      </if>
+      <if test="payerId != null" >
+        payerId,
+      </if>
+      <if test="billType != null" >
+        billType,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="sourceId != null" >
+        sourceId,
+      </if>
+      <if test="payeeId != null" >
+        payeeId,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="createBy != null" >
+        createBy,
+      </if>
+      <if test="updateTime != null" >
+        updateTime,
+      </if>
+      <if test="updateBy != null" >
+        updateBy,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="billNo != null" >
+        #{billNo,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="payerId != null" >
+        #{payerId,jdbcType=INTEGER},
+      </if>
+      <if test="billType != null" >
+        #{billType,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="sourceId != null" >
+        #{sourceId,jdbcType=INTEGER},
+      </if>
+      <if test="payeeId != null" >
+        #{payeeId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=SMALLINT},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.topjet.manage.domain.model.BonusBillInfoModel" >
+    update bonusBillInfo
+    <set >
+      <if test="billNo != null" >
+        billNo = #{billNo,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        parentId = #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="payerId != null" >
+        payerId = #{payerId,jdbcType=INTEGER},
+      </if>
+      <if test="billType != null" >
+        billType = #{billType,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="sourceId != null" >
+        sourceId = #{sourceId,jdbcType=INTEGER},
+      </if>
+      <if test="payeeId != null" >
+        payeeId = #{payeeId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        createBy = #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        updateBy = #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=SMALLINT},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+
+  <!-- 更新单人推荐费总额 -->
+  <update id="updateBillInfoForRecommendation"  parameterType="com.topjet.manage.domain.model.BonusBillInfoModel" >
+    UPDATE bonusBillInfo SET amount = #{amount},updateTime = #{updateTime}
+    WHERE id = #{id}
+  </update>
+
+  <!-- 查询条件 -->
+  <sql id="Example_Where_Clause">
+    WHERE  a.deleted = 0 and (a.billType IN('1','2','4','10','11') or (a.billType = 1 and a.createTime &lt;= date(now()))) AND a.status IN('1','3') AND a.amount>0 AND a.parentId = 0
+    <trim suffixOverrides=",">
+      <if test="createTime != null and createTime != ''">
+        AND date(a.createTime) &gt; #{createTime}
+      </if>
+      <if test="billType != null and billType != ''">
+        <if test="billType == 1">
+          AND a.billType = 1
+        </if>
+      </if>
+      <if test="status != null and status != ''">
+        AND a.status = #{status}
+      </if>
+    </trim>
+  </sql>
+
+
+  <update id="updateByParentId" parameterType="com.topjet.manage.domain.model.BonusBillInfoModel" >
+    update bonusBillInfo
+    <set >
+      <if test="billNo != null" >
+        billNo = #{billNo,jdbcType=VARCHAR},
+      </if>
+      <if test="payerId != null" >
+        payerId = #{payerId,jdbcType=INTEGER},
+      </if>
+      <if test="billType != null" >
+        billType = #{billType,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="sourceId != null" >
+        sourceId = #{sourceId,jdbcType=INTEGER},
+      </if>
+      <if test="payeeId != null" >
+        payeeId = #{payeeId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        createBy = #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        updateBy = #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=SMALLINT},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=TINYINT},
+      </if>
+    </set>
+    where parentId = #{parentId,jdbcType=INTEGER}
+  </update>
+
+
+</mapper>

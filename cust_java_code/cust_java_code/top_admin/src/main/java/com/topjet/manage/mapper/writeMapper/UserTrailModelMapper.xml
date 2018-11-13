@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.writeMapper.UserTrailModelMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.UserTrailModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="userId" property="userId" jdbcType="INTEGER" />
+    <result column="idNo" property="idNo" jdbcType="VARCHAR" />
+    <result column="userName" property="userName" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="userType" property="userType" jdbcType="BIT" />
+    <result column="useStatus" property="useStatus" jdbcType="BIT" />
+    <result column="userAuthStatus" property="userAuthStatus" jdbcType="BIT" />
+    <result column="walletId" property="walletId" jdbcType="INTEGER" />
+    <result column="companyName" property="companyName" jdbcType="VARCHAR" />
+    <result column="businessAddress" property="businessAddress" jdbcType="VARCHAR" />
+    <result column="businessAddressCityId" property="businessAddressCityId" jdbcType="INTEGER" />
+    <result column="registeredCityId" property="registeredCityId" jdbcType="INTEGER" />
+    <result column="residentCityId" property="residentCityId" jdbcType="INTEGER" />
+    <result column="telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="remark1" property="remark1" jdbcType="VARCHAR" />
+    <result column="remark2" property="remark2" jdbcType="VARCHAR" />
+    <result column="businessPhoto" property="businessPhoto" jdbcType="VARCHAR" />
+    <result column="shopFrontPhoto" property="shopFrontPhoto" jdbcType="VARCHAR" />
+    <result column="driverLicencePhoto" property="driverLicencePhoto" jdbcType="VARCHAR" />
+    <result column="operatingPermitsPhoto" property="operatingPermitsPhoto" jdbcType="VARCHAR" />
+    <result column="businessCard" property="businessCard" jdbcType="VARCHAR" />
+    <result column="bigOrders" property="bigOrders" jdbcType="VARCHAR" />
+    <result column="createBy" property="createBy" jdbcType="INTEGER" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    id, userId, idNo, userName, mobile, userType, useStatus, userAuthStatus, walletId, 
+    companyName, businessAddress, businessAddressCityId, registeredCityId, residentCityId, 
+    telephone, remark1, remark2, businessPhoto, shopFrontPhoto, driverLicencePhoto, operatingPermitsPhoto, 
+    businessCard, bigOrders, createBy, createTime
+  </sql>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from userTrail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+
+  <insert id="insert" parameterType="com.topjet.manage.domain.model.UserTrailModel" >
+    insert into userTrail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        userId,
+      </if>
+      <if test="idNo != null" >
+        idNo,
+      </if>
+      <if test="userName != null" >
+        userName,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="userType != null" >
+        userType,
+      </if>
+      <if test="useStatus != null" >
+        useStatus,
+      </if>
+      <if test="userAuthStatus != null" >
+        userAuthStatus,
+      </if>
+      <if test="walletId != null" >
+        walletId,
+      </if>
+      <if test="companyName != null" >
+        companyName,
+      </if>
+      <if test="businessAddress != null" >
+        businessAddress,
+      </if>
+      <if test="businessAddressCityId != null" >
+        businessAddressCityId,
+      </if>
+      <if test="registeredCityId != null" >
+        registeredCityId,
+      </if>
+      <if test="residentCityId != null" >
+        residentCityId,
+      </if>
+      <if test="telephone != null" >
+        telephone,
+      </if>
+      <if test="remark1 != null" >
+        remark1,
+      </if>
+      <if test="remark2 != null" >
+        remark2,
+      </if>
+      <if test="businessPhoto != null" >
+        businessPhoto,
+      </if>
+      <if test="shopFrontPhoto != null" >
+        shopFrontPhoto,
+      </if>
+      <if test="driverLicencePhoto != null" >
+        driverLicencePhoto,
+      </if>
+      <if test="operatingPermitsPhoto != null" >
+        operatingPermitsPhoto,
+      </if>
+      <if test="businessCard != null" >
+        businessCard,
+      </if>
+      <if test="bigOrders != null" >
+        bigOrders,
+      </if>
+      <if test="createBy != null" >
+        createBy,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="idNo != null" >
+        #{idNo,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        #{userType,jdbcType=BIT},
+      </if>
+      <if test="useStatus != null" >
+        #{useStatus,jdbcType=BIT},
+      </if>
+      <if test="userAuthStatus != null" >
+        #{userAuthStatus,jdbcType=BIT},
+      </if>
+      <if test="walletId != null" >
+        #{walletId,jdbcType=INTEGER},
+      </if>
+      <if test="companyName != null" >
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="businessAddress != null" >
+        #{businessAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="businessAddressCityId != null" >
+        #{businessAddressCityId,jdbcType=INTEGER},
+      </if>
+      <if test="registeredCityId != null" >
+        #{registeredCityId,jdbcType=INTEGER},
+      </if>
+      <if test="residentCityId != null" >
+        #{residentCityId,jdbcType=INTEGER},
+      </if>
+      <if test="telephone != null" >
+        #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="remark1 != null" >
+        #{remark1,jdbcType=VARCHAR},
+      </if>
+      <if test="remark2 != null" >
+        #{remark2,jdbcType=VARCHAR},
+      </if>
+      <if test="businessPhoto != null" >
+        #{businessPhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="shopFrontPhoto != null" >
+        #{shopFrontPhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="driverLicencePhoto != null" >
+        #{driverLicencePhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="operatingPermitsPhoto != null" >
+        #{operatingPermitsPhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="businessCard != null" >
+        #{businessCard,jdbcType=VARCHAR},
+      </if>
+      <if test="bigOrders != null" >
+        #{bigOrders,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.topjet.manage.domain.model.UserTrailModel" >
+    update userTrail
+    <set >
+      <if test="userId != null" >
+        userId = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="idNo != null" >
+        idNo = #{idNo,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        userName = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        userType = #{userType,jdbcType=BIT},
+      </if>
+      <if test="useStatus != null" >
+        useStatus = #{useStatus,jdbcType=BIT},
+      </if>
+      <if test="userAuthStatus != null" >
+        userAuthStatus = #{userAuthStatus,jdbcType=BIT},
+      </if>
+      <if test="walletId != null" >
+        walletId = #{walletId,jdbcType=INTEGER},
+      </if>
+      <if test="companyName != null" >
+        companyName = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="businessAddress != null" >
+        businessAddress = #{businessAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="businessAddressCityId != null" >
+        businessAddressCityId = #{businessAddressCityId,jdbcType=INTEGER},
+      </if>
+      <if test="registeredCityId != null" >
+        registeredCityId = #{registeredCityId,jdbcType=INTEGER},
+      </if>
+      <if test="residentCityId != null" >
+        residentCityId = #{residentCityId,jdbcType=INTEGER},
+      </if>
+      <if test="telephone != null" >
+        telephone = #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="remark1 != null" >
+        remark1 = #{remark1,jdbcType=VARCHAR},
+      </if>
+      <if test="remark2 != null" >
+        remark2 = #{remark2,jdbcType=VARCHAR},
+      </if>
+      <if test="businessPhoto != null" >
+        businessPhoto = #{businessPhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="shopFrontPhoto != null" >
+        shopFrontPhoto = #{shopFrontPhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="driverLicencePhoto != null" >
+        driverLicencePhoto = #{driverLicencePhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="operatingPermitsPhoto != null" >
+        operatingPermitsPhoto = #{operatingPermitsPhoto,jdbcType=VARCHAR},
+      </if>
+      <if test="businessCard != null" >
+        businessCard = #{businessCard,jdbcType=VARCHAR},
+      </if>
+      <if test="bigOrders != null" >
+        bigOrders = #{bigOrders,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        createBy = #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>

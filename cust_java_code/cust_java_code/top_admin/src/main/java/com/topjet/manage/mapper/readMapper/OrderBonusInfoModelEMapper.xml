@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.OrderBonusInfoModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.OrderBonusInfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="orderId" property="orderId" jdbcType="INTEGER" />
+    <result column="driverId" property="driverId" jdbcType="INTEGER" />
+    <result column="ownerId" property="ownerId" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="driverAmount" property="driverAmount" jdbcType="DECIMAL" />
+    <result column="ownerAmount" property="ownerAmount" jdbcType="DECIMAL" />
+    <result column="auditProcess" property="auditProcess" jdbcType="TINYINT" />
+    <result column="auditStatus" property="auditStatus" jdbcType="TINYINT" />
+    <result column="settingId" property="settingId" jdbcType="INTEGER" />
+    <result column="createBy" property="createBy" jdbcType="INTEGER" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateBy" property="updateBy" jdbcType="INTEGER" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="version" property="version" jdbcType="SMALLINT" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, orderId, driverId, ownerId, type, driverAmount, ownerAmount, auditProcess, auditStatus, 
+    settingId, createBy, createTime, updateBy, updateTime, version, deleted
+  </sql>
+
+  <sql id="Criteria_where_clause">
+    <where>
+      <if test="id != null" >
+        and id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="orderId != null" >
+        and orderId = #{orderId,jdbcType=INTEGER}
+      </if>
+      <if test="driverId != null" >
+        and driverId = #{driverId,jdbcType=INTEGER}
+      </if>
+      <if test="ownerId != null" >
+        and ownerId = #{ownerId,jdbcType=INTEGER}
+      </if>
+      <if test="type != null" >
+        and type = #{type,jdbcType=TINYINT}
+      </if>
+      <if test="auditProcess != null" >
+        and auditProcess = #{auditProcess,jdbcType=TINYINT}
+      </if>
+      <if test="auditStatus != null" >
+        and auditStatus = #{auditStatus,jdbcType=TINYINT}
+      </if>
+      <if test="settingId != null" >
+        and settingId = #{settingId,jdbcType=INTEGER}
+      </if>
+      <if test="createBy != null" >
+        and createBy = #{createBy,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null" >
+        and createTime = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="updateBy != null" >
+        and updateBy = #{updateBy,jdbcType=INTEGER}
+      </if>
+      <if test="updateTime != null" >
+        and updateTime = #{updateTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="version != null" >
+        and version = #{version,jdbcType=SMALLINT}
+      </if>
+      <if test="deleted != null" >
+        and deleted = #{deleted,jdbcType=TINYINT}
+      </if>
+    </where>
+  </sql>
+
+
+  <sql id="Example_Where_Clause">
+    WHERE 1=1 and oi.deleted=0 AND obi.deleted=0
+    AND gi.deleted=0 AND u.deleted=0 AND u1.deleted=0
+    <trim suffixOverrides=",">
+      <if test="startTime != null ">
+        AND obi.createTime &gt;=  #{startTime}
+      </if>
+      <if test="endTime != null ">
+        AND obi.createTime &lt;=  #{endTime}
+      </if>
+      <if test="goodsOwnerMobile != null and goodsOwnerMobile != ''">
+        and u.mobile = #{goodsOwnerMobile}
+      </if>
+      <if test="driverMobile != null and driverMobile != ''">
+        and u1.mobile = #{driverMobile}
+      </if>
+      <if test="serialNo != null and serialNo != ''">
+        and oi.orderNo = #{serialNo}
+      </if>
+      <if test="cityCode != null and cityCode != ''">
+        and u.residentCityId = #{cityCode}
+      </if>
+      <if test="cityMinCode != null and cityMinCode != ''">
+        and u.residentCityId  between #{cityMinCode} and #{cityMaxCode}
+      </if>
+      <if test="resident1 != null and resident1 != ''">
+        and u.resident1 = #{resident1}
+      </if>
+      <if test="resident2 != null and resident2 != ''">
+        and u.resident2 = #{resident2}
+      </if>
+      <if test="firstAuditStatus != null and firstAuditStatus != ''">
+        AND oah.statusAfter = #{firstAuditStatus} and  oah.sourceType = 3
+      </if>
+      <if test="fisrtAuditUser != null and fisrtAuditUser != ''">
+        and oah.auditName = #{fisrtAuditUser} and  oah.sourceType = 3
+      </if>
+      <if test="secondAuditStatus != null and secondAuditStatus != ''">
+        and oah.statusAfter = #{secondAuditStatus} and  oah.sourceType = 4
+      </if>
+      <if test="secondAuditUser != null and secondAuditUser != ''">
+        and oah.auditName = #{secondAuditUser} and  oah.sourceType = 4
+      </if>
+      <if test="thirdAuditStatus != null and thirdAuditStatus != ''">
+        and oah.statusAfter = #{thirdAuditStatus} and  oah.sourceType = 5
+      </if>
+      <if test="thirdAuditUser != null and thirdAuditUser != ''">
+        and oah.auditName = #{thirdAuditUser} and  oah.sourceType = 5
+      </if>
+      <if test="auditName != null and auditName != ''">
+        and aa.auditName = #{auditName}
+      </if>
+      <if test="type != null and type != ''">
+        and obi.type = #{type}
+      </if>
+      <choose>
+        <when test="statusList ==null">
+          <if test="auditCycle==2">
+            and auditStatus in (1,3)
+          </if>
+          <if test="auditCycle==3">
+            and auditStatus in (4,5)
+          </if>
+        </when>
+        <otherwise>
+          and obi.auditStatus in
+          <foreach collection="statusList" item="item" index="index"  open="(" separator="," close=")">
+            #{item}
+          </foreach>
+        </otherwise>
+      </choose>
+      <if test="flag != null and flag != '' and flag == 1">
+        <choose>
+          <when test="type != null and type != '' and type==1">
+            <choose>
+              <when test="auditCycle != null and auditCycle != '' and auditCycle==1">
+                and obi.id in (select ti.sourceId from taskInfo ti left join taskBucketInfo tb on ti.bucketId = tb.id where tb.deleted = 0 and tb.invalid = 1 and tb.TYPE = 4 and tb.sysUserId =#{sysUserId} )
+              </when>
+              <when test="auditCycle != null and auditCycle != '' and auditCycle==2">
+                and obi.id in (select ti.sourceId from taskInfo ti left join taskBucketInfo tb on ti.bucketId = tb.id where tb.deleted = 0 and tb.invalid = 1 and tb.TYPE = 5 and tb.sysUserId =#{sysUserId} )
+              </when>
+            </choose>
+          </when>
+        </choose>
+      </if>
+    </trim>
+  </sql>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from orderBonusInfo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="listOrderBonusInfo" parameterType="com.topjet.manage.domain.vo.OrderBonusListQuery" resultType="com.topjet.manage.domain.vo.OrderBonusListVO">
+    SELECT
+    ob.id,
+    ob.version,
+    o.orderNo AS serialNo,
+    ob.orderId,
+    ob.auditStatus,
+    DATE_FORMAT( ob.createTime, '%Y-%m-%d' ) AS createDate,
+    CONVERT ( o.freightFee, DECIMAL ( 25, 2 ) ) AS freightFee,
+    CONVERT ( o.agencyFee, DECIMAL ( 25, 2 ) ) AS agencyFee,
+    ou.username AS senderName,
+    IFNULL(ou.id,"") AS ownerId,
+    ou.mobile AS senderMobile,
+    CONVERT ( ob.ownerAmount, DECIMAL ( 25, 2 ) ) AS ownerAmount,
+    du.username AS receiverName,
+    du.id AS driverId,
+    du.mobile AS receiverMobile,
+    CONVERT ( ob.driverAmount, DECIMAL ( 25, 2 ) ) AS driverAmount,
+    (SELECT statusAfter FROM orderAuditHistory WHERE id = (select MAX(id) from orderAuditHistory WHERE sourceType = 3 AND sourceId = ob.id)) AS firstAuditStatus,
+    (SELECT statusAfter FROM orderAuditHistory WHERE id = (select MAX(id) from orderAuditHistory WHERE sourceType = 4 AND sourceId = ob.id)) As secondAuditStatus,
+    (SELECT statusAfter FROM orderAuditHistory WHERE id = (select MAX(id) from orderAuditHistory WHERE sourceType = 5 AND sourceId = ob.id)) As thirdAuditStatus,
+    (SELECT auditName FROM orderAuditHistory WHERE id = (select MAX(id) from orderAuditHistory WHERE sourceType = 3 AND sourceId = ob.id)) as firstAuditName,
+    (SELECT auditName FROM orderAuditHistory WHERE id = (select MAX(id) from orderAuditHistory WHERE sourceType = 4 AND sourceId = ob.id)) as secondAuditName,
+    (SELECT auditName FROM orderAuditHistory WHERE id = (select MAX(id) from orderAuditHistory WHERE sourceType = 5 AND sourceId = ob.id)) as thirdAuditName,
+    (SELECT remark FROM orderAuditHistory WHERE id = (select MAX(id) from orderAuditHistory WHERE sourceType = 3 AND sourceId = ob.id)) as firstAuditRemark,
+    (SELECT remark FROM orderAuditHistory WHERE id = (select MAX(id) from orderAuditHistory WHERE sourceType = 4 AND sourceId = ob.id)) as secondAuditRemark,
+    (SELECT remark FROM orderAuditHistory WHERE id = (select MAX(id) from orderAuditHistory WHERE sourceType = 5 AND sourceId = ob.id)) as thirdAuditRemark,
+    (SELECT createTime FROM orderAuditHistory WHERE id = (select MAX(id) from orderAuditHistory WHERE sourceType = 3 AND sourceId = ob.id)) as firstAuditTime,
+    (SELECT createTime FROM orderAuditHistory WHERE id = (select MAX(id) from orderAuditHistory WHERE sourceType = 4 AND sourceId = ob.id)) as secondAuditTime,
+    (SELECT createTime FROM orderAuditHistory WHERE id = (select MAX(id) from orderAuditHistory WHERE sourceType = 5 AND sourceId = ob.id)) as thirdAuditTime,
+    gi.destination2,
+    gi.destination1,
+    gi.destination3,
+    gi.depart1,
+    gi.depart2,
+    gi.depart3
+    <include refid="getOrderBonusListSql"/>
+    order by ${sort}
+    ${order}
+    limit #{offset}, #{limit}
+  </select>
+
+  <!-- 运费中介费补贴Count -->
+  <select id="countOrderBonusInfo" parameterType="com.topjet.manage.domain.vo.OrderBonusListQuery" resultType="java.lang.Integer">
+    SELECT count(ob.id)
+    <include refid="getOrderBonusListSql"/>
+  </select>
+
+
+  <!-- 运费中介费补贴sql -->
+  <sql id="getOrderBonusListSql">
+    FROM orderBonusInfo ob
+    LEFT JOIN orderDB.orderInfo o ON ob.orderId = o.id
+    LEFT JOIN userDB.userInfo ou ON o.ownerId = ou.id
+    LEFT JOIN userDB.userInfo du ON o.driverId = du.id
+    LEFT JOIN orderDB.goodsDetailInfo gi ON o.goodsId = gi.goodsId
+    LEFT JOIN orderAuditHistory oah ON oah.`sourceId` = o.`id`
+
+    <trim suffixOverrides=",">
+      <where>
+      <if test="serialNo != null and serialNo != ''">
+        and o.orderNo = #{serialNo}
+      </if>
+      <if test="senderMobile != null and senderMobile != ''">
+        AND  ou.mobile=#{senderMobile}
+      </if>
+      <if test="receiverMobile != null and receiverMobile != ''">
+        AND  du.mobile=#{receiverMobile}
+      </if>
+      <if test="auditName != null and auditName != ''">
+        AND  (ob.fisrtAuditUser = #{auditName} or ob.secondAuditUser = #{auditName} or ob.thirdAuditUser = #{auditName})
+      </if>
+      <if test="startDate != null">
+        and DATE_FORMAT(ob.createTime,'%Y-%m-%d') &gt;=DATE_FORMAT(#{startDate},'%Y-%m-%d')
+      </if>
+      <if test="endDate != null">
+        and DATE_FORMAT(ob.createTime,'%Y-%m-%d') &lt;=DATE_FORMAT(#{endDate},'%Y-%m-%d')
+      </if>
+      <if test="depart1 != null and depart1 != ''">
+        AND  gi.depart1=#{depart1}
+      </if>
+      <if test="depart2 != null and depart2 != ''">
+        AND  gi.depart2=#{depart2}
+      </if>
+      <if test="destination1 != null and destination1 != ''">
+        AND  gi.destination1=#{destination1}
+      </if>
+      <if test="destination2 != null and destination2 != ''">
+        AND  gi.destination2=#{destination2}
+      </if>
+      <if test="auditProcess != null and auditProcess != ''">
+        <choose>
+          <when test="statusList != null and statusList.size > 0">
+            AND auditStatus IN
+            <foreach collection="statusList" item="item" index="index"  open="(" separator="," close=")">
+              #{item}
+            </foreach>
+          </when>
+          <when test="auditStatus == null or auditStatus == ''">
+            <choose>
+              <when test="auditProcess == 1">
+                AND auditStatus in (0,2)
+              </when>
+              <when test="auditProcess == 2">
+                AND auditStatus in (1,3)
+              </when>
+              <otherwise>
+                AND auditStatus > 3
+              </otherwise>
+            </choose>
+          </when>
+          <otherwise>
+            AND  auditStatus = #{auditStatus}
+          </otherwise>
+        </choose>
+      </if>
+      </where>
+    </trim>
+  </sql>
+  <select id="listAuditOrderBonusInfo" resultType="com.topjet.manage.domain.bean.OrderBonusBean" parameterType="Object">
+    SELECT
+    obi.version AS orderBonusVersion,
+    obi.id as id,
+    obi.createTime AS createTime,
+    obi.orderId AS bonusOrderId ,
+    oi.orderNo AS serialNo,
+    obi.auditStatus AS auditStatus,
+    (SELECT statusAfter FROM orderAuditHistory WHERE id = (select MAX(id) from orderAuditHistory WHERE sourceType = 3 AND sourceId = obi.id)) AS firstAuditStatus,
+    (SELECT statusAfter FROM orderAuditHistory WHERE id = (select MAX(id) from orderAuditHistory WHERE sourceType = 4 AND sourceId = obi.id)) As secondAuditStatus,
+    (SELECT statusAfter FROM orderAuditHistory WHERE id = (select MAX(id) from orderAuditHistory WHERE sourceType = 5 AND sourceId = obi.id)) As thirdAuditStatus,
+    (SELECT auditName FROM orderAuditHistory WHERE id = (select MAX(id) from orderAuditHistory WHERE sourceType = 3 AND sourceId = obi.id)) as firstAuditUser,
+    (SELECT auditName FROM orderAuditHistory WHERE id = (select MAX(id) from orderAuditHistory WHERE sourceType = 4 AND sourceId = obi.id)) as secondAuditUser,
+    (SELECT auditName FROM orderAuditHistory WHERE id = (select MAX(id) from orderAuditHistory WHERE sourceType = 5 AND sourceId = obi.id)) as thirdAuditUser,
+    (SELECT remark FROM orderAuditHistory WHERE id = (select MAX(id) from orderAuditHistory WHERE sourceType = 3 AND sourceId = obi.id)) as firstAuditRemark,
+    (SELECT remark FROM orderAuditHistory WHERE id = (select MAX(id) from orderAuditHistory WHERE sourceType = 4 AND sourceId = obi.id)) as secondAuditRemark,
+    (SELECT remark FROM orderAuditHistory WHERE id = (select MAX(id) from orderAuditHistory WHERE sourceType = 5 AND sourceId = obi.id)) as thirdAuditRemark,
+    (SELECT createTime FROM orderAuditHistory WHERE id = (select MAX(id) from orderAuditHistory WHERE sourceType = 3 AND sourceId = obi.id)) as firstAuditTime,
+    (SELECT createTime FROM orderAuditHistory WHERE id = (select MAX(id) from orderAuditHistory WHERE sourceType = 4 AND sourceId = obi.id)) as secondAuditTime,
+    (SELECT createTime FROM orderAuditHistory WHERE id = (select MAX(id) from orderAuditHistory WHERE sourceType = 5 AND sourceId = obi.id)) as thirdAuditTime,
+    obi.settingId as settingId,
+    obi.driverAmount AS driverAmount,
+    obi.ownerAmount AS ownerAmount,
+    oi.agencyFee AS agentFee,
+    gdi.destination1 AS destination1,
+    gdi.destination2 AS destination2,
+    gdi.destination3 AS destination3,
+    oi.freightFee AS freightFee,
+    u1.username AS driverName,
+    u1.id as driverId,
+    u1.mobile AS driverMobile,
+    u.username AS goodsOwnerName,
+    u.mobile AS goodsOwnerMobile,
+    u.id as ownerId,
+    uoi.resident1 AS resident1,
+    uoi.resident2 AS resident2,
+    gdi.depart1 AS depart1,
+    gdi.depart3 AS depart3,
+    gdi.depart2 AS depart2,
+    op.createTime as haulageTime,
+    gi.loadDate AS transportTimes,
+    oi.createTime as unloadCreateTime,
+    gi.quantityType,
+    gi.quantityMax,
+    gi.quantityMin,
+    gi.unit
+    <if test="auditCycle != null and auditCycle != '' and auditCycle!=3">
+      ,tbk.name AS assignName
+    </if>
+    FROM orderBonusInfo obi
+    LEFT JOIN orderDB.orderInfo oi ON obi.orderId=oi.id
+    LEFT JOIN orderDB.goodsInfo gi ON gi.id=oi.goodsId
+    LEFT JOIN orderDB.goodsDetailInfo gdi ON gi.Id = gdi.goodsId
+    LEFT JOIN userDB.userInfo u ON oi.ownerId=u.id
+    LEFT JOIN userDB.userOtherInfo uoi ON oi.ownerId = uoi.userId
+    LEFT JOIN userDB.userInfo u1 ON oi.driverId=u1.id
+    LEFT JOIN orderDB.orderParameterInfo op on op.orderId = oi.id and op.parameterType = 8 and op.deleted = 0
+    LEFT JOIN orderAuditHistory oah ON oah.sourceId = obi.id
+    <choose>
+      <when test="type != null and type != '' and type==1">
+        <choose>
+          <when test="auditCycle != null and auditCycle != '' and auditCycle==1">
+            LEFT JOIN  taskInfo ts on obi.id=ts.sourceId and ts.type = 4 and ts.deleted = 0
+            LEFT JOIN  taskBucketInfo tbk on ts.bucketId = tbk.id and ts.deleted = 0
+          </when>
+          <when test="auditCycle != null and auditCycle != '' and auditCycle==2">
+            LEFT JOIN  taskInfo ts on obi.id=ts.sourceId and ts.type = 5 and ts.deleted = 0
+            LEFT JOIN  taskBucketInfo tbk on ts.bucketId = tbk.id and ts.deleted = 0
+          </when>
+        </choose>
+      </when>
+    </choose>
+    <include refid="Example_Where_Clause" />
+    GROUP BY obi.id
+    ORDER BY ${sort} ${order}
+    LIMIT #{offset}, #{limit}
+  </select>
+
+  <select id="countAuditOrderBonusInfo" resultType="java.lang.Integer" parameterType="Object">
+
+    select count(DISTINCT obi.id)
+    FROM orderBonusInfo obi
+    LEFT JOIN orderDB.orderInfo oi ON obi.orderId=oi.id
+    LEFT JOIN orderDB.goodsInfo gi ON gi.id=oi.goodsId
+    LEFT JOIN userDB.userInfo u ON oi.ownerId=u.id
+    LEFT JOIN userDB.userInfo u1 ON oi.driverId=u1.id
+    LEFT JOIN orderAuditHistory oah ON obi.id = oah.sourceId
+    <include refid="Example_Where_Clause" />
+  </select>
+
+</mapper>

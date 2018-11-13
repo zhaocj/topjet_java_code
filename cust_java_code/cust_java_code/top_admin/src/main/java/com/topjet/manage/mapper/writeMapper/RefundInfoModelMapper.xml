@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.writeMapper.RefundInfoModelMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.RefundInfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="billId" property="billId" jdbcType="INTEGER" />
+    <result column="refundMoney" property="refundMoney" jdbcType="DECIMAL" />
+    <result column="orderId" property="orderId" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="csStatus" property="csStatus" jdbcType="TINYINT" />
+    <result column="triggerId" property="triggerId" jdbcType="INTEGER" />
+    <result column="reason" property="reason" jdbcType="INTEGER" />
+    <result column="orderStatus" property="orderStatus" jdbcType="TINYINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="userRemark" property="userRemark" jdbcType="VARCHAR" />
+    <result column="repulseReason" property="repulseReason" jdbcType="INTEGER" />
+    <result column="repulseRemark" property="repulseRemark" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="createBy" property="createBy" jdbcType="INTEGER" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="updateBy" property="updateBy" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="SMALLINT" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, billId, refundMoney, orderId, status, csStatus, triggerId, reason, orderStatus, 
+    remark, userRemark, repulseReason, repulseRemark, createTime, createBy, updateTime, 
+    updateBy, version, deleted
+  </sql>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from refundInfo
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.topjet.manage.domain.model.RefundInfoModel" >
+    insert into refundInfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="billId != null" >
+        billId,
+      </if>
+      <if test="refundMoney != null" >
+        refundMoney,
+      </if>
+      <if test="orderId != null" >
+        orderId,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="csStatus != null" >
+        csStatus,
+      </if>
+      <if test="triggerId != null" >
+        triggerId,
+      </if>
+      <if test="reason != null" >
+        reason,
+      </if>
+      <if test="orderStatus != null" >
+        orderStatus,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="userRemark != null" >
+        userRemark,
+      </if>
+      <if test="repulseReason != null" >
+        repulseReason,
+      </if>
+      <if test="repulseRemark != null" >
+        repulseRemark,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="createBy != null" >
+        createBy,
+      </if>
+      <if test="updateTime != null" >
+        updateTime,
+      </if>
+      <if test="updateBy != null" >
+        updateBy,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="billId != null" >
+        #{billId,jdbcType=INTEGER},
+      </if>
+      <if test="refundMoney != null" >
+        #{refundMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="csStatus != null" >
+        #{csStatus,jdbcType=TINYINT},
+      </if>
+      <if test="triggerId != null" >
+        #{triggerId,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null" >
+        #{reason,jdbcType=INTEGER},
+      </if>
+      <if test="orderStatus != null" >
+        #{orderStatus,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="userRemark != null" >
+        #{userRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="repulseReason != null" >
+        #{repulseReason,jdbcType=INTEGER},
+      </if>
+      <if test="repulseRemark != null" >
+        #{repulseRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=SMALLINT},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.topjet.manage.domain.model.RefundInfoModel" >
+    update refundInfo
+    <set >
+      <if test="billId != null" >
+        billId = #{billId,jdbcType=INTEGER},
+      </if>
+      <if test="refundMoney != null" >
+        refundMoney = #{refundMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="orderId != null" >
+        orderId = #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="csStatus != null" >
+        csStatus = #{csStatus,jdbcType=TINYINT},
+      </if>
+      <if test="triggerId != null" >
+        triggerId = #{triggerId,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null" >
+        reason = #{reason,jdbcType=INTEGER},
+      </if>
+      <if test="orderStatus != null" >
+        orderStatus = #{orderStatus,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="userRemark != null" >
+        userRemark = #{userRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="repulseReason != null" >
+        repulseReason = #{repulseReason,jdbcType=INTEGER},
+      </if>
+      <if test="repulseRemark != null" >
+        repulseRemark = #{repulseRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        createBy = #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        updateBy = #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=SMALLINT},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>

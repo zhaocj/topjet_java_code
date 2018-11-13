@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.OrderAffiliateModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.OrderAffiliateModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="orderId" property="orderId" jdbcType="INTEGER" />
+    <result column="orderFrozenState" property="orderFrozenState" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="SMALLINT" />
+    <result column="createBy" property="createBy" jdbcType="INTEGER" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateBy" property="updateBy" jdbcType="INTEGER" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="deleted" property="deleted" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, orderId, orderFrozenState, version, createBy, createTime, updateBy, updateTime, 
+    deleted
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from orderDB.orderAffiliate
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!--查询冻结信息-->
+  <select id="getOrderAffiliateList" parameterType="java.lang.Integer"
+          resultType="com.topjet.manage.domain.model.OrderAffiliateModel">
+      SELECT oat.id,oat.orderId,oat.orderFrozenState,oat.createBy,oat.createTime,oat.updateBy,oat.updateTime,oat.deleted,oat.version
+      from orderDB.orderAffiliate oat where oat.orderId = #{orderId}
+  </select>
+
+</mapper>

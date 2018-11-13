@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.OwnerTruckInviteInfoModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.OwnerTruckInviteInfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="truckId" property="truckId" jdbcType="INTEGER" />
+    <result column="dirverMobile" property="dirverMobile" jdbcType="VARCHAR" />
+    <result column="used" property="used" jdbcType="TINYINT" />
+    <result column="ownerId" property="ownerId" jdbcType="INTEGER" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    id, truckId, dirverMobile, used, ownerId, createTime, updateTime, deleted
+  </sql>
+
+
+  <sql id="Criteria_where_clause">
+    <where>
+      <if test="id != null" >
+        and id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="truckId != null" >
+        and truckId = #{truckId,jdbcType=INTEGER}
+      </if>
+      <if test="dirverMobile != null" >
+        and dirverMobile = #{dirverMobile,jdbcType=VARCHAR}
+      </if>
+      <if test="used != null" >
+        and used = #{used,jdbcType=TINYINT}
+      </if>
+      <if test="ownerId != null" >
+        and ownerId = #{ownerId,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null" >
+        and createTime = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="updateTime != null" >
+        and updateTime = #{updateTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="deleted != null" >
+        and deleted = #{deleted,jdbcType=TINYINT}
+      </if>
+    </where>
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from truckDB.ownerTruckInviteInfo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+  <select id="selectListByParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from truckDB.ownerTruckInviteInfo
+    <include refid="Criteria_where_clause" />
+  </select>
+
+</mapper>

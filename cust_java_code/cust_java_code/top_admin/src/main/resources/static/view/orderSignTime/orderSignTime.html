@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>交运配货网-后台管理</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="" rel="stylesheet">
+  <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="../../bootstrap/css/bootstrap-table.min.css" rel="stylesheet"/>
+  <link href="../../css/flat-ui.min.css" rel="stylesheet"/>
+  <link href="../../css/easyui.css" rel="stylesheet"/>
+  <link href="../../css/demo.css" rel="stylesheet"/>
+  <link href="../../css/font-awesome.min.css" rel="stylesheet"/>
+  <link href="../../css/jquery.mCustomScrollbar.css" rel="stylesheet"/>
+  <link href="../../css/bootstrap-datetimepicker.css" rel="stylesheet"/>
+  <link href="../../less/modules/buttons.less" rel="stylesheet"/>
+  <link rel="shortcut icon" href="../../img/faviconindex.ico"/>
+  <link href="../../bootstrap/formValidation/formValidation.css"/>
+
+  <script src="../../resource/jquery-1.11.3.min.js"></script>
+  <script src="../../js/common/utils.js"></script>
+  <script src="../../js/bootbox.min.js"></script>
+  <script type="text/javascript" src="../../bootstrap/formValidation/formValidation.js"></script>
+  <script type="text/javascript" src="../../bootstrap/formValidation/bootstrap.js"></script>
+  <script type="text/javascript" src="../../bootstrap/formValidation/validData.js"></script>
+  <script src="../../js/vendor/jquery.easyui.min.js"></script>
+  <script src="../../js/jquery.mCustomScrollbar.concat.min.js"></script>
+  <script src="../../js/flat-ui.min.js"></script>
+  <script src="../../js/application.js"></script>
+  <script src="../../js/bootstrap-datetimepicker.min.js"></script>
+  <script src="../../js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+  <script src="../../js/echarts.min.js"></script>
+  <script src="../../js/common/index.js"></script>
+  <script src="../../js/common/ajaxCall.js"></script>
+</head>
+<body >
+<div class="modal-body  fontsize-14">
+  <form id="myForm">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label>订单签收时间</label>
+        <input type="text"  onblur="checkValue()"  id="orderSignTime" name="orderSignTime" onkeyup="this.value=this.value.replace(/\D/g,'')" class="form-control input-sm"  placeholder="请输入正整数">
+      </div>
+    </div>
+  </form>
+</div>
+<div class="clearfix"></div>
+<div class="modal-footer margin-top-15">
+  <button type="button" id="myButton" onclick="submit()" class="btn btn-primary center-block">　提　交　</button>
+</div>
+<script type="text/javascript">
+
+
+    function checkValue() {
+
+        var orderSignTime=$("#orderSignTime").val();
+        if (!(/^[1-9]\d*$/.test(orderSignTime))) {
+            bootbox.alert({
+                size: 'larger',
+                message: '请输入正整数！',
+            });
+            $("#orderSignTime").val("");
+            return;
+        }
+    }
+
+
+    function submit() {
+        debugger;
+        var url = getRootPath() + '/orderSignTime/update.do';
+        var json = {orderTime: $("#orderSignTime").val()};
+        $.ajax({
+            type: "POST",
+            url : url,
+            data: json,
+            success: function(data){
+                bootbox.alert({
+                    size: 'small',
+                    message: data.msg,
+                });
+                window.parent.location.href = getRootPath() + '/orderSignTime/orderSignTimeList.do';
+            }
+        })
+    }
+
+
+   $(function () {
+        $.topjectValidate('myForm');
+    })
+
+
+</script>
+</body>
+</html>

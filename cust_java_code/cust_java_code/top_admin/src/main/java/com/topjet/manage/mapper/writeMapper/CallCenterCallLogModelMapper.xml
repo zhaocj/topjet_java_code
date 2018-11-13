@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.writeMapper.CallCenterCallLogModelMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.CallCenterCallLogModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="callSheetId" property="callSheetId" jdbcType="VARCHAR" />
+    <result column="originCallNo" property="originCallNo" jdbcType="VARCHAR" />
+    <result column="originCalledNo" property="originCalledNo" jdbcType="VARCHAR" />
+    <result column="callType" property="callType" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="ringTime" property="ringTime" jdbcType="TIMESTAMP" />
+    <result column="beginTime" property="beginTime" jdbcType="TIMESTAMP" />
+    <result column="endTime" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="businessType" property="businessType" jdbcType="TINYINT" />
+    <result column="agent" property="agent" jdbcType="VARCHAR" />
+    <result column="queue" property="queue" jdbcType="VARCHAR" />
+    <result column="queueName" property="queueName" jdbcType="VARCHAR" />
+    <result column="monitorFilename" property="monitorFilename" jdbcType="VARCHAR" />
+    <result column="agentName" property="agentName" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="createBy" property="createBy" jdbcType="INTEGER" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="updateBy" property="updateBy" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="SMALLINT" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+    <result column="createByName" property="createByName" jdbcType="VARCHAR" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    id, callSheetId, originCallNo, originCalledNo, callType, status, ringTime, beginTime, 
+    endTime, businessType, agent, queue, queueName, monitorFilename, agentName, remark, 
+    createTime, createBy, updateTime, updateBy, version, deleted, createByName
+  </sql>
+
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from callCenterCallLog
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.topjet.manage.domain.model.CallCenterCallLogModel" >
+    insert into callCenterCallLog
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="callSheetId != null" >
+        callSheetId,
+      </if>
+      <if test="originCallNo != null" >
+        originCallNo,
+      </if>
+      <if test="originCalledNo != null" >
+        originCalledNo,
+      </if>
+      <if test="callType != null" >
+        callType,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="ringTime != null" >
+        ringTime,
+      </if>
+      <if test="beginTime != null" >
+        beginTime,
+      </if>
+      <if test="endTime != null" >
+        endTime,
+      </if>
+      <if test="businessType != null" >
+        businessType,
+      </if>
+      <if test="agent != null" >
+        agent,
+      </if>
+      <if test="queue != null" >
+        queue,
+      </if>
+      <if test="queueName != null" >
+        queueName,
+      </if>
+      <if test="monitorFilename != null" >
+        monitorFilename,
+      </if>
+      <if test="agentName != null" >
+        agentName,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="createBy != null" >
+        createBy,
+      </if>
+      <if test="updateTime != null" >
+        updateTime,
+      </if>
+      <if test="updateBy != null" >
+        updateBy,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+      <if test="createByName != null" >
+        createByName,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="callSheetId != null" >
+        #{callSheetId,jdbcType=VARCHAR},
+      </if>
+      <if test="originCallNo != null" >
+        #{originCallNo,jdbcType=VARCHAR},
+      </if>
+      <if test="originCalledNo != null" >
+        #{originCalledNo,jdbcType=VARCHAR},
+      </if>
+      <if test="callType != null" >
+        #{callType,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="ringTime != null" >
+        #{ringTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="beginTime != null" >
+        #{beginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="businessType != null" >
+        #{businessType,jdbcType=TINYINT},
+      </if>
+      <if test="agent != null" >
+        #{agent,jdbcType=VARCHAR},
+      </if>
+      <if test="queue != null" >
+        #{queue,jdbcType=VARCHAR},
+      </if>
+      <if test="queueName != null" >
+        #{queueName,jdbcType=VARCHAR},
+      </if>
+      <if test="monitorFilename != null" >
+        #{monitorFilename,jdbcType=VARCHAR},
+      </if>
+      <if test="agentName != null" >
+        #{agentName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=SMALLINT},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=TINYINT},
+      </if>
+      <if test="createByName != null" >
+        #{createByName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.topjet.manage.domain.model.CallCenterCallLogModel" >
+    update callCenterCallLog
+    <set >
+      <if test="callSheetId != null" >
+        callSheetId = #{callSheetId,jdbcType=VARCHAR},
+      </if>
+      <if test="originCallNo != null" >
+        originCallNo = #{originCallNo,jdbcType=VARCHAR},
+      </if>
+      <if test="originCalledNo != null" >
+        originCalledNo = #{originCalledNo,jdbcType=VARCHAR},
+      </if>
+      <if test="callType != null" >
+        callType = #{callType,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="ringTime != null" >
+        ringTime = #{ringTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="beginTime != null" >
+        beginTime = #{beginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        endTime = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="businessType != null" >
+        businessType = #{businessType,jdbcType=TINYINT},
+      </if>
+      <if test="agent != null" >
+        agent = #{agent,jdbcType=VARCHAR},
+      </if>
+      <if test="queue != null" >
+        queue = #{queue,jdbcType=VARCHAR},
+      </if>
+      <if test="queueName != null" >
+        queueName = #{queueName,jdbcType=VARCHAR},
+      </if>
+      <if test="monitorFilename != null" >
+        monitorFilename = #{monitorFilename,jdbcType=VARCHAR},
+      </if>
+      <if test="agentName != null" >
+        agentName = #{agentName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        createBy = #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        updateBy = #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=SMALLINT},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=TINYINT},
+      </if>
+      <if test="createByName != null" >
+        createByName = #{createByName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

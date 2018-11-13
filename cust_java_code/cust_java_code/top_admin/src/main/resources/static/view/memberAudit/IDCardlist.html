@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>交运配货</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="../../resource/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap-table.css">
+    <link rel="stylesheet" type="text/css" href="../../css/demo.css">
+    <link rel="stylesheet/less" type="text/css" href="../../less/modules/buttons.less">
+
+    <script type="text/javascript" src="../../js/common/modal.js"></script>
+    <script type="text/javascript" src="../../js/common/utils.js"></script>
+    <script type="text/javascript" src="../../js/common/ajaxCall.js"></script>
+    <script type="text/javascript" src="../../js/common/dateformate.js"></script>
+
+    <script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+    <script type="text/javascript" src="../../js/bootbox.min.js"></script>
+</head>
+<body onresize="auto()">
+<input type="hidden" id="flag" value="">
+<div class="contentBox" style="padding:10px">
+    <div class="fixed-table-toolbar">
+        <div class="eachBox">
+            <ul id="resident">
+                <li>
+                    <label>手机号码：</label>
+                    <input type="text" name="mobile" id="mobile" placeholder="输入手机号">
+                </li>
+                <div class="line10"></div>
+            </ul>
+            <div class="clearfix "></div>
+        </div>
+        <div class="columns columns-left btn-group pull-right">
+            <button type="button" onclick="tableQuery()" class="btn btn-info btn-sm">查询</button>
+        </div>
+    </div>
+    <table id='table' class="table table-striped table-bordered table-hover table-condensed"></table>
+</div>
+<script type="text/javascript">
+    $(function () {
+        var columns = [
+            {
+                field: 'username',
+                align: 'center',
+                title: '姓名',
+                sortable: true
+            },{
+                field: 'mobile',
+                align: 'center',
+                title: '手机',
+                sortable: true
+            },{
+                field: 'userType',
+                title: '身份',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    if (value == 1) {
+                        return "司机/车主";
+                    }
+                    if (value == 2) {
+                        return "货主";
+                    }
+                },sortable: true
+            },{
+                field: 'createTime',
+                title: '注册日期',
+                align: 'center',
+                sortable: true,
+                formatter: function (value, row, index) {
+                    return formatDate(new Date(value), "yyyy-MM-dd");
+                },sortable: true
+            },{
+                field: 'assignName',
+                align: 'center',
+                title: '分配人',
+                sortable: true
+            },{
+                field: 'action',
+                title: '操作',
+                align: 'center',
+                formatter: function (value, rec, index) {
+                        return '<button type="button" class="btn btn-primary btn-xs" onclick="auditIDInfo(\''
+                            + rec.id+ '\')">审核资料</button>';
+                }
+            },
+        ];
+        var url = getRootPath() + '/memberAudit/auditList.do';
+        setTableInfo('table', columns, url, getQueryParams, 'toolbar');
+    });
+    function getQueryParams() {
+        var json = {
+            'mobile': $('#mobile').val()
+        };
+        return json;
+    };
+
+    function auditIDInfo(id) {
+        $.post(getRootPath() + '/memberAudit/auditLock.do', {auditDataId: id + "_2"}, function (data) {
+            if (data.status == "1") {
+                if (!confirm(data.msg + " 正在审核，继续审核？")) {
+                    return;
+                }
+            } else if (data.status == "2") {
+                alert(data.msg);
+            }
+            auditIDInfoDo(id);
+        });
+    }
+
+    function auditIDInfoDo(id) {
+//        var url = getRootPath()+'/memberAudit/checkVersion.do';
+        location.href = getRootPath() + '/memberAudit/auditIDDetail.do?id=' + id;
+//        var dataJson = {
+//            id: id
+//        }
+//        $.ajax({
+//            type:"POST",
+//            contentType: "application/x-www-form-urlencoded;charset=utf-8",
+//            url:url,
+//            data:dataJson,
+//            dataType:"json",
+//            success:function(data){
+//                if(data.status == "05"){
+//                    bootbox.alert({
+//                        size: 'small',
+//                        message: "对应数据不存在",
+//                    });
+//                    tableRefresh();
+//                }else{
+//                    location.href = getRootPath() + '/memberAuditAction/auditIDDetail.do?id=' + id;
+//                }
+//            }
+//        });
+    };
+</script>
+</body>
+</html>

@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>交运配货</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script type="text/javascript" src="../../resource/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="../../resource/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../resource/bootstrap-theme.css">
+	<link rel="stylesheet" type="text/css" href="../../resource/bootstrap.css">
+	<script type="text/javascript" src="../../js/common/modal.js"></script>
+	<script type="text/javascript" src="../../js/common/utils.js"></script>
+	<script type="text/javascript" src="../../js/common/ajaxCall.js"></script>
+	<script type="text/javascript" src="../../js/common/dateformate.js"></script>
+	<!-- bootstrap-table 表格-->
+	<link rel="stylesheet" type="text/css" href="../../resource/bootstrap-table.css">
+	<script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+	<script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../css/demo.css">
+	<link rel="stylesheet" type="text/css" href="../../less/modules/buttons.less">
+	<script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+	<script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+	<script type="text/javascript" src="../../js/bootbox.min.js"></script>
+	<script type="text/javascript" src="../../js/common/IDCardValidate.js"></script>
+
+</head>
+<body onresize="auto()">
+<form class="form-inline queryParameters-margin">
+	<div class="fixed-table-toolbar">
+		<div class="eachBox">
+			<ul>
+				<li>
+					<label>推荐人：</label>
+					<input type="text" id="recommendMobileId" name="recommendMobile" placeholder="输入推荐人手机号">
+				</li>
+				<li>
+					<label>被推荐人：</label>
+					<input type="text" id="recommendedMobileId" name="recommendedMobile" placeholder="输入被推荐人手机号">
+				</li>
+				<li>
+					<label>开始时间：</label>
+					<input type="date" id="startTimeId" name="startTime" placeholder="选择生成补贴开始时间">
+				</li>
+				<li>
+					<label>结束时间：</label>
+					<input type="date" id="endTimeId" name="endTime" placeholder="选择生成补帖结束时间">
+				</li>
+				<div class="line10"></div>
+				<li>
+					<label>IEMI编码：</label>
+					<input type="text" id="recommendedIMEIId" name="recommendedIMEI" placeholder="输入被推荐人IEMI编码">
+				</li>
+				<li>
+					<label>一审状态：</label>
+					<select id="firstAuditStatusId" name="firstAuditStatus">
+						<option value="0" selected ="selected">待审核</option>
+						<option value="1">审核通过</option>
+						<option value="3">无效推荐</option>
+						<option value="2">假一罚三</option>
+					</select>
+				</li>
+				<li>
+					<label for="isValid" >满足条件：</label>
+					<select name="isValid" id="isValid" >
+						<option value="">不限</option>
+						<option value="1">是</option>
+						<option value="0">否</option>
+					</select>
+				</li>
+				<li>
+					<label for="isFirstCallCount" >是否回访：</label>
+					<select name="isFirstCallCount" id="isFirstCallCount" >
+						<option value="">不限</option>
+						<option value="1">是</option>
+						<option value="0">否</option>
+					</select>
+				</li>
+				<div class="line10"></div>
+				<li>
+					<label>审核人：</label>
+					<input type="text" id="firstAuditUser" name="firstAuditUser" placeholder="输入审核人">
+				</li>
+			</ul>
+			<div class="clearfix "></div>
+		</div>
+		<div id="toolbar" class="columns columns-left btn-group pull-right">
+			<button type="button" class="btn btn-info btn-sm" onclick="tableQuery();">查询</button>
+		</div>
+	</div>
+</form>
+<table id='table'  class="table table-striped table-bordered table-hover table-condensed"></table>
+<div class="modal fade" id="myModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">推荐人补帖审核</h4>
+			</div>
+			<button type="button" class="btn btn-info btn-sm" style="margin-left: 20px" id="checkIdcardAndMobile" onclick="checkIdcardAndMobile();">三元素审核</button>
+			<font id="statusTitle">未认证</font>
+			<form>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="firstAuditStatusIdId">操作状态:</label>
+						<select id="firstAuditStatusIdId" name="firstAuditStatus" data-toggle="select" class="form-control select select-default">
+							<option value="">请选择审核状态</option>
+							<option value="1">审核通过</option>
+							<option value="2">假一罚三</option>
+							<option value="3">无效推荐</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="firstAuditRemarkId">备注说明:</label>
+						<input id="firstAuditRemarkId" name="firstAuditRemark" class="form-control" id=exampleInputEmail1" placeholder="请补充说明">
+					</div>
+					<!--<div class="margin-top-15">
+						<ul class="nav nav-tabs">
+							<li role="presentation" class="active"><a href="#">操作日志</a></li>
+						</ul>
+						<div id="tabadmin" class="tab-pane" role="tabpanel">
+							<div class="bs-callout bs-callout-danger" id="callout"> <code>2016-6-17 12:52</code><br>
+								侯小梅：补贴初审 备注(符合条件) </div>
+							<div class="bs-callout bs-callout-danger" id="callout-labels-inline-block"> <code>2016-6-17 12:36</code><br>
+								彭佳军：补贴二审 备注(符合条件) </div>
+						</div>
+					</div>-->
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary center-block" onclick="submitStatusAf1()">　提　交　</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(function () {
+		var columns=[
+			{
+				field : 'createTime',
+				title : '触发日期',
+				align : 'center',
+				sortable: true,
+				formatter : function(value, row, index) {
+					if (value != null) {
+						return  formatViewDate(new Date(value),"yyyy-MM-dd HH:mm");
+					}
+					return null;
+				}
+			},
+			{
+				field : 'recommendName',
+				title : '推荐人',
+				align : 'center',
+				sortable: true,
+				formatter : function (value,row,index) {
+					return '<a  href="#" onclick="modifiedInfo1(\''
+							+ row.recommendUserId+ '\',\'推荐费补贴一审\')">'+value+'</a>';
+				}
+			},
+			{
+				field : 'recommendMobile',
+				title : '推荐人号码',
+				sortable : true,
+				align : 'center'
+			},
+			{
+				field : 'recommendedName',
+				title : '被推荐人',
+				sortable : true,
+				align : 'center',
+				formatter : function (value,row,index) {
+					return '<a  href="#" onclick="modifiedInfo1(\''
+							+ row.recommendedUserId+ '\',\'推荐费补贴一审\')">'+value+'</a>';
+				}
+			},
+			{
+				field : 'recommendedMobile',
+				title : '被推荐人号码',
+				sortable : true,
+				align : 'center'
+			},
+			{
+				field : 'recommendedIMEI',
+				title : '被推荐人IEMI',
+				sortable : true,
+				align : 'center'
+			},
+			{
+				field : 'auditStatus',
+				title : '当前状态',
+				sortable : true,
+				align : 'center',
+				formatter : function(value, row, index) {
+					if (value == 0) {
+						return "待审核";
+					}else if (value == 1) {
+						return "审核通过";
+					}else if (value == 2) {
+						return "假一罚三";
+					}else if (value == 3) {
+						return "审核驳回";
+					}
+				}
+			},
+			{
+				field : 'firstAuditRemark',
+				title : '备注',
+				sortable : true,
+				align : 'center',
+				formatter : function(value, row, index) {
+					if (value != null && value.length >= 20) {
+						var a = value.substring(0, 7) + "......";
+						var s='<span style="cursor:pointer;color:#5bc0de;" title="'+value+'" >'+a+'</span>';
+						return s;
+					}else{
+						return value
+					}
+				}
+			},
+			{
+				field : 'userType',
+				title : '被推荐人身份',
+				align : 'center',
+				sortable : true,
+				formatter: function (value) {
+					if (value == 1) {
+						return "司机";
+					} else if (value == 2) {
+						return "货主";
+					}
+				}
+			},
+			{
+				field : 'isValid',
+				title : '满足条件',
+				align : 'center',
+				sortable : true,
+				formatter: function (value) {
+					if (value == 0) {
+						return "否";
+					} else if (value == 1) {
+						return "是";
+					}
+				}
+			},
+            {
+                field: 'assignName',
+                align: 'center',
+                title: '分配人',
+                sortable: true
+            },
+			{
+				field: 'firstAuditUser',
+				align: 'center',
+				title: '审核人',
+				sortable: true
+			},
+            {
+                field: 'firstCallCount',
+                align: 'center',
+                title: '一审回访次数',
+                sortable: true
+            },
+			{
+				field : 'opt',
+				title : '可用操作',
+				align : 'center',
+				formatter : function(value, rec, index) {
+					if (rec.auditProcess == '1' && rec.auditStatus == '0') {
+						var d = '<button type="button"  data-target="#myModal" class="btn btn-primary  btn-xs" onclick="firstAuditStatus(\''
+								+ rec.id
+								+ '\',\''
+								+ rec.version
+								+ '\',\''+rec.firstAuditStatus+'\',\''+rec.firstAuditRemark+'\',\''+rec.recommendedName+'\',\''+rec.recommendedMobile+'\',\''+rec.recommendedIdNo+'\')">审核&nbsp</button> '
+							    +
+							    '<button type="button" class="btn btn-primary  btn-xs" onclick="firstCallCount(\''+ rec.id
+                                + '\',\''
+                                + rec.version
+                                + '\')">回访</button>';
+						return d;
+					}
+					return null;
+				}
+			}
+		];
+		//
+		if(isNull(getCookie("pageSizeReco1"))){
+			$("#startTimeId").val(getDate7());
+		}
+		var url=getRootPath()+'/recommendationBonus/list.do';
+		setTableInfo('table', columns, url,getQueryParams,'toolbar');
+		setTimeout(function() {
+			if(!isNull(getCookie("pageNumberReco1"))){
+				$(".pagination").find("li").each(function () {
+					if($(this).children("a").text() == getCookie("pageNumberReco1")){
+						$(this).addClass("active");
+					}
+				})
+				removeCookie("pageNumberReco1");
+				removeCookie("pageSizeReco1");
+			}
+		},600);
+	})
+
+	function getQueryParams() {
+        var param = window.location.search;
+        if(param != ""){
+            $('#firstAuditStatusId').find("option[value=1]").attr("selected","selected")
+        }
+
+		var json = {
+            auditStatus : $('#firstAuditStatusId').val(),
+			recommendedMobile : $('#recommendedMobileId').val(),
+			recommendMobile : $('#recommendMobileId').val(),
+			recommendedIMEI : $('#recommendedIMEIId').val(),
+			endTime : $('#endTimeId').val(),
+			startTime : $('#startTimeId').val(),
+			statusFlag : 1,//审核状态
+			cookieFlag : 1,//cookie标记给返回不刷新所用
+			isValid:$('#isValid').val(),
+            isFirstCallCount:$('#isFirstCallCount').val(),
+			firstAuditUser:$('#firstAuditUser').val()
+		};
+		return json;
+	}
+
+	//用户详情
+	function modifiedInfo1(id,title) {
+		setCookie("pageNumberReco1",$(".pagination .active a").text(),1);
+		setCookie("pageSizeReco1", $(".page-size").text(),1);
+		/*if(!isNull($(".pagination .active a").text())){
+		 $("#pageNumber").val($(".pagination .active a").text());
+		 }
+		 if(!isNull($(".page-size").text()) && $(".page-size").text().length<=4){
+		 $("#pageSize").val($(".page-size").text());
+		 }*/
+		window.location.href = getRootPath() + '/memberAction/memberDetail.do?id=' + id+'&title='+title;
+	};
+
+var bonusId;
+var version;
+var firstAuditRemarkId;
+var name;
+var mobile;
+var recommendedIdNo;
+function firstAuditStatus(id,ver,firstAuditStatus,firstAuditRemark,recommendedName,recommendedMobile,recommendedID){
+	$("#checkIdcardAndMobile").attr("disabled", false);
+	bonusId=id;
+	version=ver;
+    firstAuditRemarkId=firstAuditRemark;
+    name=recommendedName;
+    mobile=recommendedMobile;
+    recommendedIdNo=recommendedID;
+	$("#firstAuditStatusIdId").find("option[value='"+firstAuditStatus+"']").attr("selected",true);
+	$("#firstAuditStatusIdId").val(firstAuditStatus);
+	$("#firstAuditRemarkId").val("");
+	if(firstAuditRemark != null && firstAuditRemark != "null"){
+		$("#firstAuditRemarkId").val(firstAuditRemark);
+	}
+
+    var matchCode ;
+    var getMatchCodeUrl = getRootPath() + '/recommendationBonus/getMatchCode.do';
+    $.ajax({
+        type:"POST",
+        contentType: "application/x-www-form-urlencoded;charset=utf-8",
+        url:getMatchCodeUrl,
+        data:"bonusId="+bonusId,
+        success:function(data){
+            matchCode = data.statusAfter;
+            if(matchCode == 'null' || typeof matchCode === 'undefined'){
+                $("#statusTitle").text("未认证").removeClass("text-danger").addClass("text-success");
+            }else{
+                if(matchCode == 1){
+                    $("#statusTitle").text("已通过").removeClass("text-danger").addClass("text-success");
+                }else if((matchCode == 0|| matchCode == 2)) {
+					$("#statusTitle").text("认证不通过").removeClass("text-danger").addClass("text-success");
+				}else if( matchCode == -1){
+					$("#statusTitle").text("网络异常").removeClass("text-danger").addClass("text-success");
+				}
+            }
+            $('#myModal').modal('show');
+        }
+    });
+}
+
+	$("#firstAuditStatusIdId").change(function () {
+		if ($(this).val() == "1") {
+			$("#firstAuditRemarkId").val("审核通过");
+		}else {
+			$("#firstAuditRemarkId").val(firstAuditRemarkId.length==0?"":firstAuditRemarkId);
+		}
+	});
+
+    /**
+     * 一审回访标记
+     * @param id
+     * @param version
+     */
+    function firstCallCount(id,ver) {
+		bonusId=id;
+        version=ver;
+        url =	getRootPath()+'/recommendationBonus/callCount.do';
+        var dataJson={
+            id : bonusId,
+            version:version,
+			statusFlag : 1,//审核状态
+		}
+        $.ajaxDefaultCall(url,dataJson,function(){tableRefresh()});
+    }
+function submitStatusAf1(){
+	var firstAuditRemark=	$("#firstAuditRemarkId").val();
+	var firstAuditStatusId=	$("#firstAuditStatusIdId").val();
+
+	if(isNull(firstAuditRemark)){
+		bootbox.alert({
+			size : 'small',
+			message :'备注不能为空',
+		});
+		return ;
+	}
+	if(isNull(firstAuditStatusId)){
+		bootbox.alert({
+			size : 'small',
+			message :'请选择审核状态',
+		});
+		return ;
+	}
+	var dataJson = {
+		id : bonusId,
+		version:version,
+		firstAuditRemark:$("#firstAuditRemarkId").val(),
+		firstAuditStatus:$("#firstAuditStatusIdId").val()
+	},
+		url =	getRootPath()+'/recommendationBonus/audit.do';
+	$.ajaxDefaultCall(url,dataJson,function(){$('#myModal').modal('hide');tableRefresh();$("#firstAuditRemarkId").val('');});
+}
+
+//手机三元素审核
+function  checkIdcardAndMobile() {
+    if(name =='' || mobile=='' || recommendedIdNo =='' ){
+		bootbox.alert({
+			size: 'small',
+			message: "三元素不能为空！",
+		});
+        return;
+	}
+
+    var reg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
+    if(!reg.test(mobile)){
+        bootbox.alert({
+            size: 'small',
+            message: "不是有效的手机号码",
+        });
+        return ;
+	}
+    var result = getIdCardInfo(recommendedIdNo);
+    if (result.isTrue != true) {
+        bootbox.alert({
+            size: 'small',
+            message: "不是有效的身份证号码",
+        });
+        bt.button('reset');
+
+    }
+
+	$("#checkIdcardAndMobile").html("提交中");
+	$("#checkIdcardAndMobile").attr("disabled", true);
+
+    var data= {
+        recommendedName :name ,
+        recommendedMobile:mobile,
+        recommendedIdNo:recommendedIdNo,
+        bonusId:bonusId
+    }
+
+    var url = getRootPath() + '/recommendationBonus/CheckIdcardAndMobile.do';
+    $.ajax({
+        type:"POST",
+        contentType: "application/x-www-form-urlencoded;charset=utf-8",
+        url:url,
+        data:data,
+        success:function(responseDto){
+			if(responseDto != null && responseDto != ""){
+				if(responseDto.matchcode==1){
+					$("#statusTitle").text("已通过").removeClass("text-danger").addClass("text-success");
+				}else if(responseDto.matchCode == 0 || responseDto.matchCode == 2){
+					$("#statusTitle").text("认证不通过").removeClass("text-danger").addClass("text-success");
+				}else if(responseDto.matchCode == -1){
+					$("#statusTitle").text("网络异常，稍后再试").removeClass("text-danger").addClass("text-success");
+					$("#checkIdcardAndMobile").attr("disabled", false);
+				}
+
+			}else{
+				bootbox.alert({
+					size:'small',
+					message:"网络异常",
+				});
+			}
+			$("#checkIdcardAndMobile").html("三元素审核");
+
+        }
+    });
+
+
+}
+</script>
+
+</body>
+</html>

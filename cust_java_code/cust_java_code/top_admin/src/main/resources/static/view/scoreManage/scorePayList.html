@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>交运配货网-后台管理</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" type="text/css" href="../../bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="../../css/flat-ui.min.css">
+	<link rel="stylesheet" type="text/css" href="../../bootstrap/css/bootstrap-table.min.css">
+
+	<link rel="stylesheet" type="text/css" href="../../css/demo.css">
+	<link rel="stylesheet/less" type="text/css" href="../../css/easyui.css">
+	<link rel="stylesheet/less" type="text/css" href="../../css/font-awesome.min.css">
+	<link rel="stylesheet/less" type="text/css" href="../../css/jquery.mCustomScrollbar.css">
+	<link rel="stylesheet/less" type="text/css" href="../../css/bootstrap-datetimepicker.css">
+
+	<link rel="stylesheet/less" type="text/css" href="../../bootstrap/formValidation/formValidation.css">
+
+	<script type="text/javascript" src="../../resource/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="../../js/common/modal.js"></script>
+	<script type="text/javascript" src="../../js/common/utils.js"></script>
+	<script type="text/javascript" src="../../js/common/ajaxCall.js"></script>
+	<script type="text/javascript" src="../../js/common/dateformate.js"></script>
+	<script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+	<script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+	<script type="text/javascript" src="../../js/bootbox.min.js"></script>
+	<script type="text/javascript" src="../../js/application.js"></script>
+	<script type="text/javascript" src="../../js/flat-ui.min.js"></script>
+	<script type="text/javascript" src="../../bootstrap/formValidation/formValidation.js"></script>
+	<script type="text/javascript" src="../../bootstrap/formValidation/bootstrap.js"></script>
+	<script type="text/javascript" src="../../bootstrap/formValidation/validData.js"></script>
+
+</head>
+<body onresize="auto()">
+<div class="contentBox" style="padding:10px">
+	<div class="fixed-table-toolbar">
+		<div class="eachBox">
+			<ul>
+				<li>
+					<label>手机号码：</label>
+					<input type="text" id="sendMobile" name="sendMobile" placeholder="输入发放人手机号">
+				</li>
+				<li>
+					<label>发放日期：</label>
+					<input type="date"  id="createTime" name="createTime" placeholder="请选择日期">
+				</li>
+			</ul>
+			<div class="clearfix "></div>
+		</div>
+		<div class="columns columns-left btn-group pull-right">
+			<button type="button" onclick="tableQuery()" class="btn btn-info btn-sm" >查询</button>
+		</div>
+		<div class="columns columns-left btn-group pull-right">
+			<button type="button" class="btn btn-primary btn-sm margin-left-10" data-toggle="modal" data-target="#myModal" href="scorePay.html" data-backdrop="false">人工发放积分</button>
+		</div>
+	</div>
+	<table id='table' class="table table-striped table-bordered table-hover table-condensed"></table>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="myModal">
+	<div class="modal-dialog">
+		<div class="modal-content"></div>
+	</div>
+</div>
+<script type="text/javascript">
+	var $modalDom;
+
+$(function () {
+	var columns=[
+			 		{
+						field : 'createTime',
+						title : '发放日期',
+						align : 'center',
+						formatter : function(value, row, index) {
+							return  formatViewDate(new Date(value),"yyyy-MM-dd HH:mm");
+						}
+					},
+					{
+						field:  'name',
+						title : '发放人用户名',
+						align : 'center'
+					},
+					{
+						field : 'mobile',
+						title : '发放人手机号',
+						align : 'center'
+					},
+					{
+						field : 'value',
+						title : '奖励积分',
+						align : 'center'
+					},
+					{
+						field : 'auditName',
+						title : '操作人',
+						align : 'center'
+					},
+					{
+						field : 'cause',
+						title : '备注',
+						align : 'center',
+						formatter : function(value, row, index) {
+							if (value.length >= 20) {
+								var a = value.substring(0, 7) + "......";
+								var s='<span style="cursor:pointer;color:#5bc0de;" title="'+value+'" >'+a+'</span>';
+								return s;
+							}else{
+								return value
+							}
+						}
+					}
+				];
+		var url=getRootPath()+'/scoreGrantAction/list.do';
+		setTableInfo('table', columns, url,getQueryParams,'toolbar')
+	$modalDom=$("#myModal");
+	})
+	
+   function getQueryParams() {
+	   var json = {
+		   'mobile':$('#sendMobile').val()
+	   };
+	   var createTime = {};
+	   if(!isNull($('#createTime').val())){
+		   createTime = {"createTime":StringToDate($('#createTime').val())}
+	   }
+	   return $.extend({},json,createTime);
+	}
+	
+	function hidModal() {
+		$modalDom.modal("hide");
+	}
+
+</script>
+
+</body>
+</html>

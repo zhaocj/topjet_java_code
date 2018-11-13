@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>交运配货</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="../../resource/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap.css">
+    <script type="text/javascript" src="../../js/common/modal.js"></script>
+    <script type="text/javascript" src="../../js/common/utils.js"></script>
+    <script type="text/javascript" src="../../js/common/ajaxCall.js"></script>
+    <script type="text/javascript" src="../../js/common/dateformate.js"></script>
+    <!-- bootstrap-table 表格-->
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap-table.css">
+    <script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../css/demo.css">
+    <link rel="stylesheet" type="text/css" href="../../less/modules/buttons.less">
+    <script type="text/javascript" src="../../js/bootbox.min.js"></script>
+    <script type="text/javascript" src="../../js/common/jquery.cityselect.js"></script>
+    <script type="text/javascript" src="../../js/common/city.min.js"></script>
+
+</head>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">查看备注</h4>
+            </div>
+            <div class="modal-body"  id="testid">
+                <!--<label id="testid"></label>-->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<body onresize="auto()">
+<form class="form-inline queryParameters-margin">
+    <div class="fixed-table-toolbar">
+        <div class="eachBox">
+            <ul>
+                <li>
+                    <label for="blockMobile">手机号码：</label>
+                    <input type="text" name="blockMobile"   id="blockMobile" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"  placeholder="输入被屏蔽的手机号">
+                </li>
+                <li>
+                    <label for="startDate">开始时间：</label>
+                    <input type="date" name="startDate"   id="startDate"  placeholder="请选择开始时间">
+                </li>
+                <li>
+                    <label for="endDate">结束时间：</label>
+                    <input type="date" name="endDate"   id="endDate"  placeholder="请选择结束时间">
+                </li>
+                <li>
+                    <label for="reason">屏蔽原因：</label>
+                    <select name="reason"   id="reason">
+                        <option value="">不限</option>
+                        <option value="1">黑名单</option>
+                        <option value="2">收货地与目的地不符</option>
+                        <option value="3">收货手机与注册不符</option>
+                        <option value="4">超时自动收货</option>
+                        <option value="5">同类型用户</option>
+                        <option value="6">相同交易方次数超限</option>
+                        <option value="7">发货地与提货地不相符</option>
+                        <option value="8">订单金额不在补贴范围内</option>
+                        <option value="9">车辆认证通过车牌号重复次数一个月超过5次</option>
+                        <option value="10">车辆认证通过车牌号总共超过30次</option>
+                    </select>
+                </li>
+                <div class="line10"></div>
+                <li>
+                    <label for="type">补贴类型：</label>
+                    <select name="type"   id="type">
+                        <option value="">不限</option>
+                        <option value="1">积分</option>
+                        <option value="2">定金补贴</option>
+                        <option value="3">运费补贴</option>
+                        <option value="4">推荐费补贴</option>
+                    </select>
+                </li>
+                <li>
+                    <label for="resource">数据来源：</label>
+                    <input type="text" name="resource"   id="resource"  placeholder="请输入订单号">
+                </li>
+                <li>
+                    <label for="recoMobile" style="width: 150px">被推荐人手机号码：</label>
+                    <input type="text" name="recoMobile"   id="recoMobile" onkeyup="this.value=this.value.replace(/\D/g,'')"  style="position:relative;left: 70px" onafterpaste="this.value=this.value.replace(/\D/g,'')"  placeholder="输入被推荐人手机号" >
+                </li>
+            </ul>
+            <div class="clearfix "></div>
+        </div>
+        <div id="toolbar" class="columns columns-left btn-group pull-right">
+            <button type="button" class="btn btn-info btn-sm" onclick="tableQuery();">查询</button>
+        </div>
+    </div>
+</form>
+<table id='table'  class="table table-striped table-bordered table-hover table-condensed"></table>
+<script type="text/javascript">
+    $(function () {
+        var columns = [
+            {
+                field : 'createTime',
+                title : '触发日期',
+                align : 'center',
+                sortable: true,
+                formatter : function(value, row, index) {
+                    if (value != null) {
+                        return  formatViewDate(new Date(value),"yyyy-MM-dd HH:mm");
+                    }
+                    return null;
+                }
+            },
+            {
+                field : 'userName',
+                title : '屏蔽用户',
+                align : 'center',
+                sortable: true,
+                formatter : function (value,row,index) {
+                    return '<a  href="#" onclick="modifiedInfo(\''
+                            + row.userId+ '\',\'屏蔽补贴\',\'' + row.reditRemark + '\')">'+value+'</a>';
+                }
+            },{
+                field : 'blockMobile',
+                title : '屏蔽手机',
+                align : 'center',
+                sortable: true
+            },{
+                field : 'reason',
+                title : '屏蔽原因',
+                align : 'center',
+                sortable: true,
+                formatter : function(value, row) {
+                    if(value == 1){
+                        return "黑名单";
+                    }else if(value == 2){
+                        return "收货地与目的地不符";
+                    }else if(value == 3){
+                        if(row.type == 4){
+                            return "该手机已发放过补贴";
+                        }else{
+                            return "收货手机与注册不符";
+                        }
+                    }else if(value == 4){
+                        return "超时自动收货";
+                    }else if(value == 5){
+                        return "同类型用户";
+                    }else if(value == 6){
+                        return "相同交易方次数超限";
+                    }else if(value == 7){
+                        return "发货地与提货地不相符";
+                    }else if(value == 8){
+                        return "订单金额不在补贴范围内";
+                    }else if(value == 9){
+                        return "车辆认证通过车牌号重复次数一个月超过5次";
+                    }
+                    else if(value == 10){
+                        return "车辆认证通过车牌号总共超过30次";
+                    }
+                    else{
+                        return "-";
+                    }
+                }
+            },
+            {
+                field : 'orderNo',
+                title : '数据来源',
+                align : 'center',
+                sortable: true,
+                formatter : function(value, row) {
+                    if(row.type == 4){
+                        if(row.recoName != null && row.recoName != ""){
+                            return '<span title="查看用户详情"><a href= "#" stype="cursor:pointter" onclick = "modifiedInfo(\''
+                                    + row.recommendationId+ '\',\'屏蔽补贴管理\',\'' + row.reditRemark + '\')">'+row.recoName+'</a>'+row.recoMobile+'<br/>'+'IEMI：'+row.recoIMEI+'</span>';
+                        }
+                         return "用户不存在";
+                    }else{
+                        if(row.orderId != null && row.orderId != ""){
+                            return '<a  href="#" onclick="getCommentDetails(\''
+                                    + row.orderId+ '\',\'屏蔽补贴管理\')">'+value+'</a>' +"<br/>"+row.depart2+row.depart3+"-->"+row.destination2+row.destination3;
+                        }
+                         return "订单不存在";
+                    }
+                }
+            },
+            {
+                field : 'type',
+                title : '补贴类型',
+                align : 'center',
+                sortable: true,
+                formatter : function(value, row) {
+                    if(value == 1){
+                        return "积分";
+                    }else if(value == 2){
+                        return "定金补贴";
+                    }else if(value == 3){
+                        return "运费补贴";
+                    }else if(value == 4){
+                        return "推荐费补贴";
+                    }
+                }
+
+            },
+            {
+                field : '',
+                title : '操作',
+                align : 'center',
+                formatter : function(value, rec,index) {
+                    return '<button type="button" class="btn btn-primary btn-xs" onclick="sShow(\''+ rec.remark+ '\')">查看备注</button>';
+                }
+                /*data-toggle="modal" data-target="#myModal"*/
+            }
+        ];
+        $("#startDate").val(getDate7());
+        var url=getRootPath()+'/bonusManage/blockedBonusList.do';
+        setTableInfo('table', columns, url,getQueryParams,'toolbar');
+    })
+
+    function sShow(stra){
+        $("#testid").html(stra);
+        $('#myModal').modal('show');
+    }
+
+    function getQueryParams() {
+        var endDate = {};
+        var startDate = {};
+        if(!isNull($('#endDate').val())){
+            endDate = {'endDate':StringToDate($('#endDate').val())}
+        }
+        if(!isNull($('#startDate').val())){
+            startDate = {'startDate':StringToDate($('#startDate').val())}
+        }
+        var json = {
+            'blockMobile':$('#blockMobile').val(),
+            'reason':$('#reason').val(),
+            'type':$('#type').val(),
+            'resource':$('#resource').val(),
+            'recoMobile':$('#recoMobile').val()
+        };
+        return $.extend({},startDate,endDate,json);
+    }
+
+    //自适应高度方法
+    function auto() {
+        $("#contentmenu").css("height", window_h = $(window).height() - 53);
+        if ($(".iframeId").length > 0) {
+            $(".iframeId").css("height", window_h = $(window).height() - 98);
+        }
+    }
+    $(window).resize(function() {
+        auto()
+    });
+
+</script>
+</body>
+</html>

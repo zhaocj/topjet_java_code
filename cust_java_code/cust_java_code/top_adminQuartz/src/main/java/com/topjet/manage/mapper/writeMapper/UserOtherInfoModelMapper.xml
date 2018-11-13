@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.writeMapper.UserOtherInfoModelMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.UserOtherInfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="userId" property="userId" jdbcType="INTEGER" />
+    <result column="resident1" property="resident1" jdbcType="VARCHAR" />
+    <result column="resident2" property="resident2" jdbcType="VARCHAR" />
+    <result column="resident3" property="resident3" jdbcType="VARCHAR" />
+    <result column="residentCityId" property="residentCityId" jdbcType="INTEGER" />
+    <result column="companyName" property="companyName" jdbcType="VARCHAR" />
+    <result column="businessAddress" property="businessAddress" jdbcType="VARCHAR" />
+    <result column="businessAddressCityId" property="businessAddressCityId" jdbcType="INTEGER" />
+    <result column="safetyTips" property="safetyTips" jdbcType="VARCHAR" />
+    <result column="registeredIMEI" property="registeredIMEI" jdbcType="VARCHAR" />
+    <result column="registeredCityId" property="registeredCityId" jdbcType="INTEGER" />
+    <result column="idAddress" property="idAddress" jdbcType="VARCHAR" />
+    <result column="telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="reditRemark" property="reditRemark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userId, resident1, resident2, resident3, residentCityId, companyName, businessAddress, 
+    businessAddressCityId, safetyTips, registeredIMEI, registeredCityId, idAddress, telephone, 
+    reditRemark
+  </sql>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from userDB.userOtherInfo
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+
+  <insert id="insert" parameterType="com.topjet.manage.domain.model.UserOtherInfoModel" >
+    insert into userDB.userOtherInfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        userId,
+      </if>
+      <if test="resident1 != null" >
+        resident1,
+      </if>
+      <if test="resident2 != null" >
+        resident2,
+      </if>
+      <if test="resident3 != null" >
+        resident3,
+      </if>
+      <if test="residentCityId != null" >
+        residentCityId,
+      </if>
+      <if test="companyName != null" >
+        companyName,
+      </if>
+      <if test="businessAddress != null" >
+        businessAddress,
+      </if>
+      <if test="businessAddressCityId != null" >
+        businessAddressCityId,
+      </if>
+      <if test="safetyTips != null" >
+        safetyTips,
+      </if>
+      <if test="registeredIMEI != null" >
+        registeredIMEI,
+      </if>
+      <if test="registeredCityId != null" >
+        registeredCityId,
+      </if>
+      <if test="idAddress != null" >
+        idAddress,
+      </if>
+      <if test="telephone != null" >
+        telephone,
+      </if>
+      <if test="reditRemark != null" >
+        reditRemark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="resident1 != null" >
+        #{resident1,jdbcType=VARCHAR},
+      </if>
+      <if test="resident2 != null" >
+        #{resident2,jdbcType=VARCHAR},
+      </if>
+      <if test="resident3 != null" >
+        #{resident3,jdbcType=VARCHAR},
+      </if>
+      <if test="residentCityId != null" >
+        #{residentCityId,jdbcType=INTEGER},
+      </if>
+      <if test="companyName != null" >
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="businessAddress != null" >
+        #{businessAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="businessAddressCityId != null" >
+        #{businessAddressCityId,jdbcType=INTEGER},
+      </if>
+      <if test="safetyTips != null" >
+        #{safetyTips,jdbcType=VARCHAR},
+      </if>
+      <if test="registeredIMEI != null" >
+        #{registeredIMEI,jdbcType=VARCHAR},
+      </if>
+      <if test="registeredCityId != null" >
+        #{registeredCityId,jdbcType=INTEGER},
+      </if>
+      <if test="idAddress != null" >
+        #{idAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="reditRemark != null" >
+        #{reditRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="update" parameterType="com.topjet.manage.domain.model.UserOtherInfoModel" >
+    update userDB.userOtherInfo
+    <set >
+      <if test="userId != null" >
+        userId = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="resident1 != null" >
+        resident1 = #{resident1,jdbcType=VARCHAR},
+      </if>
+      <if test="resident2 != null" >
+        resident2 = #{resident2,jdbcType=VARCHAR},
+      </if>
+      <if test="resident3 != null" >
+        resident3 = #{resident3,jdbcType=VARCHAR},
+      </if>
+      <if test="residentCityId != null" >
+        residentCityId = #{residentCityId,jdbcType=INTEGER},
+      </if>
+      <if test="companyName != null" >
+        companyName = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="businessAddress != null" >
+        businessAddress = #{businessAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="businessAddressCityId != null" >
+        businessAddressCityId = #{businessAddressCityId,jdbcType=INTEGER},
+      </if>
+      <if test="safetyTips != null" >
+        safetyTips = #{safetyTips,jdbcType=VARCHAR},
+      </if>
+      <if test="registeredIMEI != null" >
+        registeredIMEI = #{registeredIMEI,jdbcType=VARCHAR},
+      </if>
+      <if test="registeredCityId != null" >
+        registeredCityId = #{registeredCityId,jdbcType=INTEGER},
+      </if>
+      <if test="idAddress != null" >
+        idAddress = #{idAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        telephone = #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="reditRemark != null" >
+        reditRemark = #{reditRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+</mapper>

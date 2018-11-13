@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.writeMapper.RecommendRelationshipModelMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.RecommendRelationshipModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="recommendMobile" property="recommendMobile" jdbcType="VARCHAR" />
+    <result column="recommendedMobile" property="recommendedMobile" jdbcType="VARCHAR" />
+    <result column="recommendUserId" property="recommendUserId" jdbcType="INTEGER" />
+    <result column="recommendedUserId" property="recommendedUserId" jdbcType="INTEGER" />
+    <result column="success" property="success" jdbcType="TINYINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    id, recommendMobile, recommendedMobile, recommendUserId, recommendedUserId, success, 
+    remark, createTime, updateTime, deleted
+  </sql>
+
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from userDB.recommendRelationship
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+  <delete id="delete" parameterType="java.lang.Integer" >
+    delete from userDB.recommendRelationship
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+
+  <insert id="insert" parameterType="com.topjet.manage.domain.model.RecommendRelationshipModel" >
+    insert into userDB.recommendRelationship
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="recommendMobile != null" >
+        recommendMobile,
+      </if>
+      <if test="recommendedMobile != null" >
+        recommendedMobile,
+      </if>
+      <if test="recommendUserId != null" >
+        recommendUserId,
+      </if>
+      <if test="recommendedUserId != null" >
+        recommendedUserId,
+      </if>
+      <if test="success != null" >
+        success,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="updateTime != null" >
+        updateTime,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="recommendMobile != null" >
+        #{recommendMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="recommendedMobile != null" >
+        #{recommendedMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="recommendUserId != null" >
+        #{recommendUserId,jdbcType=INTEGER},
+      </if>
+      <if test="recommendedUserId != null" >
+        #{recommendedUserId,jdbcType=INTEGER},
+      </if>
+      <if test="success != null" >
+        #{success,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.topjet.manage.domain.model.RecommendRelationshipModel" >
+    update userDB.recommendRelationship
+    <set >
+      <if test="recommendMobile != null" >
+        recommendMobile = #{recommendMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="recommendedMobile != null" >
+        recommendedMobile = #{recommendedMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="recommendUserId != null" >
+        recommendUserId = #{recommendUserId,jdbcType=INTEGER},
+      </if>
+      <if test="recommendedUserId != null" >
+        recommendedUserId = #{recommendedUserId,jdbcType=INTEGER},
+      </if>
+      <if test="success != null" >
+        success = #{success,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        updateTime = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

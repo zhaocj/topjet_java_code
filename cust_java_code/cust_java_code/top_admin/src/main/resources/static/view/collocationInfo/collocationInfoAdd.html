@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>交运配货网-后台管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="" rel="stylesheet">
+    <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="../../bootstrap/css/bootstrap-table.min.css" rel="stylesheet"/>
+    <link href="../../css/flat-ui.min.css" rel="stylesheet"/>
+    <link href="../../css/easyui.css" rel="stylesheet"/>
+    <link href="../../css/demo.css" rel="stylesheet"/>
+    <link href="../../css/font-awesome.min.css" rel="stylesheet"/>
+    <link href="../../css/jquery.mCustomScrollbar.css" rel="stylesheet"/>
+    <link href="../../css/bootstrap-datetimepicker.css" rel="stylesheet"/>
+    <link href="../../less/modules/buttons.less" rel="stylesheet"/>
+    <link rel="shortcut icon" href="../../img/faviconindex.ico"/>
+    <link href="../../bootstrap/formValidation/formValidation.css"/>
+
+    <script src="../../resource/jquery-1.11.3.min.js"></script>
+    <script src="../../js/common/utils.js"></script>
+    <script src="../../js/bootbox.min.js"></script>
+    <script type="text/javascript" src="../../bootstrap/formValidation/formValidation.js"></script>
+    <script type="text/javascript" src="../../bootstrap/formValidation/bootstrap.js"></script>
+    <script type="text/javascript" src="../../bootstrap/formValidation/validData.js"></script>
+    <script src="../../js/vendor/jquery.easyui.min.js"></script>
+    <script src="../../js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../../js/flat-ui.min.js"></script>
+    <script src="../../js/application.js"></script>
+    <script src="../../js/bootstrap-datetimepicker.min.js"></script>
+    <script src="../../js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="../../js/echarts.min.js"></script>
+    <script src="../../js/common/index.js"></script>
+    <script src="../../js/common/ajaxCall.js"></script>
+</head>
+<body>
+<div class="modal-body  fontsize-14" id="myModal">
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>名称:</label>
+                <input type="text" id="collocationName" name="collocationName" maxlength="10" class="form-control input-sm" required="required">
+            </div>
+        </div>
+</div>
+<div class="clearfix"></div>
+<div class="modal-footer margin-top-15">
+    <button type="button" id="myButton" onclick="submitCreateClick()" class="btn btn-primary center-block">　提　交　
+    </button>
+</div>
+
+<script type="text/javascript">
+
+    var collocationType = getUrlParam("collocationType");
+    function submitCreateClick() {
+        if($.trim($("#collocationName").val())=="")return;
+        if(getRealLength($.trim($("#collocationName").val()))>14){
+            bootbox.alert({
+                size: 'small',
+                message: "调研报告名称最多不超过7个字!",
+            });
+            return;
+        }
+        var json = {
+            'collocationType':collocationType,
+            'collocationName': $("#collocationName").val(),
+        }
+        var url = getRootPath() + '/collocationInfo/create.do';
+        $.ajaxDefaultCall(url, json, function () {window.parent.location.href = getRootPath()+'/view/collocationInfo/list.html?collocationType='+collocationType})
+    }
+    
+    function getUrlParam(collocationName) {
+			var reg = new RegExp("(^|&)" + collocationName + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+			 var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+			if (r != null) return unescape(r[2]); return ""; //返回参数值
+		}
+
+    function getRealLength(str) {
+        var len = 0;
+        for (var i=0; i<str.length; i++) {
+            if (str.charCodeAt(i)>127 || str.charCodeAt(i)==94) {
+                len += 2;
+            } else {
+                len ++;
+            }
+        }
+        return len;
+    }
+
+</script>
+</body>
+</html>

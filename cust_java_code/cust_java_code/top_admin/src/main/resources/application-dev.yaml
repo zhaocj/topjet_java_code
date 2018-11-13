@@ -1,0 +1,186 @@
+spring:
+  application:
+    name: admin-service
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.8.150:3311/manageDB?useUnicode=true&characterEncoding=utf-8&usessl=false
+    username: managerUser
+    password: managerUser@566560.com
+    test-while-idle: true
+    test-on-borrow: false
+    validation-query: SELECT 1 FROM DUAL
+    time-between-eviction-runs-millis: 300000
+    min-evictable-idle-time-millis: 1800000
+
+  systemdatasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.8.150:3311/systemDB?useUnicode=true&characterEncoding=utf-8&usessl=false
+    username: managerUser
+    password: managerUser@566560.com
+    test-while-idle: true
+    test-on-borrow: false
+    validation-query: SELECT 1 FROM DUAL
+    time-between-eviction-runs-millis: 300000
+    min-evictable-idle-time-millis: 1800000
+
+  resourcedatasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.8.150:3311/resourceDB?useUnicode=true&characterEncoding=utf-8&usessl=false
+    username: managerUser
+    password: managerUser@566560.com
+    test-while-idle: true
+    test-on-borrow: false
+    validation-query: SELECT 1 FROM DUAL
+    time-between-eviction-runs-millis: 300000
+    min-evictable-idle-time-millis: 1800000
+
+  seconddatasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.8.150:3311/manageDB?useUnicode=true&characterEncoding=utf-8&usessl=false
+    username: managerUser
+    password: managerUser@566560.com
+    test-while-idle: true
+    test-on-borrow: false
+    validation-query: SELECT 1 FROM DUAL
+    time-between-eviction-runs-millis: 300000
+    min-evictable-idle-time-millis: 1800000
+
+
+
+  paydatasource:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://192.168.8.150:3315/TopJetPay?useUnicode=true&characterEncoding=utf8
+      username: lit
+      password: lit@566560.com
+      test-while-idle: true
+      test-on-borrow: false
+      validation-query: SELECT 1 FROM DUAL
+      time-between-eviction-runs-millis: 300000
+      min-evictable-idle-time-millis: 1800000
+
+  boot:
+    admin:
+      client:
+        prefer-ip: true
+      url: http://192.168.8.151:64000/admin-server # 向服务端注册的地址
+
+
+  zipkin:
+    base-url: http://192.168.8.163:9411
+  sleuth:
+    sampler:
+      percentage: 1
+
+  redis:
+    host: 192.168.8.150
+    port: 6335
+    pool:
+      max-idle: 8
+    timeout: 100000
+
+  rabbitmq:
+    host: 192.168.8.122
+    port: 5672
+    username: admin
+    password: admin
+  mvc:
+    view:
+      suffix: .ftl
+
+server:
+  port: 3100
+  context-path: /admin/
+
+#feign开关配置
+feign:
+  compression:
+    request:
+      enable: true
+    response:
+      enable: true
+
+topjet:
+  redis:
+    enable: true
+  resource:
+    enable: true
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8089/eureka/
+#      defaultZone: http://192.168.8.153:8100/eureka/
+
+systemConfiguration:
+  #第三方实名认证接口开关
+  idCheckWSSwitch: 1
+
+  #日志相关开关
+  topjetLogSwitch: 1
+  topjetLogLevel: 1
+  topjetLog4jLevel: 1
+  topjetLog4jSwitch: 1
+  dynamicpassword-switch: 1
+
+
+
+
+#消息中心相关配置
+msgcenterrequest:
+  redirect:
+    url: "http://192.168.8.16:8888/json/reply/MessageRequest"
+  version: "v1"
+  key: "11a6c8704a51467dcc61e6dc6d2e97e1"
+  appId: "100606"
+
+
+#三元素审核接口相关配置
+baseservice:
+  actionName: "CheckIdcardAndMobile"
+  messageType: "AuthMessage"
+
+
+
+#实名认证接口相关配置
+CheckAuthInfoService:
+  actionName: "CheckAuthInfo"
+  messageType: "AuthMessage"
+
+#TMS相关配置
+tmsRequest:
+  redirect:
+    url: "http://192.168.8.178:6001/api/Enterprise/AddEnterprise"
+  tmsAppid: "10061"
+  tmsAesKey: "!1@2#3$4%5^6&7*8"
+  tmsAesIvcode: "<<$#@!78%%ff32&8"
+
+
+#
+appslide:
+  url: "https://devh5.566560.com/h5/view/560_3.0/carousel/index.html?appSlideId="
+dynamicpassword:
+  switch: 0
+  url: "http://192.168.8.150:3006/"
+
+management:
+  security:
+    enabled: false
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

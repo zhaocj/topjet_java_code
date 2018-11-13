@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>修改活动页面</title>
+
+    <link rel="stylesheet" type="text/css" href="../../js/layui/css/layui.css">
+    <script type="text/javascript" src="../../js/layui/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="../../js/layui/layui.js"></script>
+    <script type="text/javascript" src="../../js/common/utils.js"></script>
+
+</head>
+<body>
+    <form class="layui-form" action="">
+        <table>
+
+            <tr class="fahuo">
+                <td>【发货版】</td>
+            </tr>
+            <tr class="fahuo">
+                <td style="width: 140px;">
+                    <label name="layui-form-label">首页</label>
+                </td>
+                <td>
+                    <input type="checkbox" name="xx" lay-filter="filter1" lay-skin="switch" value="1"  id="s1" lay-text="开启|关闭">
+                </td>
+            </tr>
+            <tr class="fahuo">
+                <td style="width: 140px;">
+                    <label class="layui-form-label">我的订单</label>
+                </td>
+                <td>
+                    <input type="checkbox" name="xx" lay-filter="filter2" lay-skin="switch" value="2" id="s2" lay-text="开启|关闭">
+                </td>
+            </tr>
+            <tr class="fahuo" style="display:none">
+                <td style="width: 140px;">
+                    <label class="layui-form-label">附近车源（地图）</label>
+                </td>
+                <td>
+                    <input type="checkbox" name="xx" lay-filter="filter3" lay-skin="switch" value="3" id="s3" lay-text="开启|关闭">
+                </td>
+            </tr>
+            <tr class="fahuo">
+                <td style="width: 140px;">
+                    <label class="layui-form-label">我要用车</label>
+                </td>
+                <td>
+                    <input type="checkbox" name="xx" lay-filter="filter4" lay-skin="switch" value="4" id="s4" lay-text="开启|关闭">
+                </td>
+            </tr>
+            <tr class="fahuo">
+                <td style="width: 140px;">
+                    <label class="layui-form-label">个人中心</label>
+                </td>
+                <td>
+                    <input type="checkbox" name="xx" lay-filter="filter5" lay-skin="switch" value="5" id="s5" lay-text="开启|关闭">
+                </td>
+            </tr>
+            <tr class="jiehuo">
+                <td>【接货版】</td>
+            </tr>
+            <tr class="jiehuo">
+                <td style="width: 140px;">
+                    <label class="layui-form-label">首页</label>
+                </td>
+                <td>
+                    <input type="checkbox" name="xx" lay-filter="filter6" lay-skin="switch" value="6" id="s6" lay-text="开启|关闭">
+                </td>
+            </tr>
+            <tr class="jiehuo">
+                <td style="width: 140px;">
+                    <label class="layui-form-label">智能找货页</label>
+                </td>
+                <td>
+                    <input type="checkbox" name="xx" lay-filter="filter7" lay-skin="switch" value="7"  id="s7" lay-text="开启|关闭">
+                </td>
+            </tr>
+            <tr class="jiehuo">
+                <td style="width: 140px;">
+                    <label class="layui-form-label">我的订单页</label>
+                </td>
+                <td>
+                    <input type="checkbox" name="xx" lay-filter="filter8" lay-skin="switch" value="8" id="s8" lay-text="开启|关闭">
+                </td>
+            </tr>
+            <tr class="jiehuo" style="display:none">
+                <td style="width: 140px;">
+                    <label class="layui-form-label">附近货源（地图）</label>
+                </td>
+                <td>
+                    <input type="checkbox" name="xx" lay-filter="filter9" lay-skin="switch" value="9" id="s9" lay-text="开启|关闭">
+                </td>
+            </tr>
+            <tr class="jiehuo" style="display:none">
+                <td style="width: 140px;">
+                    <label class="layui-form-label">附近货源（列表）</label>
+                </td>
+                <td>
+                    <input type="checkbox" name="xx" lay-filter="filter10" lay-skin="switch" value="10" id="s10" lay-text="开启|关闭">
+                </td>
+            </tr>
+            <tr class="jiehuo">
+                <td style="width: 140px;">
+                    <label class="layui-form-label">个人中心页</label>
+                </td>
+                <td>
+                    <input type="checkbox" name="xx" lay-filter="filter11" lay-skin="switch" value="11" id="s11" lay-text="开启|关闭">
+                </td>
+            </tr>
+
+        </table>
+
+    </form>
+
+    <script>
+
+
+        function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+            var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+            if (r != null) return unescape(r[2]); return ""; //返回参数值
+        }
+
+        var tid=getUrlParam("tid");
+        var appType=getUrlParam("appType");
+
+        if(appType != ""){
+            if(appType == 1 || appType == 3){
+                $(".fahuo").hide();
+            }
+            if(appType == 2 || appType == 4){
+                $(".jiehuo").hide();
+            }
+        }
+
+
+        layui.use('form', function(){
+            var form = layui.form();
+
+
+
+            $.post(getRootPath()+'/regularActivity/listShowPage.do',{"tid":tid},function(result){
+                //获取数据
+                var list = result['rows'];
+
+                console.log(list);
+
+                for(var i=0; i<list.length; i++){
+
+                    var m = list[i];
+                    var showPage =  m['showPage'];
+                    var pageId = "s"+showPage;
+
+                    document.getElementById(pageId).checked = true;
+                    form.render('checkbox');
+                }
+            });
+
+
+
+            form.on('switch(filter1)', function(data){
+                var checked = data.elem.checked;
+
+                var deleteFlag ="0"; ; //开关是否开启，true或者false
+
+                var value = data.value; //开关value值，也可以通过data.elem.value得到
+
+
+                //是否打开
+                if(checked){
+                    deleteFlag = "0";
+                }else{
+                    deleteFlag = "1";
+                }
+
+                update(value,deleteFlag,"s1");
+
+            });
+
+            form.on('switch(filter2)', function(data){
+
+                var checked = data.elem.checked;
+
+                var deleteFlag ="0"; ; //开关是否开启，true或者false
+
+                var value = data.value; //开关value值，也可以通过data.elem.value得到
+
+
+                //是否打开
+                if(checked){
+                    deleteFlag = "0";
+                }else{
+                    deleteFlag = "1";
+                }
+
+                update(value,deleteFlag,"s2");
+            });
+
+            form.on('switch(filter3)', function(data){
+
+                var checked = data.elem.checked;//开关是否开启，true或者false
+
+                var deleteFlag ="0"; ;
+
+                var value = data.value; //开关value值，也可以通过data.elem.value得到
+
+                //是否打开
+                if(checked){
+                    deleteFlag = "0";
+                }else{
+                    deleteFlag = "1";
+                }
+
+                update(value,deleteFlag,"s3");
+            });
+
+            form.on('switch(filter4)', function(data){
+                var checked = data.elem.checked;
+                var deleteFlag ="0"; ; //开关是否开启，true或者false
+
+                var value = data.value; //开关value值，也可以通过data.elem.value得到
+
+
+                //是否打开
+                if(checked){
+                    deleteFlag = "0";
+                }else{
+                    deleteFlag = "1";
+                }
+
+                update(value,deleteFlag,"s4");
+            });
+
+            form.on('switch(filter5)', function(data){
+                var checked = data.elem.checked;
+                var deleteFlag ="0"; ; //开关是否开启，true或者false
+
+                var value = data.value; //开关value值，也可以通过data.elem.value得到
+
+
+                //是否打开
+                if(checked){
+                    deleteFlag = "0";
+                }else{
+                    deleteFlag = "1";
+                }
+
+                update(value,deleteFlag,"s5");
+            });
+
+            form.on('switch(filter6)', function(data){
+                var checked = data.elem.checked;
+                var deleteFlag ="0"; ; //开关是否开启，true或者false
+
+                var value = data.value; //开关value值，也可以通过data.elem.value得到
+
+
+                //是否打开
+                if(checked){
+                    deleteFlag = "0";
+                }else{
+                    deleteFlag = "1";
+                }
+
+                update(value,deleteFlag,"s6");
+            });
+
+            form.on('switch(filter7)', function(data){
+                var checked = data.elem.checked;
+                var deleteFlag ="0"; ; //开关是否开启，true或者false
+
+                var value = data.value; //开关value值，也可以通过data.elem.value得到
+
+                //是否打开
+                if(checked){
+                    deleteFlag = "0";
+                }else{
+                    deleteFlag = "1";
+                }
+
+                update(value,deleteFlag,"s7");
+            });
+
+            form.on('switch(filter8)', function(data){
+                var checked = data.elem.checked;
+                var deleteFlag ="0"; ; //开关是否开启，true或者false
+
+                var value = data.value; //开关value值，也可以通过data.elem.value得到
+
+                //是否打开
+                if(checked){
+                    deleteFlag = "0";
+                }else{
+                    deleteFlag = "1";
+                }
+                update(value,deleteFlag,"s8");
+            });
+
+            form.on('switch(filter9)', function(data){
+                var checked = data.elem.checked;
+                var deleteFlag ="0"; ; //开关是否开启，true或者false
+
+                var value = data.value; //开关value值，也可以通过data.elem.value得到
+
+                //是否打开
+                if(checked){
+                    deleteFlag = "0";
+                }else{
+                    deleteFlag = "1";
+                }
+
+                update(value,deleteFlag,"s9");
+            });
+
+            form.on('switch(filter10)', function(data){
+                var checked = data.elem.checked;
+                var deleteFlag ="0"; ; //开关是否开启，true或者false
+
+                var value = data.value; //开关value值，也可以通过data.elem.value得到
+
+                //是否打开
+                if(checked){
+                    deleteFlag = "0";
+                }else{
+                    deleteFlag = "1";
+                }
+
+                update(value,deleteFlag,"s10");
+            });
+
+            form.on('switch(filter11)', function(data){
+                var checked = data.elem.checked;
+                var deleteFlag ="0"; ; //开关是否开启，true或者false
+
+                var value = data.value; //开关value值，也可以通过data.elem.value得到
+
+                //是否打开
+                if(checked){
+                    deleteFlag = "0";
+                }else{
+                    deleteFlag = "1";
+                }
+
+                update(value,deleteFlag,"s11");
+            });
+
+        });
+
+        //修改弹出层
+        function update(value,deleteFlag,checkid) {
+            var ajax = "#"+checkid;
+
+            $.post(getRootPath()+'/regularActivity/updateOrInsertShowPage.do',{"id":value,"tid":tid,"deleteFlag":deleteFlag},function (result) {
+
+                layer.msg('修改成功', {
+                    icon: 1,
+                    time: 2000
+                });
+
+            })
+        }
+    </script>
+</body>
+</html>

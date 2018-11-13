@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.system.mapper.AppUpgradeHistoryModelMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.system.domain.model.AppUpgradeHistoryModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="systemVersion" property="systemVersion" jdbcType="VARCHAR" />
+    <result column="downloadAddress" property="downloadAddress" jdbcType="VARCHAR" />
+    <result column="isForced" property="isForced" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="deleted" property="deleted" jdbcType="INTEGER" />
+    <result column="isNotified" property="isNotified" jdbcType="INTEGER" />
+    <result column="innoVersion" property="innoVersion" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, systemVersion, downloadAddress, isForced, type, description, createTime, deleted, 
+    isNotified, innoVersion
+  </sql>
+
+  <sql id="Criteria_where_clause">
+    <where>
+      <if test="id != null" >
+        and id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="systemVersion != null" >
+        and systemVersion = #{systemVersion,jdbcType=VARCHAR}
+      </if>
+      <if test="downloadAddress != null" >
+        and downloadAddress = #{downloadAddress,jdbcType=VARCHAR}
+      </if>
+      <if test="isForced != null" >
+        and isForced = #{isForced,jdbcType=INTEGER}
+      </if>
+      <if test="type != null" >
+        and type = #{type,jdbcType=VARCHAR}
+      </if>
+      <if test="description != null" >
+        and description = #{description,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null" >
+        and createTime = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="deleted != null" >
+        and deleted = #{deleted,jdbcType=INTEGER}
+      </if>
+      <if test="isNotified != null" >
+        and isNotified = #{isNotified,jdbcType=INTEGER}
+      </if>
+      <if test="innoVersion != null" >
+       and innoVersion = #{innoVersion,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from systemDB.appUpgradeHistory
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from systemDB.appUpgradeHistory
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.topjet.system.domain.model.AppUpgradeHistoryModel" >
+    insert into systemDB.appUpgradeHistory
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="systemVersion != null" >
+        systemVersion,
+      </if>
+      <if test="downloadAddress != null" >
+        downloadAddress,
+      </if>
+      <if test="isForced != null" >
+        isForced,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+      <if test="isNotified != null" >
+        isNotified,
+      </if>
+      <if test="innoVersion != null" >
+        innoVersion,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="systemVersion != null" >
+        #{systemVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="downloadAddress != null" >
+        #{downloadAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="isForced != null" >
+        #{isForced,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=INTEGER},
+      </if>
+      <if test="isNotified != null" >
+        #{isNotified,jdbcType=INTEGER},
+      </if>
+      <if test="innoVersion != null" >
+        #{innoVersion,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="update" parameterType="com.topjet.system.domain.model.AppUpgradeHistoryModel" >
+    update systemDB.appUpgradeHistory
+    <set >
+      <if test="systemVersion != null" >
+        systemVersion = #{systemVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="downloadAddress != null" >
+        downloadAddress = #{downloadAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="isForced != null" >
+        isForced = #{isForced,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=INTEGER},
+      </if>
+      <if test="isNotified != null" >
+        isNotified = #{isNotified,jdbcType=INTEGER},
+      </if>
+      <if test="innoVersion != null" >
+        innoVersion = #{innoVersion,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectListByParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from systemDB.appUpgradeHistory
+    <include refid="Criteria_where_clause" />
+  </select>
+
+  <select id="selectPageListByParam" resultMap="BaseResultMap" parameterType="com.topjet.manage.domain.model.SysUserModel">
+    select
+    <include refid="Base_Column_List" />
+    from systemDB.appUpgradeHistory
+    <include refid="Criteria_where_clause" />
+    order by id desc
+    limit
+    #{offset}, #{limit}
+  </select>
+
+  <select id="getCountByParam" resultType="java.lang.Integer"
+          parameterType="java.util.Map">
+    select count(id)
+    from systemDB.appUpgradeHistory
+    <include refid="Criteria_where_clause" />
+  </select>
+
+</mapper>

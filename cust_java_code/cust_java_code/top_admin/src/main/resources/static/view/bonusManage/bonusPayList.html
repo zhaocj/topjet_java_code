@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>交运配货</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script type="text/javascript" src="../../resource/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="../../resource/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../resource/bootstrap-theme.css">
+	<link rel="stylesheet" type="text/css" href="../../resource/bootstrap.css">
+	<script type="text/javascript" src="../../js/common/modal.js"></script>
+	<script type="text/javascript" src="../../js/common/utils.js"></script>
+	<script type="text/javascript" src="../../js/common/ajaxCall.js"></script>
+	<script type="text/javascript" src="../../js/common/dateformate.js"></script>
+	<!-- bootstrap-table 表格-->
+	<link rel="stylesheet" type="text/css" href="../../resource/bootstrap-table.css">
+	<script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+	<script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../css/demo.css">
+	<link rel="stylesheet" type="text/css" href="../../less/modules/buttons.less">
+
+	<script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+	<script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+	<script type="text/javascript" src="../../js/bootbox.min.js"></script>
+
+	<script type="text/javascript" src="../../bootstrap/formValidation/formValidation.js"></script>
+	<script type="text/javascript" src="../../bootstrap/formValidation/bootstrap.js"></script>
+	<script type="text/javascript" src="../../bootstrap/formValidation/validData.js"></script>
+	<link rel="stylesheet/less" type="text/css" href="../../bootstrap/formValidation/formValidation.css">
+
+</head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>财务发放</title>
+</head>
+<body>
+<div class="fixed-table-toolbar">
+	<div class="eachBox">
+		<ul>
+			<li>
+				<label>补帖事项：</label>
+				<select id="billType1">
+					<option value="">不限</option>
+					<option value="1">运费补贴</option>
+					<option value="2">定金补帖</option>
+					<option value="3">推荐补帖</option>
+				</select>
+			</li>
+			<li>
+				<label>日期：</label>
+				<input type="date" id="createTime1" placeholder="请选择日期">
+			</li>
+			<li>
+				<label>状态：</label>
+				<select id="status1">
+					<option value="">不限</option>
+					<option value="5">未支付</option>
+					<option value="2">已支付</option>
+				</select>
+			</li>
+		</ul>
+		<div class="clearfix "></div>
+	</div>
+	<div id="toolbar" class="columns columns-left btn-group pull-right">
+		<button type="button" class="btn btn-info btn-sm" onclick="tableQuery();">查询</button>
+	</div>
+</div>
+<div class="modal fade" id="myModal">
+	<div class="modal-dialog">
+		<div class="modal-content"><div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+			<h4 class="modal-title">支付</h4>
+		</div>
+			<div align="center">
+				<form id="myForm" class="form-inline" >
+					<input type="hidden" name="createTime" id="createTimePay" value="">
+					<input type="hidden" name="billType" id="billTypePay" value="">
+					<input type="hidden" name="countIdNo" id="countIdNoPay" value="">
+					本次支付金额为<p>
+					<span style="color: red;" id="payMoney"></span><p>
+					<div class="form-group">
+						<div class="input-group">
+							<span class="input-group-addon" id="sizing-addon1"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></span>
+							<input type="password" class="form-control" id="pwdPay" placeholder="请输入支付密码" aria-describedby="sizing-addon1" name="password" required>
+						</div>
+					</div>
+					<div class="line10"></div>
+					<button id="myButton" type="button" class="btn btn-primary btn-lg btn-block" onclick="tijiao()" data-loading-text="正在支付..." autocomplete="off">提交</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<table id='table'  class="table table-striped table-bordered table-hover table-condensed"></table>
+<script type="text/javascript">
+$(function () {
+	var columns=[
+		{
+						field : 'createTime',
+						title : '补贴日期',
+						align : 'center'
+					},
+					{
+						field : 'billType',
+						title : '补帖事项',
+						align : 'center',
+						formatter : function(value, row,
+								index) {
+							if (value == "1") {
+								return "推荐费补贴";
+							}else if(value=='2'){
+							    return '运费补贴'
+							}
+						}
+					},
+					{
+						field : 'countId',
+						title : '数据条数',
+						align : 'center',
+						formatter : function(value, row,
+											 index) {
+								return row.countId;
+						}
+					},
+					{
+						field : 'sumAmt',
+						title : '补贴总额(元)',
+						align : 'center',
+						formatter : function(value, row,index) {
+								return row.sumAmt;
+						}
+					},
+					{
+						field : 'status',
+						title : '状态',
+						align : 'center',
+						formatter : function(value, row,
+											 index) {
+							if (row.status == 1) {
+								return '未支付';
+							}else if (row.status == 3) {
+								return '已支付';
+							}
+						}
+					},
+					{
+						field : 'action',
+						title : '操作',
+						align:'center',
+						formatter :function(value, row, index){
+						var date=getDate();
+						if(row.billType==0){
+							return;
+						}
+						var order = "";
+			 			var agree='';
+			 			if(row.billType==2){
+							order += '<button type="button" class="btn btn-success  btn-xs" onclick="order(\''
+								+ row.createTime+ '\',\''+row.billType+ '\',\'bonusPayTranList\',\''+row.status+ '\')">订单明细</button>';
+						}else if(row.billType==1 || row.billType==11 || row.billType==2 || row.billType==10){
+							order += '<button type="button" class="btn btn-success  btn-xs" onclick="order(\''
+								+ row.createTime+ '\',\''+row.billType+ '\',\'bonusPayRecoList\',\''+row.status+ '\')">订单明细</button>';
+						}
+			 			if (row.status == 1 && row.sumAmt>0 && row.countId !=0) {
+                            var agree='<button type="button" class="btn btn-primary  btn-xs" onclick="pay(\''
+                                + row.createTime+ '\',\''+row.sumAmt+ '\',\''+row.billType+ '\',\''+row.countId+'\')">同意支付</button>&nbsp;';
+							return agree+order;
+						}else{
+							return  order;
+						}
+					} 
+		},
+		];
+	$("#createTime1").val(getDate7());
+	var url=getRootPath()+'/bonusBillPay/list.do';
+	setTableInfo('table', columns, url,getQueryParams,'toolbar');
+	})
+	
+   function getQueryParams() {
+	   var param = window.location.search;
+	   if(param != ""){
+		   $('#status1').find("option[value=5]").attr("selected","selected")
+	   }
+ 		var json = {
+			'billType' : $('#billType1').val(),
+			'createTime' : $('#createTime1').val(),
+			'status' : $('#status1').val()
+		};
+		return   $.extend({},json);
+	} 
+
+	function pay(createTime,amt,billType,countIdNo){
+		$("#payMoney").text(amt);
+		$("#createTimePay").val(createTime);
+		$("#countIdNoPay").val(countIdNo);
+		$("#billTypePay").val(billType);
+		$("#pwdPay").val("");
+		$('#myModal').modal('show');
+	}
+	
+	function order(createTime,billType,Name,status){
+		var url = getRootPath() + '/view/bonusManage/'+Name+'.html?createTime='+createTime+'&billType='+billType+'&status='+status;
+		window.location.href = url;
+	}
+
+function tijiao(){
+	var bt=$('#myButton').button('loading');
+	if(!$.topjectIsValidate('myForm')){
+		bt.button('reset');
+		return;
+	}
+	var url = getRootPath()+'/bonusBillPay/transferWalletAmt.do';
+	window.parent.$.ajaxDefaultCall(url,$('#myForm').serialize(),function(){bt.button('reset');$('#myModal').modal('hide');tableRefresh();});
+}
+$(function (){
+	$.topjectValidate('myForm');
+})
+</script>
+
+</body>
+</html>

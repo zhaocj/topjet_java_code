@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.SysUserModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.SysUserModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="pwd" property="pwd" jdbcType="VARCHAR" />
+    <result column="nickName" property="nickName" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="TINYINT" />
+    <result column="loginCount" property="loginCount" jdbcType="SMALLINT" />
+    <result column="loginTime" property="loginTime" jdbcType="TIMESTAMP" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="createBy" property="createBy" jdbcType="INTEGER" />
+    <result column="updateBy" property="updateBy" jdbcType="INTEGER" />
+    <result column="superAdmin" property="superAdmin" jdbcType="TINYINT" />
+    <result column="version" property="version" jdbcType="SMALLINT" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, email, pwd, nickName, state, loginCount, loginTime, deleted, createTime, updateTime, 
+    createBy, updateBy, superAdmin, version
+  </sql>
+
+  <sql id="Criteria_where_clause">
+    <where>
+      <if test="email != null" >
+        and email = #{email,jdbcType=VARCHAR}
+      </if>
+      <if test="pwd != null" >
+        and pwd = #{pwd,jdbcType=VARCHAR}
+      </if>
+      <if test="nickName != null" >
+        and nickName = #{nickName,jdbcType=VARCHAR}
+      </if>
+      <if test="state != null" >
+        and state = #{state,jdbcType=TINYINT}
+      </if>
+      <if test="loginCount != null" >
+        and loginCount = #{loginCount,jdbcType=SMALLINT}
+      </if>
+      <if test="logintime != null" >
+        and loginTime = #{loginTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="deleted != null" >
+        and deleted = #{deleted,jdbcType=TINYINT}
+      </if>
+      <if test="createtime != null" >
+        and createTime = #{createBime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="updatetime != null" >
+        and updateTime = #{updateBime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="createby != null" >
+        and createBy = #{createBy,jdbcType=INTEGER}
+      </if>
+      <if test="updateby != null" >
+        and updateBy = #{updateBy,jdbcType=INTEGER}
+      </if>
+      <if test="superadmin != null" >
+        and superAdmin = #{superAdmin,jdbcType=TINYINT}
+      </if>
+      <if test="version != null" >
+        and version = #{version,jdbcType=SMALLINT}
+      </if>
+    </where>
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sysUser
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+
+  <select id="selectListByParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from sysUser
+    <include refid="Criteria_where_clause" />
+  </select>
+
+  <select id="selectListByEntity" resultMap="BaseResultMap" parameterType="com.topjet.manage.domain.model.SysUserModel" >
+    select
+    <include refid="Base_Column_List" />
+    from sysUser
+    <include refid="Criteria_where_clause" />
+    order by id desc
+  </select>
+
+  <select id="selectPageListByParam" resultMap="BaseResultMap" parameterType="com.topjet.manage.domain.model.SysUserModel">
+    select
+    <include refid="Base_Column_List" />
+    from sysUser
+    <include refid="Criteria_where_clause" />
+    order by id desc
+    limit
+    #{offset}, #{limit}
+  </select>
+
+  <select id="getCountByParam" resultType="java.lang.Integer" parameterType="java.util.Map">
+    select count(id)
+    from sysUser
+    <include refid="Criteria_where_clause" />
+  </select>
+
+  <select id="getRoleAllUserId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+    SELECT DISTINCT
+    s.id
+    FROM
+    sysUser s
+    WHERE
+    s.id IN (
+    SELECT  DISTINCT
+    sa.sysUserId
+    FROM
+    sysUserRoleRel sa
+    WHERE
+    sa.roleId=#{roleId}
+    )
+  </select>
+
+
+  <select id="selectAllRecord" resultMap="BaseResultMap" parameterType="com.topjet.manage.domain.model.SysUserModel">
+
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM
+    sysUser s
+    WHERE
+    s.id IN (
+    SELECT
+    sa.sysUserId
+    FROM
+    sysUserRoleRel sa
+    WHERE
+    sa.roleId IN (
+    SELECT
+    ss.roleId
+    FROM
+    sysUserRoleRel ss
+    WHERE
+    ss.sysUserId = ${createBy}
+    )
+    )
+    order by id desc
+    limit #{offset}, #{limit}
+  </select>
+
+
+  <select id="countSelectAllRecord"  resultType="java.lang.Integer" parameterType="java.lang.Integer" >
+
+    SELECT
+    count(s.id)
+    FROM
+    sysUser s
+    WHERE
+    s.id IN (
+    SELECT
+    sa.sysUserId
+    FROM sysUserRoleRel sa
+    WHERE sa.roleId IN (
+    SELECT ss.roleId
+    FROM sysUserRoleRel ss
+    WHERE ss.sysUserId = #{userId}))
+  </select>
+
+  <select id="getUserId"  parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select u.id from sysUser u where u.createBy =#{createBy};
+  </select>
+
+
+</mapper>

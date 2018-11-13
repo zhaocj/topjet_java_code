@@ -1,0 +1,18 @@
+<head>
+    <meta charset="utf-8">
+    <title>交运配货网-后台管理</title>
+</head>
+<style>
+ body{ background-color:#BDBDBD}
+</style>
+<div style="width:750px; min-height:960px; background-color:#FFFFFF; margin:0 auto">
+  <div style="width:100%; height:40px; border-bottom:#CCCCCC 1px dotted; font-size:17px; line-height:40px" id="title" class="text-center"></div>
+  <div style="padding:15px; font-size:14px; line-height:30px" id="content">　</div>
+</div>
+<script>
+    var param = window.location.search;
+    var content = param.split("&")[0].split("=")[1];
+    var title = param.split("&")[1].split("=")[1];
+    document.getElementById('title').innerHTML=decodeURI(title);
+    document.getElementById('content').innerHTML=decodeURI(content);
+</script>

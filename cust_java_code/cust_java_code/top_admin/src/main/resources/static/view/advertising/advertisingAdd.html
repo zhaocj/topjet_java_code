@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>交运配货网-后台管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="" rel="stylesheet">
+    <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="../../bootstrap/css/bootstrap-table.min.css" rel="stylesheet"/>
+    <link href="../../css/flat-ui.min.css" rel="stylesheet"/>
+    <link href="../../css/easyui.css" rel="stylesheet"/>
+    <link href="../../css/demo.css" rel="stylesheet"/>
+    <link href="../../css/font-awesome.min.css" rel="stylesheet"/>
+    <link href="../../css/jquery.mCustomScrollbar.css" rel="stylesheet"/>
+    <link href="../../css/bootstrap-datetimepicker.css" rel="stylesheet"/>
+    <link href="../../less/modules/buttons.less" rel="stylesheet"/>
+    <link rel="shortcut icon" href="../../img/faviconindex.ico"/>
+    <link href="../../bootstrap/formValidation/formValidation.css"/>
+
+    <script src="../../resource/jquery-1.11.3.min.js"></script>
+    <script src="../../js/common/utils.js"></script>
+    <script src="../../js/bootbox.min.js"></script>
+    <script type="text/javascript" src="../../bootstrap/formValidation/formValidation.js"></script>
+    <script type="text/javascript" src="../../bootstrap/formValidation/bootstrap.js"></script>
+    <script type="text/javascript" src="../../bootstrap/formValidation/validData.js"></script>
+    <script src="../../js/vendor/jquery.easyui.min.js"></script>
+    <script src="../../js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../../js/flat-ui.min.js"></script>
+    <script src="../../js/application.js"></script>
+    <script src="../../js/bootstrap-datetimepicker.min.js"></script>
+    <script src="../../js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="../../js/echarts.min.js"></script>
+    <script src="../../js/common/index.js"></script>
+    <script src="../../js/common/ajaxCall.js"></script>
+    <link href="../../umeditor/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
+    <script type="text/javascript" src="../../umeditor/third-party/template.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../../umeditor/umeditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../../umeditor/ueditor.all.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../../umeditor/umeditor.min.js"></script>
+    <script type="text/javascript" src="../../umeditor/lang/zh-cn/zh-cn.js"></script>
+
+</head>
+<style>
+    h1{
+        font-family: "微软雅黑";
+        font-weight: normal;
+    }
+    .edui-container,.edui-body-container{width:100% !important;}
+    .edui-body-container{min-height:300px;}
+    .checkbox input{
+        position: absolute;
+        margin-top: 6px;
+    }
+    .checkbox-inline{
+        padding-left: 0 !important;
+    }
+</style>
+<body onresize="auto()">
+<form id="myForm">
+    <div class="contentBox" style="padding:10px">
+        <input type="hidden" id="pictureURLId" name="pictureURLId">
+        <input type="hidden" id="appType" value="">
+        <div class="fixed-table-toolbar">
+            <div class="navmenu"><a href="#" onclick="javascript:history.back(-1); return false">广告管理</a> / 新增广告</div>
+            <div class="columns columns-left btn-group pull-right">
+                <button id = myButton type="button" class="btn btn-primary btn-sm margin-left-10" onclick="submitAdvertising()">提交广告
+                </button>
+            </div>
+        </div>
+        <div class="clearfix line1px"></div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label>广告类型</label>
+                        <select id="adType" name="adType" data-toggle="select"
+                                class="form-control select select-default select-sm">
+                            <option value="1">首页弹窗广告</option>
+                            <option value="2">首页轮播图片广告</option>
+                            <option value="3">好货节活动标识头像</option>
+                            <option value="4">好货节补贴金额图</option>
+                            <option value="5">启动页广告</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label>序号</label>
+                        <input type="text" maxlength="2" name="rank" id="rank" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"required class="form-control">
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label>开始时间</label>
+                        <input size="16" type="text" value="" onblur="validDate()" id="beginDate" required
+                               name="beginDate"
+                               placeholder="默认不限" class="form-control input-sm">
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label>结束时间</label>
+                        <input size="16" type="text" value="" onblur="validDate()" id="endDate" required name="endDate"
+                               placeholder="默认不限" class="form-control input-sm">
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label>状态</label>
+                        <select id="valid" name="valid" data-toggle="select"
+                                class="form-control select select-default select-sm select2-offscreen" tabindex="-1"
+                                title="">
+                            <option value="1">开启</option>
+                            <option value="0">关闭</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label>链接</label>
+                        <input type="text" name="redirectURL" id="redirectURL"  class="form-control">
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label>web标题</label>
+                        <input type="text" name="webTitle" id="webTitle"  class="form-control">
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label>请选择适应类型</label><br>
+                        <div class="checkbox checkbox-inline">
+                            <input id="IOSOwnerFlag" value="4" type="checkbox">
+                            <label for="IOSOwnerFlag" style="padding-right: 10px;">IOS发货版</label>
+                            <input id="IOSDriverFlag" value="3"   type="checkbox">
+                            <label for="IOSDriverFlag" style="padding-right: 10px;">IOS接货版</label>
+                            <input id="AndiorOwnerFlag" value="2"   type="checkbox">
+                            <label for="AndiorOwnerFlag" style="padding-right: 10px;">Android发货版</label>
+                            <input id="AndiorDriverFlag" value="1"   type="checkbox">
+                            <label for="AndiorDriverFlag">Android接货版</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label for="fileId1">上传图片</label>
+                        <div class="input-group">
+                            <input id="fileId1" type="file" onchange="readFile(this,'pictureURLId','fileImageId1')">
+                            <img id="fileImageId1" src="" required width="300" height="300"
+                                 class="topjet-img-size"/>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="form-group">
+                        <label>广告内容</label>
+                        <!--<input id = "content" name="content" type="te"/>-->
+                        <script id="content" name="content" type="text/plain"></script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!--#include file="../templates/footer.html"-->
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var param = window.location.search;
+    var appType = param.split("=")[1];
+
+    if(appType == 4){
+        $("#IOSOwnerFlag").attr("checked","checked");
+    }else if(appType == 3){
+        $("#IOSDriverFlag").attr("checked","checked");
+    }else if(appType == 2){
+        $("#AndiorOwnerFlag").attr("checked","checked");
+    }else if(appType == 1){
+        $("#AndiorDriverFlag").attr("checked","true");
+    }
+    $(function () {
+        if (typeof FileReader === 'undefined') {
+            bootbox.alert({
+                size: 'small',
+                message: "浏览器不支持图片预览，请更换浏览器!",
+            });
+        }
+    });
+    function readFile(str, fileIds, fileImageId) {
+        var file = str.files[0];
+        if (!/image\/\w+/.test(file.type)) {
+            bootbox.alert({
+                size: 'small',
+                message: "只能上传图片，请从新上传!",
+            });
+            return false;
+        }
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function (e) {
+            var imge = e.target.result;
+            $('#' + fileIds).val(imge);
+            $("#" + fileImageId).attr("src", this.result);
+
+        };
+    };
+
+    $("#beginDate,#endDate").datetimepicker({
+        format: "yyyy-mm-dd hh:ii",
+        todayBtn: true,
+        autoclose: true,
+        todayHighlight: true,
+        showMeridian: true,
+        pickerPosition: "bottom-left",
+        language: 'zh-CN',//中文，需要引用zh-CN.js包
+        startView: 2,//月视图
+        minView: 0//日期时间选择器所能够提供的最精确的时间选择视图
+    });
+
+    function validDate() {
+        var beginDate = StringToDate($('#beginDate').val());
+        var endDate = StringToDate($('#endDate').val());
+        if (endDate <= beginDate) {
+            bootbox.alert({
+                size: 'small',
+                message: "结束日期不能小于开始日期!",
+            });
+            $('#endDate').val($("endDateOlder").val());
+            return false;
+        }
+    }
+
+
+    function submitAdvertising() {
+        validDate();
+        var bt = $('#myButton').button('loading');
+        var typeFlag = ""
+        $.each($('.checkbox-inline input'),function(indx,ele){
+            if($(this).is(":checked")){
+                typeFlag += $(this).val();
+            }
+        })
+        if(typeFlag == ""){
+            bootbox.alert({
+                size: 'small',
+                message: "请选择适应类型!"
+            });
+            bt.button('reset');
+            return;
+        }
+        if($('#rank').val() == ""){
+            bootbox.alert({
+                size:'small',
+                message:"请输入序号!",
+            });
+            bt.button('reset');
+            return;
+        }
+        if (!$.topjectIsValidate('myForm')) {
+            bt.button('reset');
+            return;
+        }
+        var beginDate = StringToDate($('#beginDate').val());
+        var endDate = StringToDate($('#endDate').val());
+        if (endDate < beginDate) {
+            bootbox.alert({
+                size: 'small',
+                message: "结束日期不能小于开始日期!",
+            });
+            bt.button('reset');
+            return false;
+        }
+
+        var jsonBeginDate = {};
+        var jsonEndDate = {};
+        if (!isNull($('#beginDate').val())) {
+            jsonBeginDate = {"beginDate": StringToDate($('#beginDate').val())};
+        }
+        if (!isNull($('#endDate').val())) {
+            jsonEndDate = {"endDate": StringToDate($('#endDate').val())};
+        }
+
+        var text =UM.getEditor("content").getContent();
+        var htmlText = UM.getEditor('content').getAllHtml();
+        var json = {
+            'adType': $("#adType").val(),
+            'rank': $("#rank").val(),
+            'valid': $("#valid").val(),
+            'redirectURL': $("#redirectURL").val(),
+            'webTitle': $("#webTitle").val(),
+            'pictureKey': $("#pictureURLId").val(),
+            'typeFlag':typeFlag,
+            'content': text
+        }
+        var data = $.extend({}, json, jsonBeginDate, jsonEndDate);
+        var url = getRootPath() + '/advertisingAction/add.do';
+        window.parent.$.ajaxDefaultCall(url, data, function () {
+            window.history.back();
+        });
+    }
+    var um = UM.getEditor('content');
+    //当点击时，超过100个字符时，所触发的事件
+    UM.getEditor('content').addListener('keyup',function(editor){
+                var content = UM.getEditor('content').getContent();
+                if(content.length>=200){
+                    alert("只能输入200个字符");
+                }
+            }
+    );
+
+    $(function () {
+        $.topjectValidate('myForm');
+    })
+
+</script>
+
+</body>
+</html>

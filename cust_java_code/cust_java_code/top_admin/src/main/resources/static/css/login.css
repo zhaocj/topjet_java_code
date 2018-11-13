@@ -1,0 +1,79 @@
+﻿@charset "utf-8";
+/* CSS Document */
+@charset "utf-8";
+/* CSS Document */
+html,body,div,dl,dt,dd,ul,li,h1,h2,h3,h4,h5,h6,form,fieldset,input,textarea,p,blockquote,th,td,legend,img { margin:0; padding:0;}
+
+body,div,dl,dt,dd,input,label,select,option,textarea,button,fieldset,legend,a { font:12px arial,helvetica,"\5b8b\4f53",sans-serif;}
+
+fieldset,img { border:0; }
+ 
+table { border-collapse: collapse; border-spacing:0; }
+
+address,caption,cite,code,dfn,em,i,var,b { font-weight:normal; font-style:normal;} 
+
+ol,ul { list-style:none;} 
+
+h1,h2,h3,h4,h5,h6,em { font-weight:normal; font-size:100%;} 
+
+a { text-decoration:none; cursor:pointer;}
+label { cursor: pointer; }
+html{
+	_overflow-y:hidden;
+}
+
+input { border:none; background:none; outline:none; cursor:pointer;}
+
+.bg { 
+	position:fixed; top:0; width:100%; height:100%; z-index:-9;
+	_position:absolute; _height:650px;
+	_width: expression(document.body.scrollWidth > document.body.offsetWidth ? document.body.scrollWidth : document.body.offsetWidth + 'px');
+}
+
+.log_web_width { width:720px; margin:0 auto; }
+
+/* ????????? */
+.log_content { margin-top: 173px; }
+
+.slogan { position:relative; right:-401px; top:-15px; background:url(img/slogan.png) no-repeat; width: 245px; height: 44px;_right:-130px; }
+
+.log_title { text-align: center; height:114px; width:800px;position:relative;left:-40px; margin-bottom: 10px;}
+
+#indexLogo { margin-right: 10px; }
+#systemName{ font-size:36px; font-weight:bold; color:#fff; position:relative;top:-30px;}
+
+.log_form { margin-top: 25px; }
+
+.log_input, 
+.log_submit { float:left; height:50px; border-radius:3px; box-shadow: 0px 1px 5px #4d91d1; }
+
+.log_input input,
+.log_submit { font-family:"\5FAE\8F6F\96C5\9ED1"; font-size:18px;}
+
+.log_input { width:300px; margin-right:10px; *margin-right:5px; background:#fff;}
+.log_submit { width:100px; background:#2484de; color:#fff; cursor:pointer;}
+.log_submit:hover { background:#207fd8;}
+
+.log_ico { float:left; width:26px; height:26px; display:block; margin:12px 8px 12px 16px; background:url(img/ui.png) no-repeat;}
+.log_ico_acnt { background-position:0 -40px;}
+.log_ico_pwd { background-position:-30px -40px;}
+.log_input input { float:left; width:234px; height:50px; margin-right:16px; line-height:50px\9; *line-height:50px; color:#999;}
+
+.log_forget { line-height:40px; font-family:"\5FAE\8F6F\96C5\9ED1"; font-size:14px; color:#fff;}
+.log_forget:hover { text-decoration:underline;}
+
+/* ????????? */
+.log_nav { margin-top:40px; padding-top:20px; background:url(img/log_nav_line.png) center top no-repeat; text-align:center;}
+.log_nav_link { height:35px; padding:0 17px; line-height:35px; display:inline-block; font-family:"\5FAE\8F6F\96C5\9ED1"; font-size:16px; color:#d1e2f7;}
+.log_nav_link:hover { height:31px; padding:0 15px; line-height:31px; border:2px #63abed solid; border-radius:3px;}
+
+.log_footer { position:fixed; left:0; right:0; bottom:0; background:#2e3136;}
+.log_footer_in { height:50px; line-height:50px; text-align:center; font-size:14px; color:#6b6d6f;}
+
+/* IE6 */
+.log_web_width { _width:740px; }
+
+.log_ico { _margin:12px 8px 12px 8px;}
+
+.log_footer { _position:absolute; }
+.log_footer_in { _padding:12px 0 3px 0; _height:40px; _line-height:40px;}

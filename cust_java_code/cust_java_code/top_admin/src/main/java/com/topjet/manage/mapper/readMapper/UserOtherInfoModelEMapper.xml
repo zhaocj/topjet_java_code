@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.UserOtherInfoModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.UserOtherInfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="userId" property="userId" jdbcType="INTEGER" />
+    <result column="identityType" property="identityType" jdbcType="TINYINT" />
+    <result column="resident1" property="resident1" jdbcType="VARCHAR" />
+    <result column="resident2" property="resident2" jdbcType="VARCHAR" />
+    <result column="resident3" property="resident3" jdbcType="VARCHAR" />
+    <result column="residentCityId" property="residentCityId" jdbcType="INTEGER" />
+    <result column="businessAddressLongitude" property="businessAddressLongitude" jdbcType="DECIMAL" />
+    <result column="businessAddressLatitude" property="businessAddressLatitude" jdbcType="DECIMAL" />
+    <result column="companyName" property="companyName" jdbcType="VARCHAR" />
+    <result column="businessAddress" property="businessAddress" jdbcType="VARCHAR" />
+    <result column="businessAddressCityId" property="businessAddressCityId" jdbcType="INTEGER" />
+    <result column="safetyTips" property="safetyTips" jdbcType="VARCHAR" />
+    <result column="registeredIMEI" property="registeredIMEI" jdbcType="VARCHAR" />
+    <result column="registeredCityId" property="registeredCityId" jdbcType="INTEGER" />
+    <result column="idAddress" property="idAddress" jdbcType="VARCHAR" />
+    <result column="telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="reditRemark" property="reditRemark" jdbcType="VARCHAR" />
+    <result column="creditCode" property="creditCode" jdbcType="VARCHAR" />
+    <result column="internalRemark" property="internalRemark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userId,identityType, resident1, resident2, resident3, residentCityId,companyName, businessAddress,
+    businessAddressCityId, businessAddressLongitude,businessAddressLatitude,safetyTips, registeredIMEI, registeredCityId, idAddress, telephone,
+    reditRemark,creditCode, internalRemark
+  </sql>
+  <sql id="Criteria_where_clause">
+    <where>
+      <if test="userId != null" >
+       and userId = #{userId,jdbcType=INTEGER}
+      </if>
+      <if test="resident1 != null" >
+        and resident1 = #{resident1,jdbcType=VARCHAR}
+      </if>
+      <if test="resident2 != null" >
+        and resident2 = #{resident2,jdbcType=VARCHAR}
+      </if>
+      <if test="resident3 != null" >
+        and resident3 = #{resident3,jdbcType=VARCHAR}
+      </if>
+      <if test="residentCityId != null" >
+        and residentCityId = #{residentCityId,jdbcType=INTEGER}
+      </if>
+      <if test="companyName != null" >
+        and companyName = #{companyName,jdbcType=VARCHAR}
+      </if>
+      <if test="businessAddress != null" >
+        and businessAddress = #{businessAddress,jdbcType=VARCHAR}
+      </if>
+      <if test="businessAddressCityId != null" >
+        and businessAddressCityId = #{businessAddressCityId,jdbcType=INTEGER}
+      </if>
+      <if test="safetyTips != null" >
+        and safetyTips = #{safetyTips,jdbcType=VARCHAR}
+      </if>
+      <if test="registeredIMEI != null" >
+        and registeredIMEI = #{registeredIMEI,jdbcType=VARCHAR}
+      </if>
+      <if test="registeredCityId != null" >
+        and registeredCityId = #{registeredCityId,jdbcType=INTEGER}
+      </if>
+      <if test="idAddress != null" >
+        and idAddress = #{idAddress,jdbcType=VARCHAR}
+      </if>
+      <if test="telephone != null" >
+        and telephone = #{telephone,jdbcType=VARCHAR}
+      </if>
+      <if test="reditRemark != null" >
+        and reditRemark = #{reditRemark,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from userDB.userOtherInfo
+    where userId = #{userId,jdbcType=INTEGER}
+  </select>
+
+
+
+  <select id="selectListByParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from userDB.userOtherInfo
+    <include refid="Criteria_where_clause" />
+  </select>
+  <!--根据id-->
+
+
+
+</mapper>

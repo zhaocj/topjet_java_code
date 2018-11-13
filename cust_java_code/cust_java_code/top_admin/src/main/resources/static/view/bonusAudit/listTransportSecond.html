@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>交运配货</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script type="text/javascript" src="../../resource/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="../../resource/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../resource/bootstrap-theme.css">
+	<link rel="stylesheet" type="text/css" href="../../resource/bootstrap.css">
+	<script type="text/javascript" src="../../js/common/modal.js"></script>
+	<script type="text/javascript" src="../../js/common/utils.js"></script>
+	<script type="text/javascript" src="../../js/common/ajaxCall.js"></script>
+	<script type="text/javascript" src="../../js/common/dateformate.js"></script>
+	<!-- bootstrap-table 表格-->
+	<link rel="stylesheet" type="text/css" href="../../resource/bootstrap-table.css">
+	<script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+	<script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../css/demo.css">
+	<link rel="stylesheet" type="text/css" href="../../less/modules/buttons.less">
+
+	<script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+	<script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+	<script type="text/javascript" src="../../js/bootbox.min.js"></script>
+	<style>
+
+		.formationBox{margin: 10px auto 0;padding-right: 20px;background-color: #fafafa !important;}
+		.formationBox li{width:100%;border-bottom:1px solid #f3f3f3;padding-bottom:10px;padding-top:10px;line-height: 15px;background-color: white;}
+		.formationBox li p{font-size: 14px;line-height: 15px;margin-bottom:0;}
+		.modal-footer{border-top:0px !important;}
+	</style>
+
+</head>
+<body onresize="auto()">
+<form class="form-inline queryParameters-margin">
+	<div class="fixed-table-toolbar">
+		<div class="eachBox">
+			<ul>
+				<li>
+					<label>发货人：</label>
+					<input type="text" id="goodsOwnerMobileId" name="goodsOwnerMobile" placeholder="输入发货人手机号">
+				</li>
+				<li>
+					<label>承运人：</label>
+					<input type="text" id="driverMobileId" name="driverMobile" placeholder="输入承运人手机号">
+				</li>
+				<li>
+					<label>开始时间：</label>
+					<input type="date" id="startTimeId" name="startTime" placeholder="选择生成补贴开始时间">
+				</li>
+				<li>
+					<label>结束时间：</label>
+					<input type="date" id="endTimeId" name="endTime" placeholder="选择生成补帖结束时间">
+				</li>
+				<div class="line10"></div>
+				<li>
+					<label>订单号：</label>
+					<input type="text" id="serialNoId" name="serialNo" placeholder="输入订单号">
+				</li>
+				<li>
+					<label>二审状态：</label>
+					<select id="secondAuditStatusId" name="secondAuditStatus">
+						<option value="">不限</option>
+						<option value="0">未审核</option>
+						<option value="4">审核通过</option>
+						<option value="5">驳回</option>
+					</select>
+				</li>
+				<li>
+					<label>审核人：</label>
+					<input type="text" id="secondAuditUser" name="secondAuditUser" placeholder="输入审核人">
+				</li>
+			</ul>
+			<div class="clearfix "></div>
+		</div>
+		<div id="toolbar" class="columns columns-left btn-group pull-right">
+			<button type="button" class="btn btn-primary" onclick="javascript:secondAudit(4)" style="margin-right:2mm;">审核通过 </button>
+			<button type="button" class="btn btn-primary"  onclick="javascript:secondAudit(5)" style="margin-right:2mm;">审核驳回 </button>
+			<button type="button" class="btn btn-primary" onclick="tableQuery()" style="margin-right:2mm;">查询</button>
+		</div>
+	</div>
+</form>
+<table id='table'  class="table table-striped table-bordered table-hover table-condensed"></table>
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="secondAuditPassDlg" tabindex="-1" role="dialog"
+	 aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">×</button>
+				<h4 class="modal-title" id="myModalLabel1">运费补贴审核</h4>
+			</div>
+			<form role="form" class="form-horizontal">
+				<div class="modal-body">
+					<div class="form-group">
+						<label style="font-size: 22px;">审核通过审核中......</label>
+					</div>
+					<div class="form-group">
+						<label for="secondAuditRemark1" style="font-size: 18px;">备注:</label>
+						<textarea   id="secondAuditRemark1" class="form-control" >同意一审结果</textarea>
+					</div>
+				</div>
+
+			</form>
+			<div class="clearfix"></div>
+			<div id="dataList" style="height: 200px; background-color: white;">
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" onclick="javascript:secondAuditConfirm(4)"  class="btn btn-primary" style="margin-right: 230px;">确认审核通过</button>
+			</div>
+		</div>
+
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="secondAuditInvalidDlg" tabindex="-1" role="dialog"
+	 aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">×</button>
+				<h4 class="modal-title" id="myModalLabel2">驳回确认</h4>
+			</div>
+			<form role="form" class="form-horizontal">
+				<div class="modal-body">
+					<div class="form-group" style="text-align: center;">
+						<label style="font-size: 22px;">批量驳回审核中......</label>
+					</div>
+					<div class="form-group">
+						<label for="secondAuditRemark2" style="font-size: 18px;">备注:</label>
+						<textarea   id="secondAuditRemark2" class="form-control" ></textarea>
+					</div>
+				</div>
+			</form>
+			<div class="clearfix"></div>
+			<div id="dataList1" style="height: 200px; background-color: white;">
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" onclick="javascript:secondAuditConfirm(5)"  class="btn btn-primary" style="margin-right: 230px;">确认驳回</button>
+			</div>
+		</div>
+
+	</div>
+</div>
+<script type="text/javascript">
+	$(function () {
+		var columns=[
+            {
+                field : 'ck',
+                checkbox : true,
+                formatter : function(value, row, index) {
+                    if (row.auditStatus == "1" || row.auditStatus=='3') {
+                        return {
+                            checked : false
+                        };
+                    } else {
+                        return {
+                            disabled: true
+                        }
+
+                    }
+                    return value;
+                }
+            },
+			{
+				field : 'createTime',
+				title : '触发日期',
+				align : 'center',
+				sortable: true,
+				formatter : function(value, row, index) {
+					if (value != null) {
+						return  formatViewDate(new Date(value),"yyyy-MM-dd HH:mm");
+					}
+					return null;
+				}
+			},
+			{
+				field : 'serialNo',
+				title : '运单号',
+				align : 'center',
+				sortable: true,
+				formatter: function (value, row,index) {
+					var a = "-";
+					if(value != null && value != "") {
+						return '<a  href="#" onclick="getCommentDetails(\''
+								+ row.bonusOrderId + '\',\'运费费补贴二审\')">' + value + '</a>' + "<br/>" + row.depart2 + row.depart3 + "-->" + row.destination2 + row.destination3;
+					}
+					return a;
+				}
+			},
+			{
+				field : 'freightFee',
+				title : '运费',
+				align : 'center',
+				sortable: true,
+				formatter : function(value, row,
+									 index) {
+					if (value != null) {
+						return value.toFixed(2);
+					}
+					return 0;
+
+				}
+			},
+			{
+				field : 'goodsOwnerName',
+				title : '发货人',
+				sortable: true,
+				align : 'center',
+				formatter : function (value,row,index) {
+					var a = "-";
+					if(value != null && value != "") {
+						return '<a  href="#" onclick="modifiedInfo(\''
+								+ row.ownerId + '\',\'运费费补贴二审\')">' + value + '</a>';
+					}
+					return a;
+				}
+			},
+			{
+				field : 'goodsOwnerMobile',
+				title : '发货人手机',
+				sortable: true,
+				align : 'center'
+			},
+			{
+				field : 'ownerAmount',
+				title : '发货补贴',
+				align : 'center',
+				sortable: true,
+				formatter : function(value, row,
+									 index) {
+					if (value != null) {
+						return value.toFixed(2);
+					}
+					return 0;
+
+				}
+			},
+			{
+				field : 'driverName',
+				title : '承运人',
+				align : 'center',
+				sortable: true,
+				formatter : function (value,row,index) {
+					var a = "-";
+					if(value != null && value != "") {
+						return '<a  href="#" onclick="modifiedInfo(\''
+								+ row.driverId+ '\',\'运费费补贴二审\')">'+value+'</a>';
+					}
+					return a;
+				}
+			},
+			{
+				field : 'driverMobile',
+				title : '承运人手机',
+				sortable: true,
+				align : 'center'
+			},
+			{
+				field : 'driverAmount',
+				title : '承运补贴',
+				sortable: true,
+				align : 'center',
+				formatter : function(value, row,
+									 index) {
+					if (value != null) {
+						return value.toFixed(2);
+					}
+					return 0;
+				}
+			},
+			{
+				field : 'firstAuditUser',
+				title : '初审人',
+				sortable: true,
+				align : 'center'
+			},
+			{
+				field : 'auditStatus',
+				title : '当前状态',
+				sortable : true,
+				align : 'center',
+				formatter : function(value, row, index) {
+                    if (value == "0") {
+                        return "未审核";
+                    }else if (value == "1") {
+                        return "一审通过";
+                    }else if (value == "2") {
+                        return "一审待定";
+                    }else if (value == "3") {
+                        return "一审驳回";
+                    }else if (value == "4") {
+                        return "二审通过";
+                    }else if (value == "5") {
+                        return "二审驳回";
+                    }else if (value == "6") {
+                        return "三审通过";
+                    }else if (value == "7") {
+                        return "三审驱回";
+                    }else if(value == "8"){
+                        return "假一罚三";
+                    }
+
+				}
+			},{
+                field : 'assignName',
+                title : '分配人',
+                sortable: true,
+                align : 'center'
+            },
+			{
+				field : 'secondAuditUser',
+				title : '审核人',
+				sortable: true,
+				align : 'center'
+			},
+			{
+				field : 'distance',
+				title : '运输公里数',
+				sortable: true,
+				align : 'center',
+				formatter : function(value, row,index) {
+					return row.distance+'公里';
+				}
+			},
+			{
+				field : 'transportTimes',
+				title : '运输时间',
+				sortable: true,
+				align : 'center',
+				formatter : function(value, row, index) {
+					if(row.transportTime == '0' && row.hour == "0" && row.second == "0"){
+						return '-';
+					}else if(value != null && value != ""){
+						return row.transportTime+'天'+''+row.hour+'小时'+row.second+'分钟';
+					}
+				}
+			},
+			{
+				field : 'volumeAndWeight',
+				title : '货物数量/单位',
+				sortable: true,
+				align : 'center',
+				formatter : function(value, row, index) {
+                    if(row.quantityType==1){
+                        return row.quantityMax+row.unit;
+                    }else{
+                        return row.quantityMin+"-"+ row.quantityMax + row.unit;
+                    }
+				}
+			}
+		];
+		$("#startTimeId").val(getDate7());
+		var url=getRootPath()+'/orderBonusInfo/listAuditOrderBonusInfo.do';
+		setTableInfo('table', columns, url,getQueryParams,'toolbar')
+	})
+
+	function getQueryParams() {
+		var startTime=$('#startTimeId').val();
+		var startTimeData={}
+		if(!isNull(startTime)){
+			startTimeData={'startTime':StringToDate(startTime)};
+		}
+		var endTime=$('#endTimeId').val();
+		var endTimeData={}
+		if(!isNull(endTime)){
+			endTimeData={'endTime':StringToDate(endTime)};
+		}
+
+        var param = window.location.search;
+        if(param != ""){
+            $('#secondAuditStatusId').find("option[value=1]").attr("selected","selected")
+        }
+		var json = {
+			goodsOwnerMobile : $('#goodsOwnerMobileId').val(),
+			driverMobile : $('#driverMobileId').val(),
+			serialNo : $('#serialNoId').val(),
+			secondAuditStatus : $('#secondAuditStatusId').val(),
+			secondAuditUser:$('#secondAuditUser').val(),
+			typeFlag : 1, //补贴类型1代表运费补贴
+			statusFlag : 2 //审核状态
+		};
+		return  $.extend({}, json,startTimeData,endTimeData);
+	}
+
+
+    var stat;
+    var checkedItems;
+    function secondAudit(status) {
+        checkedItems = $('#table').bootstrapTable('getSelections');
+        if(checkedItems.length==0){
+            bootbox.alert({
+                size : 'small',
+                message :"请勾选",
+            });
+            return
+        }
+        $("#secondAuditRemark1").val("同意一审结果");
+        $("#secondAuditRemark2").val("");
+		var secondId = checkedItems[0].id;
+        state = status;
+        if(status==4){
+				var url = getRootPath()+'/orderBonusInfo/getAuditHistory.do';
+				$.ajax({
+					type:"POST",
+					contentType: "application/x-www-form-urlencoded;charset=utf-8",
+					url:url,
+					data:"id="+secondId,
+					success:function(dataList){
+						var html ="<ul class='nav nav-tabs'><li role='presentation' class='active'><a href='#depart' data-toggle='tab'>操作日志</a></li></ul>"
+								+" <div class='tab-content' ><div id='depart' class='tab-pane active' style='height: 100%' role='tabpanel'><ul class=formationBox>";
+						if(checkedItems.length>1){
+							$('#dataList').empty();
+							$("#secondAuditPassDlg").modal('show');
+						}
+						else{
+							appendRecord (html,dataList);
+						}
+					}
+				});
+				function appendRecord(html,dataList) {
+					var allRecordsHTML = html;
+					if(dataList.length>0){
+						var recordHTML ='<li><p style="color:#FF0000">'+formatDates(dataList[0].createTime) +'</p>'
+								+'<p>'+dataList[0].auditName +'<span>:</span>'+"补贴初审"+'<span>&nbsp;&nbsp;&nbsp;备注</span>('+dataList[0].remark +')</li>'
+							allRecordsHTML += recordHTML;
+					}
+					var endDiv = "</ul>"+" </div>"+"</div>";
+					allRecordsHTML+=endDiv;
+					//将数据拼接
+					$('#dataList').empty();
+					$("#dataList").append(allRecordsHTML);
+					$("#secondAuditPassDlg").modal('show');
+				}
+			//$("#secondAuditPassDlg").modal('show');
+        }else if(status==5){
+            if (checkedItems.length>1){
+                bootbox.alert({
+                    size : 'small',
+                    message :"审核驳回不支持批量审核",
+                });
+                return
+            }else{
+				var url = getRootPath()+'/orderBonusInfo/getAuditHistory.do';
+				$.ajax({
+					type:"POST",
+					contentType: "application/x-www-form-urlencoded;charset=utf-8",
+					url:url,
+					data:"id="+secondId,
+					success:function(dataList){
+						var html ="<ul class='nav nav-tabs'><li role='presentation' class='active'><a href='#depart' data-toggle='tab'>操作日志</a></li></ul>"
+								+" <div class='tab-content' ><div id='depart' class='tab-pane active' style='height: 100%' role='tabpanel'><ul class=formationBox>";
+						appendRecord (html,dataList);
+					}
+				});
+				function appendRecord(html,dataList) {
+					var allRecordsHTML = html;
+					if(dataList.length>0){
+							var recordHTML ='<li><p style="color:#FF0000">'+formatDates(dataList[0].createTime) +'</p>'
+									+'<p>'+dataList[0].auditName +'<span>:</span>'+"补贴初审"+'<span>&nbsp;&nbsp;&nbsp;备注</span>('+dataList[0].remark +')</li>'
+							allRecordsHTML += recordHTML;
+					}
+					var endDiv = "</ul>"+" </div>"+"</div>";
+					allRecordsHTML+=endDiv;
+					//将数据拼接
+					$('#dataList1').empty();
+					$("#dataList1").append(allRecordsHTML);
+				}
+
+				$("#secondAuditInvalidDlg").modal('show');
+            }
+        }
+	}
+
+
+    function secondAuditConfirm(status){
+        var state = status;
+        var  checkedItemsJson =JSON.stringify( checkedItems);
+        var secondAuditRemark = $("#secondAuditRemark1").val();
+        if(state == 5){
+            secondAuditRemark = $("#secondAuditRemark2").val();
+        }
+        if(secondAuditRemark == ""){
+            bootbox.alert({
+                size : 'small',
+                message :"备注不能为空",
+            });
+            return
+        }
+        $.ajax({
+            type : 'post',
+            url : getRootPath() + '/orderBonusInfo/auditOrderBonusInfo.do',
+            data : {
+                checkedItems:checkedItemsJson,
+                secondAuditRemark:secondAuditRemark,
+                secondAuditStatus:state,
+            },
+            success : function(data) {
+                $("#secondAuditPassDlg").modal('hide');
+                $("#secondAuditInvalidDlg").modal('hide');
+                var success=	data.orderBonusBean.successCount;
+                var fail=	data.orderBonusBean.failCount;
+                if(fail==undefined){
+                    fail=0;
+                }
+                bootbox.alert(success+"条成功;"+fail+"条失败");
+                $tableDom.bootstrapTable('refresh');
+            }
+        });
+    }
+
+
+</script>
+
+</body>
+</html>

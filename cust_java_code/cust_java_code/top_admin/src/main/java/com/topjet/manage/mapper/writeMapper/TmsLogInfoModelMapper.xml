@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.writeMapper.TmsLogInfoModelMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.TmsLogInfoModel" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="request" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="response" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="type" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="inOrOut" jdbcType="TINYINT" javaType="java.lang.Integer" />
+      <arg column="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="success" jdbcType="TINYINT" javaType="java.lang.Integer" />
+      <arg column="costTime" jdbcType="BIGINT" javaType="java.lang.Long" />
+    </constructor>
+  </resultMap>
+
+
+  <insert id="insertTmsLog" parameterType="com.topjet.manage.domain.model.TmsLogInfoModel" >
+    insert into manageDB.tmsLog (request, response,
+    type, inOrOut, createTime,
+    success, costTime)
+    values (#{request}, #{response},
+    #{type}, #{inOrOut}, #{createTime},
+    #{success}, #{costTime})
+  </insert>
+</mapper>

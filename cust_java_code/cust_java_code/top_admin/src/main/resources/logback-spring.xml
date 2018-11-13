@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+
+    <springProperty  scope="context" name="springAppName"  source="spring.application.name"  />
+
+    <!-- 日志在工程中的输出位置 -->
+    <property name="LOG_FILE" value="${BUILD_FOLDER:-build}/${springAppName}" />
+
+    <!-- 控制台的日志输入样式 -->
+    <property name="CONSOLE_LOG_PATTERN"
+              value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+
+    <!-- 控制台Appender-->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 为logstash输出的JSON格式的Appender -->
+    <appender name="logstash" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_FILE}.json</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <FileNamePattern>${LOG_FILE}.json.%d{yyyy-MM-dd}.gz</FileNamePattern>
+            <!-- keep 30 days' worth of history -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class ="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder" charset="UTF-8">
+            <providers>
+                <timestamp>
+                    <timeZone>UTC+8</timeZone>
+                </timestamp>
+                <pattern>
+                    <pattern>
+                        {
+                        "severity": "%level",
+                        "service": "${springAppName:-}",
+                        "trace": "%X{X-B3-TraceId:-}",
+                        "span": "%X{X-B3-SpanId:-}",
+                        "parent": "%X{X-B3-ParentSpanId:-}",
+                        "exportable": "%X{X-Span-Export:-}",
+                        "pid": "${PID:-}",
+                        "thread": "%thread",
+                        "class": "%logger{40}",
+                        "rest": "%message"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+    </appender>
+
+
+
+    <springProperty  scope="context" name="elkDestination"  source="topjet.elk.destination"  />
+
+    <appender name="logstashtcp" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>${elkDestination}</destination>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+    </appender>
+
+<!-- -->
+
+    <!-- mybatis 打印 sql -->
+    <logger name="com.topjet.cloud" level="DEBUG" />
+    <logger name="org.apache.ibatis" level="DEBUG" />
+    <logger name="org.mybatis" level="DEBUG" />
+    <logger name="java.sql.Connection" level="DEBUG" />
+    <logger name="java.sql.Statement" level="DEBUG" />
+    <logger name="java.sql.PreparedStatement" level="DEBUG" />
+
+<!--测试合并-->
+
+    <root level="INFO">
+        <appender-ref ref="console"/>
+        <appender-ref ref="logstash"/>
+        <appender-ref ref="logstashtcp"/>
+    </root>
+
+
+</configuration>

@@ -1,0 +1,100 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.8.151:3301/manageDB?useUnicode=true&characterEncoding=utf-8&usessl=false
+    username: managerUser
+    password: managerUser@566560.com
+    max-idle: 10
+    max-wait: 10000
+    min-idle: 5
+    initial-size: 5
+    validation-query: SELECT 1
+    test-on-borrow: false
+    test-while-idle: true
+    time-between-eviction-runs-millis: 18800
+  seconddatasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.8.151:3301/manageDB?useUnicode=true&characterEncoding=utf-8&usessl=false
+    username: managerUser
+    password: managerUser@566560.com
+    max-idle: 10
+    max-wait: 10000
+    min-idle: 5
+    initial-size: 5
+    validation-query: SELECT 1
+    test-on-borrow: false
+    test-while-idle: true
+    time-between-eviction-runs-millis: 18800
+
+  boot:
+    admin:
+      client:
+        prefer-ip: true
+      url: http://192.168.8.151:64000/admin-server # 向服务端注册的地址
+
+  #===========MQ配置=====================
+  rabbitmq:
+    host : 192.168.8.122
+    port : 5672
+    username : admin
+    password : admin
+  #===========REDIS配置==================
+  redis:
+    host: 192.168.8.150
+    port: 6335
+    pool:
+      max-idle: 8
+    timeout: 100000
+server:
+  port: 8081
+
+#===========系统开关配置================
+
+  #推荐补贴开关接口开关
+systemConfiguration:
+  recommendBonusSwitch: "1"
+
+
+
+#==============生日祝福定时任务配置=======
+birthday:
+  switch: 1  #开关
+
+topjet:
+  redis:
+    enable: true
+  resource:
+    enable: true
+
+
+#请求响应压缩
+feign:
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+#      defaultZone: http://peer1:8761/eureka/
+      defaultZone: http://localhost:8080/eureka/
+
+
+
+management:
+  security:
+    enabled: false
+info: #定义各种额外的详情给服务端显示
+  app:
+    name: "@project.name@" #从pom.xml中获取
+    description: "@project.description@"
+    version: "@project.version@"
+    spring-boot-version: "@project.parent.version@"
+
+
+
+
+

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>交运配货</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script type="text/javascript" src="../../resource/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="../../resource/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../resource/bootstrap-theme.css">
+	<link rel="stylesheet" type="text/css" href="../../resource/bootstrap.css">
+	<script type="text/javascript" src="../../js/common/modal.js"></script>
+	<script type="text/javascript" src="../../js/common/utils.js"></script>
+	<script type="text/javascript" src="../../js/common/ajaxCall.js"></script>
+	<script type="text/javascript" src="../../js/common/dateformate.js"></script>
+	<!-- bootstrap-table 表格-->
+	<link rel="stylesheet" type="text/css" href="../../resource/bootstrap-table.css">
+	<script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+	<script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../css/demo.css">
+	<link rel="stylesheet" type="text/css" href="../../less/modules/buttons.less">
+
+</head>
+<body onresize="auto()">
+<form class="form-inline queryParameters-margin">
+	<div class="fixed-table-toolbar">
+		<div class="eachBox">
+			<ul>
+				<li>
+					<label>投诉人：</label>
+					<input type="text" name="mobile"  id="mobileId"  placeholder="输入投诉人手机号">
+				</li>
+				<li>
+					<label>被投诉人：</label>
+					<input type="text"  name="complaintedMobile"  id="complaintedMobileId" placeholder="输入被投诉人手机号">
+				</li>
+				<li>
+					<label>关联订单：</label>
+					<input type="text"  name="serialNo"  id="serialNoId"  placeholder="输入关联订单号">
+				</li>
+				<li id="statusHidden">
+					<label>状态：</label>
+					<select id="statusId"  name="status">
+						<option value="">请选择</option>
+						<option value="1">待处理</option>
+						<option value="2">投诉属实</option>
+						<option value="3">投诉和解</option>
+						<option value="4">虚假投诉</option>
+					</select>
+				</li>
+			</ul>
+			<div class="clearfix "></div>
+		</div>
+		<div id="toolbar" class="columns columns-left btn-group pull-right">
+			<button type="button" class="btn btn-info btn-sm" onclick="tableQuery();">查询</button>
+		</div>
+	</div>
+</form>
+<table id='table'  class="table table-striped table-bordered table-hover table-condensed"></table>
+<script type="text/javascript">
+$(function () {
+	var columns=[
+				{
+						field : 'orderSerialNo',
+						title : '订单号',
+						align : 'center',
+						sortable:true
+					},
+					{
+						field : 'createTime',
+						title : '投诉时间',
+						align : 'center',
+						sortable:true,
+						formatter : function(value, row, index) {
+							return formatDates(value,'yyyy-MM-dd');
+					}
+					},
+					{
+						field : 'name',
+						title : '投诉人姓名',
+						align : 'center',
+						sortable:true,
+						formatter : function (value,row,index) {
+							return '<a  href="#" onclick="modifiedInfo(\''
+									+ row.userId+ '\',\'用户投诉\')">'+value+'</a>';
+						}
+					},
+					{
+						field : 'mobile',
+						title : '投诉人号码',
+						align : 'center',
+						sortable:true
+					},
+					{
+						field : 'complaintedName',
+						title : '被投诉人姓名',
+						align : 'center',
+						sortable:true,
+						formatter : function (value,row,index) {
+							return '<a  href="#" onclick="modifiedInfo(\''
+									+ row.complaintedUserId+ '\',\'用户投诉\')">'+value+'</a>';
+						}
+					},
+					{
+						field : 'complaintedMobile',
+						title : '被投诉人号码',
+						align : 'center',
+						sortable:true
+					},
+					{
+						field : 'content',
+						title : '投诉事由',
+						align : 'center',
+						sortable:true,
+						formatter : function(value, row, index) {
+							if (value.length >= 20) {
+								var a = value.substring(0, 7) + "......";
+								var s='<span style="cursor:pointer;color:#5bc0de;" title="'+value+'" >'+a+'</span>';
+								return s;
+							}else{
+								return value
+							}
+						}
+					},
+					{
+						field : 'status',
+						title : '处理结果',
+						align : 'center',
+						sortable:true,
+						formatter : function(value, row,
+								index) {
+							if (value == "1") {
+								return "待处理";
+							}
+							else if (value == "2") {
+								return "投诉属实";
+							}
+							else if (value == "3") {
+								return "投诉和解";
+							}
+							else if (value == "4") {
+								return "投诉虚假";
+							}
+						}
+					},
+					{
+						field : 'remark',
+						title : '备注',
+						align : 'center',
+						sortable:true,
+						formatter : function(value, row, index) {
+							if (value.length >= 20) {
+								var a = value.substring(0, 7) + "......";
+								var s='<span style="cursor:pointer;color:#5bc0de;" title="'+value+'" >'+a+'</span>';
+								return s;
+							}else{
+								return value
+							}
+						}
+					},
+			{
+			field : 'action',
+			title : '操作',
+			align:'center',
+			formatter :function(value, row, index){
+				if(row.status=="1") {
+					return [
+						'<button type="button" class="btn btn-primary  btn-xs" onclick="complaintDetails(\'' + row.id + '\',\'' + row.version + '\')">查看详情</button>'
+					].join(' ');
+				}else{
+					return [
+						'<button type="button" class="btn btn-default  btn-xs" onclick="complaintDetails(\'' + row.id + '\',\'' + row.version + '\')">查看详情</button>'
+					].join(' ');
+				}
+			}
+		},
+		];
+	var url=getRootPath()+'/complaint/listComplaint.do';
+	setTableInfo('table', columns, url,getQueryParams,'toolbar')
+	})
+	
+   function getQueryParams() {
+	   var param = window.location.search;
+	   if(param != ""){
+		   $('#statusId').find("option[value=1]").attr("selected","selected")
+	   }
+		var json = {
+				'mobile' : $('#mobileId').val(),
+				'status' : $('#statusId').val(),
+				'complaintedMobile' : $('#complaintedMobileId').val(),
+				'orderSerialNo' : $('#serialNoId').val()
+			};
+
+		return json;
+	} 
+
+	function complaintDetails(id){
+		window.location.href = getRootPath()+'/complaint/getComplaintDetail.do?id='+id;
+	}
+</script>
+
+</body>
+</html>

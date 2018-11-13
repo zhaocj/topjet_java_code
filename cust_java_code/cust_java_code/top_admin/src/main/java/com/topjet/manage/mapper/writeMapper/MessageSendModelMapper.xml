@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.writeMapper.MessageSendModelMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.MessageSendModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="beginDate" property="beginDate" jdbcType="TIMESTAMP" />
+    <result column="registrationStartTime" property="registrationStartTime" jdbcType="TIMESTAMP" />
+    <result column="registrationEndTime" property="registrationEndTime" jdbcType="TIMESTAMP" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="transactionCount" property="transactionCount" jdbcType="INTEGER" />
+    <result column="sendType" property="sendType" jdbcType="TINYINT" />
+    <result column="memberType" property="memberType" jdbcType="TINYINT" />
+    <result column="unlogDayNum" property="unlogDayNum" jdbcType="INTEGER" />
+    <result column="createBy" property="createBy" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="updateBy" property="updateBy" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="SMALLINT" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, createTime, beginDate, registrationStartTime, registrationEndTime, mobile, content, 
+    transactionCount, sendType, memberType, unlogDayNum, createBy, status, updateBy, 
+    version, deleted
+  </sql>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from messageSend
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+
+  <insert id="insert" parameterType="com.topjet.manage.domain.model.MessageSendModel" >
+    insert into messageSend
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="beginDate != null" >
+        beginDate,
+      </if>
+      <if test="registrationStartTime != null" >
+        registrationStartTime,
+      </if>
+      <if test="registrationEndTime != null" >
+        registrationEndTime,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="transactionCount != null" >
+        transactionCount,
+      </if>
+      <if test="sendType != null" >
+        sendType,
+      </if>
+      <if test="memberType != null" >
+        memberType,
+      </if>
+      <if test="unlogDayNum != null" >
+        unlogDayNum,
+      </if>
+      <if test="createBy != null" >
+        createBy,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="updateBy != null" >
+        updateBy,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="beginDate != null" >
+        #{beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registrationStartTime != null" >
+        #{registrationStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registrationEndTime != null" >
+        #{registrationEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionCount != null" >
+        #{transactionCount,jdbcType=INTEGER},
+      </if>
+      <if test="sendType != null" >
+        #{sendType,jdbcType=TINYINT},
+      </if>
+      <if test="memberType != null" >
+        #{memberType,jdbcType=TINYINT},
+      </if>
+      <if test="unlogDayNum != null" >
+        #{unlogDayNum,jdbcType=INTEGER},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=SMALLINT},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="update" parameterType="com.topjet.manage.domain.model.MessageSendModel" >
+    update messageSend
+    <set >
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="beginDate != null" >
+        beginDate = #{beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registrationStartTime != null" >
+        registrationStartTime = #{registrationStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registrationEndTime != null" >
+        registrationEndTime = #{registrationEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="transactionCount != null" >
+        transactionCount = #{transactionCount,jdbcType=INTEGER},
+      </if>
+      <if test="sendType != null" >
+        sendType = #{sendType,jdbcType=TINYINT},
+      </if>
+      <if test="memberType != null" >
+        memberType = #{memberType,jdbcType=TINYINT},
+      </if>
+      <if test="unlogDayNum != null" >
+        unlogDayNum = #{unlogDayNum,jdbcType=INTEGER},
+      </if>
+      <if test="createBy != null" >
+        createBy = #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="updateBy != null" >
+        updateBy = #{updateBy,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=SMALLINT},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>

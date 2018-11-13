@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>交运配货网-后台管理</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="" rel="stylesheet">
+  <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="../../bootstrap/css/bootstrap-table.min.css" rel="stylesheet"/>
+  <link href="../../css/flat-ui.min.css" rel="stylesheet"/>
+  <link href="../../css/easyui.css" rel="stylesheet"/>
+  <link href="../../css/demo.css" rel="stylesheet"/>
+  <link href="../../css/font-awesome.min.css" rel="stylesheet"/>
+  <link href="../../css/jquery.mCustomScrollbar.css" rel="stylesheet"/>
+  <link href="../../css/bootstrap-datetimepicker.css" rel="stylesheet"/>
+  <link href="../../less/modules/buttons.less" rel="stylesheet"/>
+  <link rel="shortcut icon" href="../../img/faviconindex.ico"/>
+  <link href="../../bootstrap/formValidation/formValidation.css"/>
+
+  <script src="../../resource/jquery-1.11.3.min.js"></script>
+  <script type="text/javascript" src="../../js/common/modal.js"></script>
+  <script src="../../js/common/utils.js"></script>
+  <script src="../../js/bootbox.min.js"></script>
+  <script type="text/javascript" src="../../bootstrap/formValidation/formValidation.js"></script>
+  <script type="text/javascript" src="../../bootstrap/formValidation/bootstrap.js"></script>
+  <script type="text/javascript" src="../../bootstrap/formValidation/validData.js"></script>
+  <script src="../../js/vendor/jquery.easyui.min.js"></script>
+  <script src="../../js/jquery.mCustomScrollbar.concat.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="../../js/flat-ui.min.js"></script>
+  <script src="../../js/application.js"></script>
+  <script src="../../js/bootstrap-datetimepicker.min.js"></script>
+  <script src="../../js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+  <script type="text/javascript" src="../../js/common/dateformate.js"></script>
+  <script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+  <script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+  <script type="text/javascript" src="../../js/bootbox.min.js"></script>
+  <script src="../../js/echarts.min.js"></script>
+  <script src="../../js/common/index.js"></script>
+  <script src="../../js/common/ajaxCall.js"></script>
+  <script type="text/javascript" src="../../js/common/jquery.cityselect.js"></script>
+  <script type="text/javascript" src="../../js/common/md5.js"></script>
+  <style>
+    .modal-body .col-xs-6{width:33.333333%}
+    .temp-col{width:50% !important;}
+    .fixed-table-body{height:auto;overflow:hidden;}
+      .bootstrap-table{width:96%;margin:0 auto;}
+      #btn{margin-top:0px !important;}
+      .fixed-table-pagination{width:96%;margin:0 auto;}
+  </style>
+</head>
+<body >
+<div class="modal-body  fontsize-14" style="width:900px;margin:0 auto;height: auto;    overflow: hidden;">
+  <input type="hidden" id="id" name="id">
+  <!--<input type="hidden" id="version" name="version">-->
+  <form id="myForm">
+    <input type="hidden" id="icon" name="icon">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label>姓名</label>
+        <input type="text" id="name" name="username" class="form-control input-sm"  readonly>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label>身份证号</label>
+        <input type="text" id="idNo" name="idNo" class="form-control input-sm"   readonly>
+      </div>
+    </div>
+    <div class="col-xs-6" style="    height: 72px;">
+      <div class="form-group">
+        <label>身份</label>
+        <select id="type" style="width: 260px;">
+          <option value="1">司机/车主</option>
+          <option value="2">货主</option>
+        <!--  <option value="3">信息部/配货部</option>
+          <option value="4">物流公司</option>-->
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label>注册日期</label>
+        <input type="text" id="createTime" name="createTime" class="form-control input-sm"   readonly>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label >年龄</label>
+          <input type="text" id="age" name="age" class="form-control input-sm"   readonly>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label>企业名称</label>
+        <input type="" id="companyName" name="companyName" class="form-control input-sm"  >
+      </div>
+    </div>
+    <div class="col-xs-6 temp-col">
+      <div class="form-group" id="businessAddressCity">
+        <label >经营地址</label>
+        <select id="businessAddressCity1" placeholder="请选择省" class="prov">
+        </select>
+        <select id="businessAddressCity2" placeholder="请选择市" class="city">
+        </select>
+        <select id="businessAddressCity3" placeholder="请选区或县" class="dist">
+        </select>
+      </div>
+    </div>
+
+
+    <div class="col-xs-6 temp-col">
+      <div id="resident" class="form-group">
+        <label >常住地</label>
+        <select id="resident1" placeholder="请选择省" class="prov">
+        </select>
+        <select id="resident2" placeholder="请选择市" class="city">
+        </select>
+        <select id="resident3" placeholder="请选区或县" class="dist">
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-6 temp-col">
+      <div class="form-group" id="businessLineFisrt">
+        <label >路线一</label>
+        <select id="businessLineFisrt1" placeholder="请选择省" class="prov">
+        </select>
+        <select id="businessLineFisrt2" placeholder="请选择市" class="city">
+        </select>
+        <select id="businessLineFisrt3" placeholder="请选区或县" class="dist">
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-6 temp-col">
+      <div class="form-group" id="businessLineSecond">
+        <label >路线二</label>
+        <select id="businessLineSecond1" placeholder="请选择省" class="prov">
+        </select>
+        <select id="businessLineSecond2" placeholder="请选择市" class="city">
+        </select>
+        <select id="businessLineSecond3" placeholder="请选区或县" class="dist">
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-6 temp-col">
+      <div class="form-group" id="businessLineThird">
+        <label >路线三</label>
+        <select id="businessLineThird1" placeholder="请选择省" class="prov">
+        </select>
+        <select id="businessLineThird2" placeholder="请选择市" class="city">
+        </select>
+        <select id="businessLineThird3" placeholder="请选区或县" class="dist">
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-6 temp-col">
+      <div class="form-group" id="businessLineForth">
+        <label >路线四</label>
+        <select id="businessLineForth1" placeholder="请选择省" class="prov">
+        </select>
+        <select id="businessLineForth2" placeholder="请选择市" class="city">
+        </select>
+        <select id="businessLineForth3" placeholder="请选区或县" class="dist">
+        </select>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label>固定电话</label>
+        <input type="text" id="telephone" name="telephone">
+      </div>
+    </div>
+  </form>
+</div>
+<div class="clearfix"></div>
+<div class="modal-footer margin-top-15" id="btn">
+  <button type="button" id="myButton" onclick="submit()" class="btn btn-primary center-block">　提　交　</button>
+</div>
+<div  class="columns columns-left btn-group pull-right">
+     <button type="button" class="btn btn-primary"  onclick="addBlackList()" style="margin-right: 20px">添加黑名单 </button>
+</div>
+<table id='table' class="table table-striped table-bordered table-hover table-condensed"></table>
+</div>
+<script type="text/javascript">
+    var param = window.location.search;
+    var mobile = param.split("=")[1];
+    var businessLineFisrtId;
+    var businessLineSecondId;
+    var businessLineThirdId;
+    var businessLineForthId;
+    var url=getRootPath()+'/callCenter/queryByCallNo.do';
+    $(function(){
+        $.ajax({
+            type : 'post',
+            url:url,
+            data:{"mobile":mobile},
+            success:function(userInfoBean){
+                if(userInfoBean==""){
+                    bootbox.alert({
+                        size: 'small',
+                        message: "来电用户不是560用户",
+                    });
+                    document.getElementById("btn").style.display= "none";
+                }else{
+                    businessLineFisrtId =userInfoBean.businessLineFisrtId;
+                    businessLineSecondId = userInfoBean.businessLineSecondId;
+                    businessLineThirdId = userInfoBean.businessLineThirdId;
+                    businessLineForthId = userInfoBean.businessLineForthId;
+                    $("#name").val(userInfoBean.username);
+                    $("#id").val(userInfoBean.id);
+//                    $("#version").val(userBean.version);
+                    $("#idNo").val(userInfoBean.idNo);
+                    $("#type  option[value='"+userInfoBean.userType+"']").attr("selected",true);
+                    $("#createTime").val(new Date(userInfoBean.createTime).toLocaleString());
+                    if(userInfoBean.idNo!=""){
+                        $("#age").val(new Date().getFullYear()-userInfoBean.idNo.substring(6,10));
+                    }
+                    $("#telephone").val(userInfoBean.telephone);
+                    $("#companyName").val(userInfoBean.companyName);
+                    //常住地
+                    $("#resident").citySelect({
+                        prov: userInfoBean.resident1,
+                        city: userInfoBean.resident2,
+                        dist: userInfoBean.resident3 == '' ? '1' : userInfoBean.resident3
+                    });
+                    //经营地址
+                    $("#businessAddressCity").citySelect({
+                        prov: userInfoBean.businessAddressCity1,
+                        city: userInfoBean.businessAddressCity2,
+                        dist: userInfoBean.businessAddressCity3  == '' ? '1' :userInfoBean.businessAddressCity3
+                    });
+
+                    //路线一
+                    $("#businessLineFisrt").citySelect({
+                        prov: userInfoBean.businessLineFisrt1,
+                        city: userInfoBean.businessLineFisrt2,
+                        dist: userInfoBean.businessLineFisrt3 == '' ? '1' : userInfoBean.businessLineFisrt3
+                    });
+                    //路线二
+                    $("#businessLineSecond").citySelect({
+                        prov: userInfoBean.businessLineSecond1,
+                        city: userInfoBean.businessLineSecond2,
+                        dist: userInfoBean.businessLineSecond3 == '' ? '1' : userInfoBean.businessLineSecond3
+                    });
+                    //路线三
+                    $("#businessLineThird").citySelect({
+                        prov: userInfoBean.businessLineThird1,
+                        city: userInfoBean.businessLineThird2,
+                        dist:  userInfoBean.businessLineThird3== '' ? '1' : userInfoBean.businessLineThird3
+                    });
+                    //路线四
+                    $("#businessLineForth").citySelect({
+                        prov: userInfoBean.businessLineForth1,
+                        city: userInfoBean.businessLineForth2,
+                        dist: userInfoBean.businessLineForth3 == '' ? '1' :userInfoBean.businessLineForth3
+                    });
+
+                }
+
+
+            }
+
+        });
+    });
+    $(function () {
+        var columns = [
+            {
+                field: 'originCallNo',
+                align: 'center',
+                title: '呼叫号码',
+                sortable: true
+            },{
+                field: 'originCalledNo',
+                align: 'center',
+                title: '被呼叫号码',
+                sortable: true
+            },{
+                field: 'callType',
+                align: 'center',
+                title: '通话类型',
+                sortable: true,
+                formatter: function (value, row, index) {
+                    if (value == "dialout") {
+                        return "外呼通话";
+                    }
+                    if (value == "normal") {
+                        return "普通来电";
+                    }
+                    if (value == "transfer") {
+                        return "转接电话";
+                    }
+                    if (value == "dialTransfer") {
+                        return "外呼转接";
+                    }
+                }
+            },{
+                field: 'status',
+                title: '接听状态',
+                align: 'center',
+                sortable: true,
+                formatter: function (value, row, index) {
+                    if (value == "dealing") {
+                        return "已接";
+                    }
+                    if (value == "notDeal") {
+                        return "振铃未接听";
+                    }
+                    if (value == "leak") {
+                        return "放弃";
+                    }
+                    if (value == "queueLeak") {
+                        return "排队放弃";
+                    }
+                    if (value == "blackList") {
+                        return "黑名单";
+                    }
+                    if (value == "voicemail") {
+                        return "留言";
+                    }
+                }
+            },{
+                field: 'businessType',
+                title: '业务类型',
+                align: 'center',
+                sortable: true,
+                formatter: function (value, row, index) {
+                    if (value == 1) {
+                        return "注册认证咨询";
+                    }
+                    if (value == 2) {
+                        return "产品使用操作咨询";
+                    }
+                    if (value == 3) {
+                        return "充值及提现到账咨询";
+                    }
+                    if (value == 4) {
+                        return "运营补贴咨询";
+                    }
+                    if (value ==5) {
+                        return "积分兑换咨询";
+                    }
+                    if (value == 6) {
+                        return "招商代理咨询";
+                    }
+                    if (value == 7) {
+                        return "投诉建议";
+                    }
+                    if (value == 8) {
+                        return "其它咨询";
+                    }
+                }
+            },{
+                field: 'beginTime',
+                align: 'center',
+                title: '通话开始时间',
+                sortable: true,
+                formatter: function (value, row, index) {
+                  return formatViewDate(new Date(value), "yyyy-MM-dd HH:mm:ss");
+               }
+            },{
+                field: 'endTime',
+                title: '通话结束时间',
+                align: 'center',
+                sortable: true,
+                formatter: function (value, row, index) {
+                    return formatViewDate(new Date(value), "yyyy-MM-dd HH:mm:ss");
+                }
+            },{
+                field: 'createByName',
+                title: '处理坐席名称',
+                align: 'center',
+                sortable: true
+            },{
+                field: 'remark',
+                title: '通话备注',
+                align: 'center',
+                sortable: true
+            }
+        ];
+
+        var listUrl = getRootPath() + '/callCenter/listCallCenterCallLog.do';
+        setTableInfo('table',columns,listUrl,getQueryParams,'toolbar');
+    });
+
+    function getQueryParams() {
+        var json = {
+            'originCallNo': mobile
+        };
+        return $.extend({},json);
+    }
+  function submit() {
+       bootbox.confirm("确认提交吗？" ,function (result) {
+          if(result){
+              var bt = $('#myButton').button('loading');
+              if (!$.topjectIsValidate('myForm')) {
+                  bt.button('reset');
+                  return;
+              }
+              if ($("#resident2").val() == '') {
+                  bootbox.alert('常住地必须选二级城市', function (result) {
+                      bt.button('reset');
+                  });
+                  return;
+              }
+              var json = {
+                  'id': $("#id").val(),
+                  'userType': $("#type").val(),
+                  'companyName': $("#companyName").val(),
+                  'telephone': $("#telephone").val(),
+                  'businessAddressCity1': $("#businessAddressCity1").val(),
+                  'businessAddressCity2': $("#businessAddressCity2").val(),
+                  'businessAddressCity3': $("#businessAddressCity3").val(),
+
+                  'businessLineFisrt1':  $("#businessLineFisrt1").val(),
+                  'businessLineFisrt2':  $("#businessLineFisrt2").val(),
+                  'businessLineFisrt3':  $("#businessLineFisrt3").val(),
+                  'businessLineSecond1': $("#businessLineSecond1").val(),
+                  'businessLineSecond2': $("#businessLineSecond2").val(),
+                  'businessLineSecond3': $("#businessLineSecond3").val(),
+
+                  'businessLineThird1': $("#businessLineThird1").val(),
+                  'businessLineThird2': $("#businessLineThird2").val(),
+                  'businessLineThird3': $("#businessLineThird3").val(),
+
+                  'businessLineForth1': $("#businessLineForth1").val(),
+                  'businessLineForth2': $("#businessLineForth2").val(),
+                  'businessLineForth3': $("#businessLineForth3").val(),
+
+                  'businessLineFisrtId': businessLineFisrtId,
+                  'businessLineSecondId': businessLineSecondId,
+                  'businessLineThirdId': businessLineThirdId,
+                  'businessLineForthId': businessLineForthId,
+
+                  'resident1': $("#resident1").val(),
+                  'resident2': $("#resident2").val(),
+                  'resident3': $("#resident3").val(),
+//                  'version': $("#version").val()
+              }
+
+              var data =json;
+              var url = getRootPath() +'/callCenter/updateUserInfo.do';
+              $.ajaxDefaultCall(url, data, function () {
+                  history.go(0)
+              });
+          }
+      })
+  }
+  
+  function addBlackList() {
+      bootbox.confirm("确认拉黑吗？" ,function (result) {
+          if(result) {
+              //名单类型值0-2     0：呼入红名单 1：呼入黑名单 2：外呼黑名单
+              // sig的值为 32位大写MD5加密 （帐号Id + 帐号APISecret +时间戳）帐号Id:N00000008474 帐号APISecret:c6102860-f35b-11e6-9be1-fbd83790c3a6
+              var dateTime = formatDates(new Date(), "yyyyMMddhhmmss");
+              var authorization = base64encode('N00000008474:' + dateTime);
+              var sig = hex_md5('N00000008474c6102860-f35b-11e6-9be1-fbd83790c3a6' + dateTime);
+              var url = getRootPath() + '/callCenter/addBlackList.do' + '?sig=' + sig;
+              var json = {
+                  'PBX': 'sh.ali.5.7',
+                  'BlackNum': mobile,
+                  'Type': '1',
+                  'authorization': authorization
+              }
+              $.ajax({
+                  type: "POST",
+                  contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                  url: url,
+                  data: json,
+                  success: function (data) {
+                      bootbox.alert({
+                              size: 'small',
+                              message: '操作成功',
+                          }
+                      );
+                  }
+              });
+          }
+      })
+  }
+  $(function () {
+      $.topjectValidate('myForm');
+  })
+</script>
+</body>
+</html>

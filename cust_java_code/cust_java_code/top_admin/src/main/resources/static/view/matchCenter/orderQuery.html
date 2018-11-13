@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>交运配货</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="../../resource/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap-table.css">
+    <link rel="stylesheet" type="text/css" href="../../css/demo.css">
+    <link rel="stylesheet/less" type="text/css" href="../../less/modules/buttons.less">
+
+    <script type="text/javascript" src="../../js/common/modal.js"></script>
+    <script type="text/javascript" src="../../js/common/utils.js"></script>
+    <script type="text/javascript" src="../../js/common/ajaxCall.js"></script>
+    <script type="text/javascript" src="../../js/common/dateformate.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+    <script type="text/javascript" src="../../js/bootbox.min.js"></script>
+    <script type="text/javascript" src="../../js/common/jquery.cityselect.js"></script>
+</head>
+<body onresize="auto()">
+<input type="hidden" id="flag" value="0">
+<input type="hidden" id="orderStatus" value="">
+<div class="contentBox" style="padding:10px">
+    <div class="fixed-table-toolbar">
+        <div class="eachBox">
+            <ul>
+                <div id="depart">
+                    <li>
+                        <label>出发地<font class="text-danger">*</font></label>
+                        <select class="prov" id="depart1" name="depart1">
+                            <option value="">请选择省</option>
+                            <option value="1">……</option>
+                        </select>
+                    </li>
+                    <li>
+                        <select class="city" id="depart2" name="depart2">
+                            <option value="">请选择市</option>
+                            <option value="1">……</option>
+                        </select>
+                    </li>
+                    <li>
+                        <select class="dist" id="depart3" name="depart3">
+                            <option value="">请选择区/县</option>
+                            <option value="1">……</option>
+                        </select>
+                    </li>
+                </div>
+                <div class="line10"></div>
+                <li>
+                    <label>装车时间</label>
+                    <select name="loadDateType" id="loadDateType">
+                        <option value="">请选择提货时间类型</option>
+                        <option value="0">具体时间</option>
+                        <option value="1">今定今装</option>
+                        <option value="2">今定明装</option>
+                        <option value="3">随到随走</option>
+                    </select>
+                </li>
+                <div id="loadDateId">
+                    <li>
+                        <label for="loadDate">装车时间</label>
+                        <input type="date" name="loadDate" id="loadDate" value="" placeholder="输入截止装车时间">
+                    </li>
+                </div>
+                <li>
+                    <label style="width: 100px">距离发布时间</label>
+                    <select name="distanceTime" id="distanceTime" style="margin-left: 35px">
+                        <option value="">请选择距离发布时间</option>
+                        <option value="0">半小时</option>
+                        <option value="1">1小时</option>
+                    </select>
+                </li>
+                <div class="line10"></div>
+                <div id="destination">
+                    <li>
+                        <label>目的地<font class="text-danger">*</font></label>
+                        <select class="prov" id="destination1" name="destination1">
+                            <option value="">请选择省</option>
+                            <option value="1">……</option>
+                        </select>
+                    </li>
+                    <li>
+                        <select class="city" id="destination2" name="destination2">
+                            <option value="">请选择市</option>
+                            <option value="1">……</option>
+                        </select>
+                    </li>
+                    <li>
+                        <select class="dist" id="destination3" name="destination3">
+                            <option value="">请选择区/县</option>
+                            <option value="1">……</option>
+                        </select>
+                    </li>
+                </div>
+
+                <div class="line10"></div>
+                <li>
+                    <label for="ownerMobile">手机号：</label>
+                    <input type="text" name="ownerMobile"   id="ownerMobile" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"  placeholder="输入发布人手机号">
+                </li>
+                <li>
+                    <label>所需车型</label>
+                    <select name="TruckTypedisplayName" id="TruckTypedisplayName" onchange="findTypeId(this.options[this.options.selectedIndex].value)">
+                        <option value="">请选择车型</option>
+                    </select>
+                </li>
+                <li>
+                    <label>车长</label>
+                    <select name="truckLength" id="truckLength" onchange="findLengthId(this.options[this.options.selectedIndex].value)">
+                        <option value="">请选择车长</option>
+                    </select>
+                </li>
+                <div class="line10"></div>
+               <!-- <li>
+                    <label for="startDate">订单日期</label>
+                    <input type="date" name="startDate"   id="startDate" value=""  placeholder="输入订单发布起始日期">
+                </li>-->
+                <li>
+                    <label for="freightFeeStatus" >托管运费</label>
+                    <select name="freightFeeStatus" id="freightFeeStatus" >
+                        <option value="">不限</option>
+                        <option value="1">是</option>
+                        <option value="0">否</option>
+                    </select>
+                </li>
+                <!--<li>
+                    <label for="isAgencyFee" >存在定金</label>
+                    <select name="isAgencyFee" id="isAgencyFee" >
+                        <option value="">不限</option>
+                        <option value="2">是</option>
+                        <option value="1">否</option>
+                    </select>
+                </li>-->
+            </ul>
+            <div class="clearfix "></div>
+        </div>
+        <div class="columns columns-left btn-group pull-right">
+            <button type="button" class="btn btn-primary"  onclick="falseSupply()" style="margin-right:2mm;">虚假货源</button>
+            <button type="button" onclick="tableQuery()" class="btn btn-info btn-sm">查询</button>
+        </div>
+    </div>
+    <table id='table' class="table table-striped table-bordered table-hover table-condensed"></table>
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="callRemarkModal" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">×
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel1">联系标记</h4>
+                </div>
+                <form role="form" class="form-horizontal">
+                    <div class="modal-body">
+                        <div class="form-group" style="text-align: center;">
+                            <label style="font-size: 22px;">联系备注</label>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="callRemarkId" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" onclick="javascript:callRemarkConfirm()" class="btn btn-primary">确认
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="pushSupplyModal" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">×
+                    </button>
+                    <h4 class="modal-title" id="pushSupplyModalTitle">推送货源</h4>
+                </div>
+                <form role="form" class="form-horizontal">
+                    <div class="modal-body">
+                        <div class="form-group" style="text-align: center;">
+                            <label style="font-size: 22px;">电话号码</label>
+                        </div>
+                        <div class="form-group">
+                            <input id="pushMobile" maxlength="11" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"   class="form-control input-sm"  placeholder="请输入电话号码" onblur="checkMobile()"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" onclick="pushSupplyConfirm()" class="btn btn-primary">提交
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="../../js/common/truckType.js"></script>
+<script type="text/javascript">
+    $(function () {
+        getQuery();
+    });
+
+
+    function getQuery() {
+        var columns = [
+            {
+                field : 'ck',
+                checkbox : true,
+                formatter : function(value, row, index) {
+                    if (row.isHidden==0) {
+                        return {
+                            checked : false
+                        };
+                    } else {
+                        return {
+                            disabled: true
+                        }
+
+                    }
+                    return value;
+                }
+
+            },
+            {
+                field: 'serialNo',
+                align: 'center',
+                title: '货源号',
+                formatter: function (value, row,index) {
+                    var a = '<a  href="#" onclick="getCommentGoodsDetails(\''
+                        + row.goodsId+ '\',\'货源查询\')">'+value+'</a>';
+                    return a;
+                }
+            },{
+                field: 'depart1',
+                align: 'center',
+                title: '出发地',
+                formatter: function (value, row, index) {
+                    return row.depart2 + row.depart3;
+                }
+            },{
+                field: 'destination2',
+                align: 'center',
+                title: '目的地'
+            },{
+                field: 'quantityType',
+                title: '货物数量',
+                align: 'center',
+                formatter : function(value, row,
+                                     index) {
+                    if (row.quantityType == 1) {
+                        return row.quantityMax;
+                    }
+                    else if(row.quantityType == 2){
+                        return row.quantityMax---row.quantityMin;
+                    }
+                }
+            },{
+                field: 'unit',
+                align: 'center',
+                title: '货物单位'
+            }, {
+                field: 'loadDateType',
+                title: '装车时间类型',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    if (value == '0') {
+                        return "具体时间";
+                    } else if(value == '1'){
+                        return '今定今装';
+                    }else if(value == '2'){
+                        return '今定明装';
+                    }else if(value == '3'){
+                        return '随到随走';
+                    }
+                }
+            },{
+                field: 'loadDate',
+                title: '装车时间',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    return formatViewDate(new Date(value),"yyyy-MM-dd HH:mm");
+                }
+            },{
+                field: 'typeAndLength',
+                title: '车型车长',
+                align: 'center'/*,
+                 formatter: function (value, row, index) {
+                 if(row.truckTypeName==null){
+                 row.truckTypeName="";
+                 }
+                 if(row.truckLength==null){
+                 row.truckLength="";
+                 }
+                 return row.truckTypeName+"/"+row.truckLength;
+                 }*/
+            },{
+                field: 'ownerName',
+                title: '发布人姓名',
+                align: 'center',
+                formatter : function (value,row,index) {
+                    return '<a  href="#" onclick="modifiedInfo(\''
+                        + row.ownerId+ '\',\'货源查询\',\'' + row.reditRemark + '\')">'+value+'</a>';
+                }
+            },{
+                field: 'ownerMobile',
+                align: 'center',
+                title: '发布人手机号',
+                formatter : function (value,row,index) {
+                    return '<a  href="#" onclick="modifiedInfo(\''
+                        + row.ownerId+ '\',\'货源查询\',\'' + row.reditRemark + '\')">'+value+'</a>';
+                }
+            },{
+                field: 'destinationDetail',
+                title: '发布人常驻地',
+                align: 'center'
+            },{
+                field: 'freightFeeStatus',
+                title: '托管运费',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    if (value == 0) {
+                        return "否";
+                    } else {
+                        return '是';
+                    }
+                }
+            },
+            /* {field: 'agencyFee',
+             title: '定金',
+             align: 'center',
+             formatter : function(value, row,
+             index) {
+             if (value != null) {
+             return value.toFixed(2);
+             }
+             else{
+             return "0.00";
+             }
+
+             }
+             }, {
+             field: 'isHidden',
+             title: '订单状态',
+             align: 'center',
+             formatter: function (value, row, index) {
+             if (value == 0) {
+             return "正常";
+             } else {
+             return '虚假';
+             }
+             }
+             },*/{
+                field: 'action',
+                title: '操作',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    var s = ['<button type="button" class="btn btn-primary btn-xs" onclick="hideOrder(\'' + row.goodsId + '\')" >隐藏</button>',
+                        '<button type="button" class="btn btn-primary btn-xs" onclick="callRemark(\'' + row.ownerMobile + '\')" >联系标记</button>',
+                        '<button type="button" class="btn btn-primary btn-xs" onclick="callLogQuery(\'' + row.ownerMobile + '\')" >联系记录</button>',
+                        '<button type="button" class="btn btn-primary btn-xs" onclick="pushSupply(\'' + row.goodsId + '\')" >推送</button>',].join(' ');
+                    return s;
+                }
+            },
+        ];
+        $("#loadDate").val(getDate10());
+        var url = getRootPath() + '/matchCenter/orderQueryList.do';
+        setTableInfo('table', columns, url, getQueryParams, 'toolbar');
+        $("#depart").citySelect({
+            prov: '',
+            city: ''
+        });
+        $("#destination").citySelect({
+            prov: '',
+            city: '',
+            dist: ''
+        });
+    }
+
+    var typeId;
+    var  lengthId;
+    function findTypeId(id) {
+        typeId = id;
+    }
+    function findLengthId(id) {
+        lengthId = id;
+    }
+
+
+    function getQueryParams() {
+        var displayName=$('#TruckTypedisplayName  option:selected').text();
+        if(displayName=="请选择车型"){
+            displayName="";
+        }
+        var truckLength = $('#truckLength option:selected').text();
+        if(truckLength=="请选择车长"){
+            truckLength="";
+        }
+        var loadDate =  {};
+        if($("#loadDate").val() != ""){
+            loadDate = {"loadDate":StringToDate($("#loadDate").val() + ' 23:59:59')};
+        }
+      /*  var startDate = {};
+        if($("#startDate").val() != ""){
+            startDate = {"startDate":StringToDate($("#startDate").val())};
+        }
+*/
+        var json = {
+            'depart1': $('#depart1').val(),
+            'depart2': $('#depart2').val(),
+            'depart3': $('#depart3').val(),
+            'destination1': $('#destination1').val(),
+            'destination2': $('#destination2').val(),
+            'destination3': $('#destination3').val(),
+            'truckType':displayName,
+            'ownerMobile': $('#ownerMobile').val(),
+            'truckLength': truckLength,
+            'freightFeeStatus':$('#freightFeeStatus').val(),
+            'isAgencyFee':$('#isAgencyFee').val(),
+            'loadDateType':$('#loadDateType').val(),
+            'distanceTime':$('#distanceTime').val(),
+            'typeId':typeId,
+            'lengthId':lengthId
+        };
+        return $.extend({},json,loadDate);
+    };
+
+    function hideOrder(id) {
+        bootbox.confirm("确认隐藏?", function (result) {
+            if (result) {
+                var url = getRootPath() + '/matchCenter/hideOrder.do';
+                var data = {'id': id};
+                $.ajaxDefaultCall(url, data,function(){tableRefresh();});
+            }
+        });
+    };
+
+
+    var mobile;
+
+    function callRemark(ownerMobile) {
+        mobile = ownerMobile;
+        $("#callRemarkModal").modal('show');
+    }
+    ;
+
+    function callRemarkConfirm() {
+        var remark = $("#callRemarkId").val();
+        $("#callRemarkId").val("");
+        if (remark == "") {
+            bootbox.alert({
+                size: 'small',
+                message: "备注不能为空",
+            });
+            return
+        }
+        $.ajax({
+            type: 'post',
+            url: getRootPath() + '/matchCenter/callLog.do',
+            data: {
+                mobile:mobile,
+                remark: remark,
+            },
+            success: function (data) {
+                $("#callRemarkModal").modal('hide');
+                $tableDom.bootstrapTable('refresh');
+            }
+        });
+    }
+
+
+    function callLogQuery(ownerMobile) {
+        mobile=ownerMobile;
+        window.location.href = getRootPath() + '/view/matchCenter/callLogQuery.html?mobile=' + mobile;
+    }
+
+    var orderId ;
+    /**
+     * 推送货源
+     */
+    function  pushSupply(id){
+        orderId = id;
+        //展示弹出框
+        $("#pushSupplyModal").modal('show');
+    }
+
+    /**
+     * 推送货源提交
+     */
+    function  pushSupplyConfirm(){
+        var mobile = $("#pushMobile").val();
+        if(mobile == null || mobile == ""){
+            bootbox.alert({
+                size: 'small',
+                message: "请输入手机号!"
+            });
+            return;
+        }
+        if(driverMobileType != 1){
+            bootbox.alert({
+                size: 'small',
+                message: "非司机身份用户，无法推送!"
+            });
+            $("#pushMobile").val("");
+            return;
+        }
+        var pushSupplyUrl = getRootPath()+'/matchCenter/pushSupply.do';
+        var json = {
+            mobile:mobile,
+            orderId: orderId
+        };
+        $.ajaxDefaultCall(pushSupplyUrl, json, function () {
+            window.location.href = getRootPath() +'/view/matchCenter/orderQuery.html';
+        });
+
+    }
+var driverMobileType;
+    function checkMobile() {
+        var pushMobile =$("#pushMobile").val();
+        var reg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
+        if(reg.test(pushMobile)){
+            var url = getRootPath()+'/matchCenter/checkMobile.do';
+            $.ajax({
+                type:"POST",
+                contentType: "application/x-www-form-urlencoded;charset=utf-8",
+                url:url,
+                data:"pushMobile="+pushMobile,
+                success:function(data){
+                    if(data.success == false){
+                        bootbox.alert({
+                            size: 'small',
+                            message: "不是平台用户，请重新输入电话号码!"
+                        });
+                        $("#pushMobile").val("");
+                        return;
+                    }/*else{
+                        if(data.userType != 1){
+                            bootbox.alert({
+                                size: 'small',
+                                message: "非司机身份用户，无法推送!"
+                            });
+                            $("#pushMobile").val("");
+                            return;
+                        }
+                    }*/
+                    driverMobileType = data.userType;
+                }
+            });
+        }else{
+            bootbox.alert({
+                size: 'small',
+                message: "手机号格式不正确，请重新输入!"
+            });
+            $("#pushMobile").val("");
+            return;
+        }
+
+    }
+
+   function falseSupply() {
+      var  checkedItems = $('#table').bootstrapTable('getSelections');
+       if(checkedItems.length==0){
+           bootbox.alert({
+               size : 'small',
+               message :"请勾选",
+           });
+           return
+       }
+       var  checkedItemsJson =JSON.stringify( checkedItems);
+       $.ajax({
+           type : 'post',
+           url : getRootPath() + '/matchCenter/falseSupply.do',
+           data : {
+               checkedItems:checkedItemsJson
+           },
+           success : function(data) {
+               var success=	data.successCount;
+               var fail=	data.failCount;
+               if(fail==undefined){
+                   fail=0;
+               }
+               bootbox.alert(success+"条成功;"+fail+"条失败");
+               $tableDom.bootstrapTable('refresh');
+           }
+       });
+   }
+</script>
+</body>
+</html>

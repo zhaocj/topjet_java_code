@@ -1,0 +1,25 @@
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: admin-quartz
+  freemarker:
+    request-context-attribute: request
+  mvc:
+    view:
+      suffix: .ftl
+    static-path-pattern: /static/**
+
+logging:
+  level:
+    com:
+      topjet:
+        manage:
+          mapper : debug
+  config: classpath:logback-spring.xml
+
+birthday:
+  message:
+    owner: "亲爱的{0}{1}，今天是您的生日，【560交运配货】全体员工祝您生日快乐！祝您身体健康，家庭幸福，工作顺利！560一路相伴，愿您交好运，帮您找好车！"
+    driver: "亲爱的{0}{1}，今天是您的生日，【560交运配货】全体员工祝您生日快乐！祝您身体健康，家庭幸福，工作顺利！560一路相伴，愿您交好运，帮您配好货！"

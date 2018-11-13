@@ -1,0 +1,779 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.OrderInfoModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.OrderInfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="ownerId" property="ownerId" jdbcType="INTEGER" />
+    <result column="driverId" property="driverId" jdbcType="INTEGER" />
+    <result column="goodsId" property="goodsId" jdbcType="INTEGER" />
+    <result column="serialNo" property="serialNo" jdbcType="VARCHAR" />
+    <result column="orderStatus" property="orderStatus" jdbcType="TINYINT" />
+    <result column="driverTruckId" property="driverTruckId" jdbcType="INTEGER" />
+    <result column="isAssigned" property="isAssigned" jdbcType="VARCHAR" />
+    <result column="bonusValid" property="bonusValid" jdbcType="INTEGER" />
+    <result column="isDriverAgreementAccept" property="isDriverAgreementAccept" jdbcType="VARCHAR" />
+    <result column="isOwnerAgreementAccept" property="isOwnerAgreementAccept" jdbcType="VARCHAR" />
+    <result column="isGuaranteed" property="isGuaranteed" jdbcType="VARCHAR" />
+    <result column="isHidden" property="isHidden" jdbcType="VARCHAR" />
+    <result column="isInner" property="isInner" jdbcType="VARCHAR" />
+    <result column="sourceType" property="sourceType" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="deleted" property="deleted" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, ownerId, driverId, goodsId, serialNo, orderStatus, driverTruckId, isAssigned,
+    bonusValid, isDriverAgreementAccept, isOwnerAgreementAccept, isGuaranteed, isHidden, 
+    isInner, sourceType, createTime, updateTime, deleted
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from orderDB.orderInfo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+
+  <sql id="Criteria_where_clause">
+    <where>
+      <if test="id != null" >
+        and id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="ownerId != null" >
+        and ownerId = #{ownerId,jdbcType=INTEGER}
+      </if>
+      <if test="driverId != null" >
+        and driverId = #{driverId,jdbcType=INTEGER}
+      </if>
+      <if test="goodsId != null" >
+        and goodsId = #{goodsId,jdbcType=INTEGER}
+      </if>
+      <if test="serialNo != null" >
+        and serialNo = #{serialNo,jdbcType=VARCHAR}
+      </if>
+      <if test="orderStatus != null" >
+        and orderStatus = #{orderStatus,jdbcType=TINYINT}
+      </if>
+      <if test="driverTruckId != null" >
+        and driverTruckId = #{driverTruckId,jdbcType=INTEGER}
+      </if>
+      <if test="isAssigned != null" >
+        and isAssigned = #{isAssigned,jdbcType=VARCHAR}
+      </if>
+      <if test="bonusValid != null" >
+        and bonusValid = #{bonusValid,jdbcType=INTEGER}
+      </if>
+      <if test="isDriverAgreementAccept != null" >
+        and isDriverAgreementAccept = #{isDriverAgreementAccept,jdbcType=VARCHAR}
+      </if>
+      <if test="isOwnerAgreementAccept != null" >
+        and isOwnerAgreementAccept = #{isOwnerAgreementAccept,jdbcType=VARCHAR}
+      </if>
+      <if test="isGuaranteed != null" >
+        and isGuaranteed = #{isGuaranteed,jdbcType=VARCHAR}
+      </if>
+      <if test="isHidden != null" >
+        and isHidden = #{isHidden,jdbcType=VARCHAR}
+      </if>
+      <if test="isInner != null" >
+        and isInner = #{isInner,jdbcType=VARCHAR}
+      </if>
+      <if test="sourceType != null" >
+        and sourceType = #{sourceType,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null" >
+        and createTime = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="updateTime != null" >
+        and updateTime = #{updateTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="deleted != null" >
+        and deleted = #{deleted,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+
+  <select id="selectPageListByParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from orderDB.orderInfo
+    <include refid="Criteria_where_clause" />
+    order by id desc
+    limit
+    #{offset}, #{limit}
+  </select>
+
+  <select id="getCountByParam" resultType="java.lang.Integer" parameterType="java.util.Map">
+    select count(id) from orderDB.orderInfo
+    <include refid="Criteria_where_clause" />
+  </select>
+
+
+  <!--管理平台匹配中心用户查询-->
+  <select id="userQueryList" resultType="com.topjet.manage.domain.bean.MatchCenterUserBean"
+          parameterType="com.topjet.manage.domain.bean.MatchCenterUserBean">
+    select
+    a.id as userId,
+    a.`username` as userName,
+    a.mobile as userMobile,
+    (select YEAR(NOW())-SUBSTR(a.idNo FROM 7 FOR 4)) as age,
+    a.userType as userType,
+    IFNULL(( SELECT remark FROM manageDB.`userAuditHistory` WHERE sourceType = 1  AND sourceId = a.id and statusAfter IN (1, 2) ORDER BY createTime DESC  LIMIT 1),"")
+    as reditRemark,
+
+    CASE
+    WHEN a.userType>1 THEN (SELECT COUNT(*) FROM orderDB.orderInfo WHERE ownerId=a.id and deleted = 0  )
+    WHEN a.userType=1 THEN (SELECT COUNT(*) FROM orderDB.orderInfo WHERE driverId=a.id and deleted = 0)
+    ELSE 0
+    END AS orderCount,
+
+    CASE
+    WHEN a.userType>1 THEN (SELECT COUNT(*) FROM orderDB.orderInfo WHERE ownerId=a.id AND orderStatus=2 and deleted = 0)
+    WHEN a.userType=1 THEN (SELECT COUNT(*) FROM orderDB.orderInfo WHERE driverId=a.id AND orderStatus=2 and deleted = 0)
+    ELSE 0
+    END AS pendingOrderCount,
+
+    CASE
+    WHEN a.userType>1 THEN (SELECT COUNT(*) FROM orderDB.orderInfo WHERE ownerId=a.id and deleted = 0   AND orderStatus BETWEEN 3 AND 5 )
+    WHEN a.userType=1 THEN (SELECT COUNT(*) FROM orderDB.orderInfo WHERE driverId=a.id and deleted = 0  AND orderStatus BETWEEN 3 AND 5 )
+    ELSE 0
+    END AS completedOrderCount,
+    CASE
+    WHEN a.userType>1 THEN (SELECT COUNT(*) FROM orderDB.orderInfo WHERE ownerId=a.id AND orderStatus=7 and deleted = 0 )
+    WHEN a.userType=1 THEN (SELECT COUNT(*) FROM orderDB.orderInfo WHERE driverId=a.id AND orderStatus=7 and deleted = 0 )
+    ELSE 0
+    END AS acceptedOrderCount,
+
+    CASE
+    WHEN a.userType>1 THEN (SELECT COUNT(*) FROM orderDB.orderInfo WHERE ownerId=a.id AND orderStatus=6 and deleted = 0 )
+    WHEN a.userType=1 THEN (SELECT COUNT(*) FROM orderDB.orderInfo WHERE driverId=a.id AND orderStatus=6 and deleted = 0 )
+    ELSE 0
+    END AS carrierOrderCount,
+    (SELECT COUNT(*) FROM orderDB.`goodsInfo` WHERE userId=a.id AND goodsStatus IN (3,5,6)  and deleted = 0 ) revokeOrderCount,
+    (SELECT COUNT(*) FROM orderDB.`goodsInfo` WHERE userId=a.id AND isHidden=1 and deleted = 0 ) falseOrderCount
+    from  userDB.`userInfo` a
+    <include refid="base_list_where2"></include>
+    order by a.id desc
+    limit #{offset}, #{limit}
+  </select>
+
+
+  <sql id="base_list_where2">
+    where a.deleted = 0  and ur.userNature = 0
+    <if test="userMobile != null and userMobile !=''">
+      and a.mobile = #{userMobile}
+    </if>
+    <if test="userType != null and userType !=''">
+      and a.userType= #{userType}
+    </if>
+    <if test="days != null and days !=''and amount != null and amount !=''"  >
+      and(
+      a.id in  (
+      select ow.ownerId from orderDB.orderInfo ow  where ow.deleted = 0
+      and date_sub(curdate(),interval #{days} day) &lt;= ow.createTime  and  ow.createTime &lt;= now()
+      GROUP by ow.ownerId HAVING count(1)&lt;= #{amount}
+      )
+      OR
+      a.id not in (
+      select ow.ownerId from orderDB.orderInfo ow  where ow.deleted = 0
+      and date_sub(curdate(),interval #{days} day) &lt;= ow.createTime  and  ow.createTime &lt;= now()
+      GROUP by ow.ownerId HAVING count(1)> 0)
+      )
+    </if>
+  </sql>
+
+
+  <select id="userQueryCount" resultType="java.lang.Integer"
+          parameterType="com.topjet.manage.domain.bean.MatchCenterUserBean">
+    SELECT count(*)  from  userDB.`userInfo` a
+    <include refid="base_list_where2"></include>
+  </select>
+
+
+  <!--订单管理列表-->
+  <select id="orderQuertList" parameterType="com.topjet.manage.domain.bean.MatchCenterOrderBean"
+          resultType="com.topjet.manage.domain.bean.MatchCenterOrderBean">
+      select DISTINCT gi.id as goodsId,
+      gi.userId as ownerId,
+      oi.goodsId as goodId,
+      oi.orderStatus as orderStatus,
+      gi.goodsNo as serialNo,
+      gi.isFreightFeeManaged as freightFeeStatus,
+      IFNULL(ush.remark,"")as reditRemark,
+      oi.agencyFee as agencyFee,
+      gi.version as version,
+      gi.isHidden as isHidden,
+      gi.goodsStatus,
+      gi.version as Goodsversion,
+      u1.username as ownerName,
+      u1.mobile as ownerMobile,
+      u1.userType as ownerType,
+      ui.residentCityId as residentCityId,
+     <!--/* gti.truckTypeId as truckId,*/ -->
+      gdi.depart1 as depart1,
+      gdi.depart2 as depart2,
+      gdi.depart3 as depart3,
+      gdi.departCityId as departCityId,
+      gdi.destination1 as destination1,
+      gdi.destination2 as destination2,
+      gdi.destination3 as destination3,
+      gdi.destinationCityId as destinationCityId,
+      IFNULL(gdi.departDetail,gdi.destinationDetail) as destinationDetail,
+      gi.loadDate as loadDate,
+      gdi.senderMobile as senderMobile,
+      gdi.sender as sender,
+      gi.createTime as createTime,
+      gi.loadDateType as loadDateType,
+  <!--/*ttd.code as truckType,*/ -->
+CONCAT(
+(SELECT ttd.displayName FROM orderDB.goodsTruckInfo gt INNER JOIN resourceDB.`truckTypeDictionary` ttd ON gt.truckTypeId=ttd.id AND gt.type=1 WHERE gt.goodsId=gi.id LIMIT 1),'/',
+(SELECT tld.displayName FROM orderDB.goodsTruckInfo gt INNER JOIN resourceDB.`truckLengthDictionary` tld ON gt.truckTypeId=tld.id AND gt.type=2 WHERE gt.goodsId=gi.id LIMIT 1)) AS typeAndLength,
+  gi.quantityType,gi.quantityMax,gi.quantityMin,
+  gi.unit,gi.goodsStatus
+  from
+  orderDB.goodsInfo gi
+  LEFT JOIN orderDB.goodsDetailInfo gdi on gdi.goodsId = gi.id
+  left join userDB.userInfo u1 on gi.userId = u1.id
+  LEFT JOIN userDB.userOtherInfo ui on ui.userId = u1.id
+  LEFT JOIN manageDB.userAuditHistory ush on ush.sourceId = gi.id
+  INNER JOIN orderDB.orderInfo oi on oi.goodsId = gi.id
+  <if test="truckType != ''"><!-- /*type = 1车型  type= 2 车长*/ -->
+    INNER JOIN orderDB.goodsTruckInfo f ON f.goodsId=gi.id AND f.type=1 AND f.truckTypeId = #{typeId}
+  </if>
+  <if test="truckLength != ''">
+    INNER JOIN orderDB.goodsTruckInfo a ON a.goodsId=gi.id AND a.type=2 AND a.truckTypeId = #{lengthId}
+  </if>
+<include refid="base_list_where"/>
+ GROUP BY gi.id
+ order by gi.id ASC
+ limit #{offset}, #{limit}
+</select>
+
+<!--订单管理页数-->
+  <select id="orderQuertCount" parameterType="com.topjet.manage.domain.bean.MatchCenterOrderBean" resultType="java.lang.Integer">
+    SELECT  count(DISTINCT gi.id)
+    from
+    orderDB.goodsInfo gi
+    LEFT JOIN orderDB.goodsDetailInfo gdi on gdi.goodsId = gi.id
+    left join userDB.userInfo u1 on gi.userId = u1.id
+    LEFT JOIN userDB.userOtherInfo ui on ui.userId = u1.id
+    LEFT JOIN manageDB.userAuditHistory ush on ush.sourceId = gi.id
+    INNER JOIN orderDB.orderInfo oi on oi.goodsId = gi.id
+    <if test="truckType != ''"> <!-- /*type = 1车型  type= 2 车长*/ -->
+      INNER JOIN orderDB.goodsTruckInfo f ON f.goodsId=gi.id AND f.type=1 AND f.truckTypeId = #{typeId}
+    </if>
+    <if test="truckLength != ''">
+      INNER JOIN orderDB.goodsTruckInfo a ON a.goodsId=gi.id AND a.type=2 AND a.truckTypeId = #{lengthId}
+    </if>
+    <include refid="base_list_where"/>
+  </select>
+
+  <!--根据货物id查询数据-->
+  <select id="getGoodsInfo" resultType="com.topjet.manage.domain.model.GoodsInfoModel"
+          parameterType="com.topjet.manage.domain.model.GoodsInfoModel">
+    select g.id,g.userId,g.payStyle,g.isCarpool,g.isCarpool,g.loadDateType,g.loadDate,g.category,g.packType,g.loadType,g.quantityType,g.quantityMax,
+    g.quantityMin,g.unit,g.goodsNo,g.sourceType,g.isHidden,g.isInner,g.goodsPushNum,g.createTime,g.updateTime,g.version,g.deleted
+    from orderDB.goodsInfo g where g.id = #{id}
+  </select>
+
+
+  <sql id="base_list_where">
+    where gi.deleted = 0 and gi.goodsStatus != 6  and gi.id not in (SELECT orderId from manageDB.matchOrderInfo)
+    <if test="ownerMobile != null and ownerMobile !=''">
+      and u1.mobile = #{ownerMobile}
+    </if>
+    <if test="freightFeeStatus != null and freightFeeStatus !=''">
+      and gi.isFreightFeeManaged = #{freightFeeStatus}
+    </if>
+    <if test="freightFeeStatus == 0">
+      and gi.isFreightFeeManaged = 0
+    </if>
+    <if test="serialNo != null and serialNo !=''">
+      and gi.goodsNo = #{serialNo}
+    </if>
+    <if test="loadDate != null">
+      and gi.loadDate &gt;= NOW() and gi.loadDate  &lt;= #{loadDate}
+    </if>
+    <if test="loadDateType != null and loadDateType !=''">
+      and gi.loadDateType = #{loadDateType}
+    </if>
+    <if test="orderStatus != null and orderStatus !=''">
+      and oi.orderStatus = #{orderStatus}
+    </if>
+    <if test="goodsStatus != null and goodsStatus !=''">
+      and gi.goodsStatus = #{goodsStatus}
+    </if>
+
+
+    <if test="depart1 != null and depart1 !=''">
+      and gdi.depart1  like CONCAT('%', #{depart1}, '%')
+    </if>
+    <if test="depart2 != null and depart2 !=''">
+      and gdi.depart2 like CONCAT('%', #{depart2}, '%')
+    </if>
+    <if test="depart3 != null and depart3 !=''">
+      and gdi.depart3 like CONCAT('%',#{depart3}, '%')
+    </if>
+
+
+
+    <if test="destination1 != null and destination1 !=''">
+      and gdi.destination1 = #{destination1}
+    </if>
+    <if test="destination2 != null and destination2 !=''">
+      and gdi.destination2 = #{destination2}
+    </if>
+    <if test="destination3 != null and destination3 !=''">
+      and gdi.destination3 = #{destination3}
+    </if>
+   <!-- <if test="truckType != null and truckType != '' ">
+      and  ttd.`displayName` = #{truckType}
+    </if>
+    <if test="truckLength != null and truckLength != '' ">
+      and  tld.`displayName` = #{truckLength}
+    </if>-->
+    <if test="startDate != null and startDate !=''">
+      and oi.createTime  >= #{startDate}
+    </if>
+    <if test="isAgencyFee == '1'.toString()">
+      and oi.AgencyFee=0
+    </if>
+    <if test="isAgencyFee == '2'.toString()">
+      and oi.AgencyFee>0
+    </if>
+    <if test="distanceTime == 0">
+      and (UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(oi.createTime))  BETWEEN 1800 and 3600 and oi.orderStatus=1
+    </if>
+    <if test="distanceTime == 1">
+      and (UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(oi.createTime)) > 3600 and oi.orderStatus=1
+    </if>
+  </sql>
+
+  <!--订单管理列表-->
+  <select id="getOrderList" parameterType="com.topjet.manage.domain.vo.OrderListQuery"
+          resultType="com.topjet.manage.domain.vo.OrderListVO">
+    SELECT
+        o.id,
+        o.version,
+        o.orderNo AS orderNo,
+        DATE_FORMAT(o.createTime, '%Y-%m-%d %T') AS createDate,
+        IFNULL(u.username, '') as username,
+        IFNULL(u.mobile, '') as mobile,
+        o.orderStatus AS orderStatus,
+        o.goodsId,
+        o.`aheadFee` AS aheadFee,
+        o.`aheadFeeStatus` AS aheadFeeStatus,
+        o.`backFee` AS backFee,
+        o.`backFeeStatus` AS backFeeStatus,
+        o.`deliveryFee` AS deliveryFee,
+        o.`deliveryFeeStatus` AS deliveryFeeStatus,
+        o.`freightFee` AS freightFee,
+        CONCAT(
+            ggi.depart1,
+            ggi.depart2,
+            ggi.depart3
+        ) AS departCity,
+        CONCAT(
+            ggi.destination1,
+            ggi.destination2,
+            ggi.destination3
+        ) AS destinationCity,
+        ah.auditName AS sysName,
+        g.isHidden,
+        o.ownerId as uid,
+    IFNULL((select ah5.remark from manageDB.userAuditHistory ah5 where ah5.id = (select max(ah6.id) from manageDB.userAuditHistory ah6
+    where  u.id = ah6.sourceId and ah6.sourceType = 1 and ah6.statusAfter in (1, 2))), '')as reditRemark,
+        oa.orderFrozenState as orderFrozenState,
+        oa.id as orderAffiliateId,
+        oa.version as orderAffiliateVersion
+
+      <include refid="getOrderListSql"/>
+
+ <!--   <if test="orderTable != null and orderTable ==2 ">
+      <include refid="getOrderHistoryListSql"/>
+    </if>-->
+    order by  id desc
+    limit #{offset}, #{limit}
+  </select>
+
+  <!--订单管理页数-->
+  <select id="getOrderListCount" parameterType="com.topjet.manage.domain.vo.OrderListQuery" resultType="java.lang.Integer">
+    SELECT
+	count(o.id)
+
+      <include refid="getOrderListSql"/>
+
+ <!--   <if test="orderTable != null and orderTable ==2 ">
+      <include refid="getOrderHistoryListSql"/>
+    </if>-->
+  </select>
+
+  <!--根据订单号查询-->
+  <select id="findByOrderNo" parameterType="java.lang.String" resultType="com.topjet.manage.domain.model.OrderInfoModel">
+    SELECT o.id,o.ownerId,o.driverId,o.goodsId,o.orderNo,o.orderStatus,o.driverTruckId,o.isAssigned,o.agencyFee,o.agencyStatus,
+    o.freightFee,o.freightFeeStatus,o.aheadFee,o.aheadFeeStatus,o.deliveryFee,o.deliveryFeeStatus,o.backFee,o.backFeeStatus,o.createTime,
+    o.updateTime,o.version,o.deleted,ob.ownerAmount
+    from orderDB.orderInfo o where o.orderNo = #{orderNo}
+  </select>
+  <!--根据订单id查询货源id-->
+  <select id="findGoodIdByOrderId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    SELECT o.goodsId,o.version
+    from orderDB.orderInfo o LEFT JOIN orderBonusInfo ob on o.id = ob.orderId
+    where o.id = #{id}
+  </select>
+
+    <!--/* - opi.createTime as signDate,签收时间*
+      (SELECT  bb.createTime from manageDB.bonusBillInfo bb where bb.billType = 2 and bb.sourceId =o.id  and bb.deleted=0) as aheadFeeTime,
+      (SELECT  ba.createTime from manageDB.bonusBillInfo ba where ba.billType = 3 and ba.sourceId =o.id  and ba.deleted=0) as agencyFeeTime,
+      (SELECT  bc.createTime from manageDB.bonusBillInfo bc where bc.billType = 4 and bc.sourceId =o.id  and bc.deleted=0) as amtSumTime,
+      (SELECT  be.createTime from manageDB.bonusBillInfo be where be.billType = 5 and be.sourceId =o.id  and be.deleted=0) as deliveryFeeTime,*/
+          /* LEFT JOIN orderParameterInfo opi ON o.id = opi.orderId and opi.parameterType =8 and opi.deleted=0*/
+    /-->
+  <!--订单获取详情-->
+  <select id="orderDetail" parameterType="java.lang.Integer" resultType="com.topjet.manage.domain.vo.OrderDetailAdminVO">
+    SELECT DISTINCT
+    o.id,
+    o.version,
+    o.driverId  as driverId,
+     CONCAT((select CONCAT(tI.plateNo1,tI.plateNo2,tI.plateNo3) as plateNo from truckDB.driverTruckInfo dTI INNER JOIN truckDB.truckInfo tI ON dTI.truckId = tI.id LIMIT 1),'/',
+    (SELECT ttd.displayName FROM orderDB.goodsTruckInfo gt INNER JOIN resourceDB.`truckTypeDictionary` ttd ON gt.truckTypeId=ttd.id AND gt.type=1 WHERE gt.goodsId=g.id LIMIT 1),'/',
+    (SELECT tld.displayName FROM orderDB.goodsTruckInfo gt INNER JOIN resourceDB.`truckLengthDictionary` tld ON gt.truckTypeId=tld.id AND gt.type=2 WHERE gt.goodsId=g.id LIMIT 1))AS truckInfo,
+    o.aheadFeeStatus,
+    o.deliveryFeeStatus,
+    o.agencyStatus,
+    o.orderNo AS orderNo,
+    o.createTime AS createDate,
+    ou.username,
+    ou.mobile,
+    o.orderStatus AS orderStatus,
+    o.freightFeeStatus as freightFeeStatus,
+    CONVERT ( o.freightFee, DECIMAL(25, 2))   AS amtSum,
+    CONVERT ( o.aheadFee, DECIMAL(25, 2)) AS aheadFee,
+    CONVERT ( o.deliveryFee, DECIMAL(25, 2)) AS deliveryFee,
+    CONVERT ( o.backFee, DECIMAL(25, 2)) AS backFee,
+    CONVERT ( o.agencyFee, DECIMAL(25, 2)) AS agencyFee,
+    (SELECT  bb.createTime from orderDB.orderBillInfo bb where bb.billType = 2 and bb.orderId =o.id  and bb.deleted=0) as aheadFeeTime,
+    IFNULL((SELECT  ba.createTime from orderDB.orderBillInfo ba where ba.billType = 1 and ba.orderId =o.id  and ba.deleted=0),(select oo.createTime from orderDB.orderInfo oo where oo.id = #{id}))as agencyFeeTime,
+    IFNULL((SELECT  bc.createTime from orderDB.orderBillInfo bc where bc.billType = 3 and bc.orderId =o.id  and bc.deleted=0),(select oo.createTime from orderDB.orderInfo oo where oo.id = #{id}))as amtSumTime,
+    (SELECT  be.createTime from orderDB.orderBillInfo be where be.billType = 4 and be.orderId =o.id  and be.deleted=0) as deliveryFeeTime,
+    g.category,
+    g.loadDate AS loadDate,
+    g.packType,
+    g.loadType,
+    g.quantityType,
+    CONVERT (g.quantityMax, DECIMAL(25, 2)) AS quantityMax,
+    CONVERT (g.quantityMin, DECIMAL(25, 2)) AS quantityMin,
+    g.unit,
+    CONCAT(
+    (SELECT ttd.displayName FROM orderDB.goodsTruckInfo gt INNER JOIN resourceDB.`truckTypeDictionary` ttd ON gt.truckTypeId=ttd.id AND gt.type=1 WHERE gt.goodsId=g.id LIMIT 1),'/',
+    (SELECT tld.displayName FROM orderDB.goodsTruckInfo gt INNER JOIN resourceDB.`truckLengthDictionary` tld ON gt.truckTypeId=tld.id AND gt.type=2 WHERE gt.goodsId=g.id LIMIT 1),"/",IF(g.isCarpool!=1,"整车","可拼车"))AS truckType,
+    gr.textRemark,
+    gr.photoRemark,
+    g.loadDateType,
+    IFNULL(ou.username,gdi.sender)AS sendName,
+	IFNULL(ou.mobile,gdi.senderMobile)AS sendMobile,
+    IFNULL(CONCAT(gdi.depart1,gdi.depart2,gdi.depart3),gdi.departDetail)AS sendAddress,
+    oci.pickupCode AS sendPickupCode,
+    gdi.receiver AS receiveName,
+    gdi.receiverMobile receiveMobile,
+    IFNULL(CONCAT(gdi.destination1,gdi.destination2,gdi.destination3),gdi.destinationDetail) AS receiveAddress,
+    oci.unloadCode AS receiveUnloadCode,
+    du.username AS driverName,
+    du.mobile AS driverMobile,
+    gps.detail AS driverDetail,
+    obi.ownerAmount
+    FROM
+	orderDB.orderInfo o
+    LEFT JOIN orderDB.orderCodeInfo oci on oci.orderId = o.id
+    LEFT JOIN userDB.userInfo ou ON o.ownerId = ou.id
+    AND ou.deleted = 0
+    LEFT JOIN userDB.userInfo du ON o.driverId = du.id
+    AND du.deleted = 0
+    LEFT JOIN userDB.userGpsInfo gps ON du.id = gps.userId
+    LEFT JOIN orderDB.goodsInfo g ON o.goodsId = g.id
+    AND g.deleted = 0
+    LEFT JOIN orderDB.goodsRemark gr on gr.goodsId = g.id
+    LEFT JOIN orderDB.goodsDetailInfo gdi on gdi.goodsId = g.id
+    LEFT JOIN orderBonusInfo obi on obi.orderId = o.id
+    WHERE o.deleted=0
+    AND o.id = #{id}
+    GROUP BY o.id
+  </select>
+
+  <sql id="getOrderListSql">
+    FROM
+    orderDB.orderInfo o
+    LEFT JOIN userDB.userInfo u ON o.ownerId = u.id
+    and u.deleted = 0
+    LEFT JOIN userDB.userOtherInfo ui on ui.userId = u.id
+    LEFT JOIN orderDB.goodsInfo g ON o.goodsId = g.id
+    AND g.deleted = 0
+    LEFT JOIN orderDB.goodsDetailInfo ggi on ggi.goodsId = g.id
+    LEFT JOIN manageDB.orderAuditHistory ah ON ah.sourceId = o.id
+    AND ah.id=(select a.id from manageDB.orderAuditHistory a where a.sourceId=o.id order by createTime desc limit 1)
+    LEFT JOIN orderDB.orderAffiliate oa  ON oa.orderId = o.id AND oa.deleted=0
+    WHERE
+    o.deleted = 0
+
+    <trim suffixOverrides=",">
+
+      <if test="mobile != null and mobile != ''">
+        AND  u.mobile=#{mobile}
+      </if>
+
+      <if test="receiverMobile != null and receiverMobile != ''">
+        and (SELECT mobile  from userDB.userInfo u where  u.id = o.driverId  and u.deleted =0) = #{receiverMobile}
+      </if>
+      <if test="orderNo != null and orderNo != ''">
+        AND  o.orderNo=#{orderNo}
+      </if>
+
+      <if test="startDate != null">
+        and o.createTime &gt;= #{startDate}
+      </if>
+      <if test="endDate != null">
+        and o.createTime &lt;= #{endDate}
+      </if>
+
+
+      <!--			<if test="startDate != null and endDate != null">
+                      AND o.createTime BETWEEN #{startDate} AND #{endDate}
+                  </if>-->
+
+      <if test="orderStatus != null and orderStatus != ''">
+        AND o.orderStatus=#{orderStatus}
+      </if>
+      <if test="freightFeeStatus != null and freightFeeStatus != ''">
+        AND o.`freightFeeStatus`=#{freightFeeStatus}
+      </if>
+
+      <if test="departCityId != null and departCityId != ''">
+        AND  ggi.departCityId BETWEEN #{departCityId} AND #{endDepartCityId}
+      </if>
+
+      <if test="destinationCityId != null and destinationCityId != ''">
+        AND  ggi.destinationCityId BETWEEN #{destinationCityId} AND #{endDestinationCityId}
+      </if>
+
+      <if test="sysName != null and sysName != ''">
+        AND  ah.auditName = #{sysName}
+      </if>
+
+    </trim>
+
+  </sql>
+
+
+  <!--货源获取详情-->
+  <select id="goodsDetail" parameterType="java.lang.Integer" resultType="com.topjet.manage.domain.vo.OrderDetailAdminVO">
+    SELECT DISTINCT
+    g.id,
+    g.payStyle,
+    g.version,
+    g.goodsNo AS orderNo,
+    g.createTime AS createDate,
+    u1.userType as ownerType,
+    ui.residentCityId as residentCityId,
+    g.goodsStatus AS orderStatus,
+    g.category,
+    g.loadDate AS loadDate,
+    g.packType,
+    g.loadType,
+    g.quantityType,
+    CONVERT (g.quantityMax, DECIMAL(25, 2)) AS quantityMax,
+    CONVERT (g.quantityMin, DECIMAL(25, 2)) AS quantityMin,
+    g.unit,
+    CONCAT(IFNULL((select DISTINCT ttd.`displayName` from resourceDB.truckTypeDictionary ttd  LEFT JOIN orderDB.goodsTruckInfo gti ON ttd.id = gti.truckTypeId where gti.goodsId = g.id and ttd.deleted = 0 and g.id = #{id} GROUP BY g.id),''),"/",IFNULL((SELECT DISTINCT tld.`displayName` from resourceDB.truckLengthDictionary tld LEFT JOIN orderDB.goodsTruckInfo gti ON tld.id = gti.truckTypeId where gti.goodsId = g.id and tld.deleted = 0 and g.id = #{id} GROUP BY g.id),''),"/",IF(g.isCarpool!=1,"整车","可拼车")) AS truckType,
+    gr.textRemark,
+    gr.photoRemark,
+    g.loadDateType,
+    IFNULL(u1.username,gdi.sender)AS username,
+	IFNULL(u1.mobile,gdi.senderMobile)AS mobile,
+    IFNULL(CONCAT(gdi.depart1,gdi.depart2,gdi.depart3),gdi.departDetail)AS sendAddress,
+    oci.pickupCode AS sendPickupCode,
+    gdi.receiver AS receiveName,
+    gdi.receiverMobile AS receiveMobile,
+    IFNULL(CONCAT(gdi.destination1,gdi.destination2,gdi.destination3),gdi.destinationDetail) AS receiveAddress,
+    oci.unloadCode AS receiveUnloadCode,
+    gps.detail AS driverDetail
+    FROM
+    orderDB.goodsInfo g
+    LEFT JOIN orderDB.goodsRemark gr on gr.goodsId = g.id
+    LEFT JOIN orderDB.goodsDetailInfo gdi on gdi.goodsId = g.id
+    LEFT JOIN orderDB.orderInfo o on g.id = o.goodsId
+    and o.deleted = 0
+    LEFT JOIN orderDB.orderCodeInfo oci on oci.orderId = o.id
+    left join userDB.userInfo u1 on g.userId = u1.id
+    LEFT JOIN userDB.userOtherInfo ui on ui.userId = u1.id
+    LEFT JOIN userDB.userGpsInfo gps ON ui.id = gps.userId
+	WHERE g.deleted=0
+    AND g.id = #{id}
+    GROUP BY g.id
+  </select>
+
+  <!--货源查询列表-->
+  <select id="goodQuertList" parameterType="com.topjet.manage.domain.bean.MatchCenterOrderBean"
+          resultType="com.topjet.manage.domain.bean.MatchCenterOrderBean">
+    select DISTINCT gi.id as goodsId,
+    gi.userId as ownerId,
+    gi.goodsNo as serialNo,
+    gi.isFreightFeeManaged as freightFeeStatus,
+    IFNULL(ush.remark,"")as reditRemark,
+    gi.version as version,
+    gi.isHidden as isHidden,
+    gi.goodsStatus,
+    gi.version as Goodsversion,
+    u1.username as ownerName,
+    u1.mobile as ownerMobile,
+    u1.userType as ownerType,
+    ui.residentCityId as residentCityId,
+    gdi.depart1 as depart1,
+    gdi.depart2 as depart2,
+    gdi.depart3 as depart3,
+    gdi.departCityId as departCityId,
+    gdi.destination1 as destination1,
+    gdi.destination2 as destination2,
+    gdi.destination3 as destination3,
+    gdi.destinationCityId as destinationCityId,
+    IFNULL(gdi.departDetail,gdi.destinationDetail) as destinationDetail,
+    gi.loadDate as loadDate,
+    gdi.senderMobile as senderMobile,
+    gdi.sender as sender,
+    gi.createTime as createTime,
+    gi.loadDateType as loadDateType,
+    CONCAT(
+    (SELECT ttd.displayName FROM orderDB.goodsTruckInfo gt INNER JOIN resourceDB.`truckTypeDictionary` ttd ON gt.truckTypeId=ttd.id AND gt.type=1 WHERE gt.goodsId=gi.id LIMIT 1),'/',
+    (SELECT tld.displayName FROM orderDB.goodsTruckInfo gt INNER JOIN resourceDB.`truckLengthDictionary` tld ON gt.truckTypeId=tld.id AND gt.type=2 WHERE gt.goodsId=gi.id LIMIT 1)) AS typeAndLength,
+    gi.quantityType,gi.quantityMax,gi.quantityMin,
+    gi.unit,gi.goodsStatus
+    from
+    orderDB.goodsInfo gi
+    LEFT JOIN orderDB.goodsDetailInfo gdi on gdi.goodsId = gi.id
+    left join userDB.userInfo u1 on gi.userId = u1.id
+    LEFT JOIN userDB.userOtherInfo ui on ui.userId = u1.id
+    LEFT JOIN manageDB.userAuditHistory ush on ush.sourceId = gi.id
+    <if test="truckType != ''"> <!-- type = 1车型  type= 2 车长-->
+      INNER JOIN orderDB.goodsTruckInfo f ON f.goodsId=gi.id AND f.type=1 AND f.truckTypeId = #{typeId}
+    </if>
+    <if test="truckLength != ''">
+      INNER JOIN orderDB.goodsTruckInfo a ON a.goodsId=gi.id AND a.type=2 AND a.truckTypeId = #{lengthId}
+    </if>
+
+    <include refid="base_list_whered"/>
+    GROUP BY gi.id
+    order by gi.id ASC
+    limit #{offset}, #{limit}
+  </select>
+
+  <!--货源查询页数-->
+  <select id="goodQuertCount" parameterType="com.topjet.manage.domain.bean.MatchCenterOrderBean" resultType="java.lang.Integer">
+    SELECT  count(DISTINCT gi.id)
+    from
+    orderDB.goodsInfo gi
+    LEFT JOIN orderDB.goodsDetailInfo gdi on gdi.goodsId = gi.id
+    left join userDB.userInfo u1 on gi.userId = u1.id
+    LEFT JOIN userDB.userOtherInfo ui on ui.userId = u1.id
+    LEFT JOIN manageDB.userAuditHistory ush on ush.sourceId = gi.id
+    <if test="truckType != ''"> <!-- type = 1车型  type= 2 车长-->
+      INNER JOIN orderDB.goodsTruckInfo f ON f.goodsId=gi.id AND f.type=1 AND f.truckTypeId = #{typeId}
+    </if>
+    <if test="truckLength != ''">
+      INNER JOIN orderDB.goodsTruckInfo a ON a.goodsId=gi.id AND a.type=2 AND a.truckTypeId = #{lengthId}
+    </if>
+    <include refid="base_list_whered"/>
+  </select>
+
+  <!-- 货源 -->
+  <sql id="base_list_whered">
+    where gi.deleted = 0 and gi.goodsStatus not in (6,3) and gi.id not in (SELECT orderId from manageDB.matchOrderInfo)  <!-- and oi.isAssigned = 0 and oi.orderStatus not in (8,9,10,11)-->
+    <if test="ownerMobile != null and ownerMobile !=''">
+      and u1.mobile = #{ownerMobile}
+    </if>
+    <if test="freightFeeStatus != null and freightFeeStatus !=''">
+      and gi.isFreightFeeManaged = #{freightFeeStatus}
+    </if>
+    <if test="freightFeeStatus == 0">
+      and gi.isFreightFeeManaged = 0
+    </if>
+    <if test="serialNo != null and serialNo !=''">
+      and gi.goodsNo = #{serialNo}
+    </if>
+    <if test="loadDate != null">
+      and gi.loadDate &gt;= NOW() and gi.loadDate  &lt;= #{loadDate}
+    </if>
+    <if test="loadDate == null">
+      and gi.loadDate &gt;= NOW()
+    </if>
+    <if test="loadDateType != null and loadDateType !=''">
+      and gi.loadDateType = #{loadDateType}
+    </if>
+    <!--<if test="orderStatus != null and orderStatus !=''">
+      and oi.orderStatus = #{orderStatus}
+    </if>-->
+    <if test="goodsStatus != null and goodsStatus !=''">
+      and gi.goodsStatus = #{goodsStatus}
+    </if>
+
+    <if test="depart1 != null and depart1 !=''">
+       and  gdi.depart1 like '${depart1}%'
+    </if>
+    <if test="depart2 != null and depart2 !=''">
+       and gdi.depart2  like '${depart2}%'
+    </if>
+    <if test="depart3 != null and depart3 !=''">
+       and gdi.depart3  like  '${depart3}%'
+    </if>
+
+    <if test="destination1 != null and destination1 !=''">
+      and gdi.destination1 = #{destination1}
+    </if>
+    <if test="destination2 != null and destination2 !=''">
+      and gdi.destination2 = #{destination2}
+    </if>
+    <if test="destination3 != null and destination3 !=''">
+      and gdi.destination3 = #{destination3}
+    </if>
+  <!--  <if test="truckType != null and truckType != '' ">
+      and  ttd.`displayName` = #{truckType}
+    </if>
+    <if test="truckLength != null and truckLength != '' ">
+      and  tld.`displayName` = #{truckLength}
+    </if>-->
+   <!-- <if test="startDate != null">
+      and oi.createTime  >= #{startDate}
+    </if>
+    <if test="isAgencyFee == '1'.toString()">
+      and oi.AgencyFee=0
+    </if>
+    <if test="isAgencyFee == '2'.toString()">
+      and oi.AgencyFee>0
+    </if>-->
+    <if test="distanceTime == 0">
+      and (UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(gi.createTime))  BETWEEN 1800 and 3600 and gi.goodsStatus=1
+    </if>
+    <if test="distanceTime == 1">
+      and (UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(gi.createTime)) > 3600 and gi.goodsStatus=1
+    </if>
+  </sql>
+
+  <!-- 获取运行轨迹 -->
+  <select id="getRunninnTrack" parameterType="com.topjet.manage.domain.vo.OrderInfoBean"
+          resultType="com.topjet.manage.domain.model.UserGpsInfoHistoryModel">
+    SELECT
+    ghi.userId,
+    ghi.longitude,
+    ghi.latitude,
+    ghi.createTime
+    from  userDB.userGpsInfoHistory ghi
+    where
+    ghi.userId = #{driverId}
+    and
+    ghi.createTime &lt;=  (SELECT opi.createTime  from  orderDB.orderParameterInfo   opi where opi.orderId =#{id}  and opi.parameterType =8 and opi.deleted =0)
+    and
+    ghi.createTime >= (SELECT opi.createTime  from   orderDB.orderParameterInfo   opi where opi.orderId = #{id}  and opi.parameterType =7 and opi.deleted =0)
+
+  </select>
+
+
+</mapper>

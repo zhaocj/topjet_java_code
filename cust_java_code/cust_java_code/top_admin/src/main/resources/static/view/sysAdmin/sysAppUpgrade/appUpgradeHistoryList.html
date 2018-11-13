@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>交运配货网-后台管理</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" type="text/css" href="../../../bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="../../../css/flat-ui.min.css">
+	<link rel="stylesheet" type="text/css" href="../../../bootstrap/css/bootstrap-table.min.css">
+
+	<link rel="stylesheet" type="text/css" href="../../../css/demo.css">
+	<link rel="stylesheet/less" type="text/css" href="../../../css/easyui.css">
+	<link rel="stylesheet/less" type="text/css" href="../../../css/font-awesome.min.css">
+	<link rel="stylesheet/less" type="text/css" href="../../../css/jquery.mCustomScrollbar.css">
+
+	<script type="text/javascript" src="../../../resource/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="../../../js/common/modal.js"></script>
+	<script type="text/javascript" src="../../../js/common/utils.js"></script>
+	<script type="text/javascript" src="../../../js/common/ajaxCall.js"></script>
+	<script type="text/javascript" src="../../../js/common/dateformate.js"></script>
+	<script type="text/javascript" src="../../../resource/bootstrap-table.js"></script>
+	<script type="text/javascript" src="../../../resource/bootstrap-table-zh-CN.js"></script>
+	<script type="text/javascript" src="../../../js/bootbox.min.js"></script>
+	<script type="text/javascript" src="../../../js/application.js"></script>
+	<script type="text/javascript" src="../../../js/flat-ui.min.js"></script>
+</head>
+<body onresize="auto()" class="modal-open">
+	<table id='table'></table>
+	<script type="text/javascript">
+		$(function(){
+			var columns = [
+						{
+							field : 'createTime',
+							title : '记录时间',
+							align : 'center',
+							formatter : function(value, row, index) {
+								return  formatDate(new Date(value),"yyyy-MM-dd");
+							}
+						},
+						{
+							field : 'systemVersion',
+							title : '系统版本号',
+							align : 'center'
+						},
+						{
+							field : 'innoVersion',
+							title : '内部版本号',
+							align : 'center'
+						},
+						{
+							field : 'downloadAddress',
+							title : '程序包下载地址',
+							align : 'center'
+						},
+						{
+							field : 'isForced',
+							title : '是否强制更新',
+							align : 'center',
+							formatter : function(value, row, index) {
+								if (value == 0) {
+									return "否"
+								}
+								if (value == 1) {
+									return "是";
+								}
+
+							}
+						},
+						{
+							field : 'type',
+							title : '系统类型',
+							align : 'center',
+							formatter : function(value, row, index) {
+								if (value == 1) {
+									return "安卓司机版"
+								}
+								if (value == 2) {
+									return "安卓货主版";
+								}
+								if (value == 3) {
+									return "IOS司机版"
+								}
+								if (value == 4) {
+									return "IOS货主版";
+								}
+							}
+						},
+						{
+							field : 'description',
+							title : '升级相关描述',
+							align : 'center'
+						},
+						{
+							field : 'isNotified',
+							title : '是否推送 ',
+							width : 180,
+							align : 'center',
+							formatter : function(value, row, index) {
+								if (value == "0") {
+									return "否"
+								}
+								if (value == "1") {
+									return "是";
+								}
+
+							}
+						}
+				];
+					var url=getRootPath() + '/appUpgrade/viesHistoryDataList.do';
+					setTableInfo('table', columns, url, getQueryParams, null);
+				})
+			function getQueryParams() {
+				var param = window.location.search;
+				var type = param.split("&")[0].split("=")[1];
+				var json = {'type':type};
+				return json;
+			}
+	</script>
+</body>
+</html>

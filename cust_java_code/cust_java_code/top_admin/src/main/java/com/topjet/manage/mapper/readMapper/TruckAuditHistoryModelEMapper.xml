@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.TruckAuditHistoryModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.TruckAuditHistoryModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="sourceType" property="sourceType" jdbcType="TINYINT" />
+    <result column="sourceId" property="sourceId" jdbcType="INTEGER" />
+    <result column="statusAfter" property="statusAfter" jdbcType="TINYINT" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="createBy" property="createBy" jdbcType="INTEGER" />
+    <result column="auditName" property="auditName" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, sourceType, sourceId, statusAfter, createTime, createBy, auditName, remark, deleted
+  </sql>
+
+  <sql id="Criteria_where_clause">
+    <where>
+      <if test="id != null" >
+        and id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="sourceType != null" >
+        and sourceType = #{sourceType,jdbcType=TINYINT}
+      </if>
+      <if test="sourceId != null" >
+        and sourceId = #{sourceId,jdbcType=INTEGER}
+      </if>
+      <if test="statusAfter != null" >
+        and statusAfter = #{statusAfter,jdbcType=TINYINT}
+      </if>
+      <if test="createBy != null" >
+        and createBy = #{createBy,jdbcType=INTEGER}
+      </if>
+      <if test="auditName != null" >
+        and auditName = #{auditName,jdbcType=VARCHAR}
+      </if>
+      <if test="deleted != null" >
+        and deleted = #{deleted,jdbcType=TINYINT}
+      </if>
+
+    </where>
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from truckDB.truckAuditHistory
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectListByParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from manageDB.truckAuditHistory
+    <include refid="Criteria_where_clause" />
+  </select>
+
+</mapper>

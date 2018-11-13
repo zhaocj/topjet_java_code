@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>交运配货</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="../../resource/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap-table.css">
+    <link rel="stylesheet" type="text/css" href="../../css/demo.css">
+    <link rel="stylesheet/less" type="text/css" href="../../less/modules/buttons.less">
+
+    <script type="text/javascript" src="../../js/common/modal.js"></script>
+    <script type="text/javascript" src="../../js/common/utils.js"></script>
+    <script type="text/javascript" src="../../js/common/ajaxCall.js"></script>
+    <script type="text/javascript" src="../../js/common/dateformate.js"></script>
+
+    <script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+    <script type="text/javascript" src="../../js/bootbox.min.js"></script>
+    <script type="text/javascript" src="../../js/common/jquery.cityselect.js"></script>
+</head>
+<body onresize="auto()">
+<div class="contentBox" style="padding:10px">
+    <div class="fixed-table-toolbar" >
+        <input id="appType" type="hidden"  value="">
+        <div class="columns columns-left btn-group pull-right">
+            <button type="button" class="btn btn-primary btn-sm margin-left-10" onclick="add()">添加公告内容</button>
+        </div>
+    </div>
+</div>
+<table id='table' ></table>
+<script type="text/javascript">
+
+    $(function () {
+        var columns = [
+            {
+                field: 'title',
+                align: 'center',
+                title: '维护标题',
+            },  {
+                field: 'text',
+                align: 'center',
+                title: '文本内容',
+            },  {
+                field: 'remark',
+                align: 'center',
+                title: '备注(维护原因)',
+            }, /*{
+                field: 'appType',
+                align: 'center',
+                title: '维护版本',
+                formatter: function (value, row, index) {
+                    if (value == 1) {
+                        return "Android(司机版)";
+                    }else if(value == 2){
+                        return 'Android(货主版)';
+                    }else if(value == 3){
+                        return 'IOS（司机版）';
+                    }else if(value == 4) {
+                        return 'IOS（货主版）';
+                    }else{
+                        return "";
+                    }
+                }
+            },*/{
+                field: 'startTime',
+                title: '开始时间',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    return formatViewDate(new Date(value), "yyyy-MM-dd HH:mm");
+                }
+            },
+            {
+                field: 'endTime',
+                title: '结束时间',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    return formatViewDate(new Date(value), "yyyy-MM-dd HH:mm");
+                }
+            },
+            {
+                field: 'valid',
+                title: '生效状态',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    if (value == '0') {
+                        return "未开启";
+                    } else if (value == '1') {//new Date(row.startTime).getTime()<new Date().getTime() && new Date(row.endTime).getTime()>new Date().getTime()
+                        if (new Date(row.startTime).getTime()<new Date().getTime() && new Date(row.endTime).getTime()>new Date().getTime()) {
+                            return "开启";
+                        } else {
+                            return "过期或时间未到";
+                        }
+                    }
+                }
+            },
+            {
+                field: 'action',
+                title: '操作',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    var s =['<button type="button" class="btn btn-primary btn-xs" onclick="edit(' + row.id + ')" >修改</button>',
+                        '<button type="button" class="btn btn-danger  btn-xs" onclick="removeAdv('+row.id+')">刪除</button>'].join(' ');
+                    return s;
+                }
+            },
+        ];
+        var url = getRootPath() + '/maintenance/queryAllAssertSettingInfoModel.do';
+        setTableInfo('table', columns, url, getQueryParams, 'toolbar');
+    });
+
+    function getQueryParams() {
+        if($('#appType').val()=="")
+        {
+         //   var navText="<a href=\"queryIndex.html\" >维护公告管理</a> /";
+            switch (location.search){
+                case"?appType=4":
+                    $('#appType').val("4");
+                  //  navText=navText+"IOS发货版";
+                    break;
+                case"?appType=3":
+                    $('#appType').val("3");
+                  //  navText=navText+"IOS接货版";
+                    break;
+                case"?appType=2":
+                    $('#appType').val("2");
+                 //   navText=navText+"Android发货版";
+                    break;
+                case"?appType=1":
+                    $('#appType').val("1");
+                 //   navText=navText+"Android接货版";
+                    break;
+            }
+        //    $('#navTitle').html(navText);
+        }
+        var json = {
+            'appType': $('#appType').val()
+        };
+        return json;
+    };
+
+    function add(appType) {
+        window.location.href = getRootPath()+'/view/maintenance/addMaintenance.html?appType=' + $('#appType').val();
+    }
+    function edit(id) {
+        window.location.href = getRootPath() + '/maintenance/queryAssertSettingInfoModelById.do?id=' + id;
+/*
+        function edit(id, version) {
+            var url = getRootPath() + '/maintenance/queryAssertSettingInfoModelById.do?id=' + id;
+            modalEdit(url, '修改公告', 'lg');
+        }*/
+    };
+    function removeAdv(id) {
+        bootbox.confirm("确认删除?", function (result) {
+            if (result) {
+                var url = getRootPath() + '/maintenance/updeteDeletMaintenance.do';
+                var data = {'id': id};
+                $.ajaxDefaultCall(url, data,function(){tableRefresh();});
+            }
+        });
+    };
+    var apptype=$("#appType").val();
+    if(apptype != ""){
+        var navText="<a href=queryIndex.html>维护公告管理</a>";
+        if(apptype==4){
+            navText=navText+"IOS发货版";
+        }else if(apptype==3){
+            navText=navText+"IOS接货版";
+        }else if(apptype==2){
+            navText=navText+"Android发货版";
+        }else if(apptype==1){
+            navText=navText+"Android接货版";
+        }
+        $('#navTitle').html(navText);
+    }
+
+
+</script>
+</body>
+</html>

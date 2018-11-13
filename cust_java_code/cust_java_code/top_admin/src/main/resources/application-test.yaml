@@ -1,0 +1,156 @@
+spring:
+  application:
+    name: admin-service
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.8.151:3303/manageDB?useUnicode=true&characterEncoding=utf-8&usessl=false&zeroDateTimeBehavior=convertToNull
+    username: managerUser
+    password: managerUser@566560.com
+    test-while-idle: true
+    test-on-borrow: false
+    validation-query: SELECT 1 FROM DUAL
+    time-between-eviction-runs-millis: 300000
+    min-evictable-idle-time-millis: 1800000
+
+  systemdatasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.8.151:3303/systemDB?useUnicode=true&characterEncoding=utf-8&usessl=false
+    username: managerUser
+    password: managerUser@566560.com
+    test-while-idle: true
+    test-on-borrow: false
+    validation-query: SELECT 1 FROM DUAL
+    time-between-eviction-runs-millis: 300000
+    min-evictable-idle-time-millis: 1800000
+
+  resourcedatasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.8.151:3303/resourceDB?useUnicode=true&characterEncoding=utf-8&usessl=false
+    username: managerUser
+    password: managerUser@566560.com
+    test-while-idle: true
+    test-on-borrow: false
+    validation-query: SELECT 1 FROM DUAL
+    time-between-eviction-runs-millis: 300000
+    min-evictable-idle-time-millis: 1800000
+
+  seconddatasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.8.151:3302/manageDB?useUnicode=true&characterEncoding=utf-8&usessl=false&zeroDateTimeBehavior=convertToNull
+    username: managerUser
+    password: managerUser@566560.com
+    test-while-idle: true
+    test-on-borrow: false
+    validation-query: SELECT 1 FROM DUAL
+    time-between-eviction-runs-millis: 300000
+    min-evictable-idle-time-millis: 1800000
+
+  freemarker:
+    request-context-attribute: request
+  zipkin:
+    base-url: http://192.168.8.151:9711
+  sleuth:
+    sampler:
+      percentage: 1
+
+  redis:
+    host: 192.168.8.150
+    port: 6337
+    pool:
+      max-idle: 8
+    timeout: 100000
+
+  rabbitmq:
+    host: 192.168.8.162
+    port: 5672
+    username: admin
+    password: admin
+  mvc:
+    view:
+      suffix: .ftl
+  http:
+    encoding:
+      force: true
+      charset: UTF-8
+      enabled: true
+
+server:
+  port: 8081
+  context-path: /admin/
+  tomcat:
+    uri-encoding: UTF-8
+
+#feign开关配置
+feign:
+  compression:
+    request:
+      enable: true
+    response:
+      enable: true
+
+topjet:
+  redis:
+    enable: true
+  resource:
+    enable: true
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+#      defaultZone: http://192.168.8.151:8200/eureka/
+#      defaultZone: http://127.0.0.1:8080/eureka/
+      defaultZone: http://127.0.0.1:8080/eureka/
+
+
+
+logging:
+  config: classpath:logback-spring.xml
+
+
+systemConfiguration:
+  #第三方实名认证接口开关
+  idCheckWSSwitch: 1
+
+  #日志相关开关
+  topjetLogSwitch: 1
+  topjetLogLevel: 1
+  topjetLog4jLevel: 1
+  topjetLog4jSwitch: 1
+
+#三元素审核接口相关配置
+
+baseservice:
+  redirect:
+    url: http://192.168.8.16:8888/json/reply/MessageRequest
+  version: v1
+  key: 11a6c8704a51467dcc61e6dc6d2e97e1
+  appId: 100606
+  actionName: CheckIdcardAndMobile
+  messageType: AuthMessage
+
+
+appslide:
+  url: "https://test2h5.566560.com/h5/view/560_3.0/carousel/index.html?appSlideId="
+
+dynamicpassword:
+  switch: 0
+  url: "http://192.168.8.150:3006/"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

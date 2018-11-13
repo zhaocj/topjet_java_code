@@ -1,0 +1,86 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.8.151:3303/manageDB?useUnicode=true&characterEncoding=utf-8&usessl=false
+    username: managerUser
+    password: managerUser@566560.com
+    max-idle: 10
+    max-wait: 10000
+    min-idle: 5
+    initial-size: 5
+    validation-query: SELECT 1
+    test-on-borrow: false
+    test-while-idle: true
+    time-between-eviction-runs-millis: 18800
+  seconddatasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.8.151:3302/manageDB?useUnicode=true&characterEncoding=utf-8&usessl=false
+    username: readUser
+    password: readUser@566560.com
+    validation-query: SELECT 1
+    test-on-borrow: false
+    test-while-idle: true
+    time-between-eviction-runs-millis: 18800
+
+  #===========MQ配置=====================
+  rabbitmq:
+    host: 192.168.8.162
+    port: 5672
+    username: admin
+    password: admin
+  #===========REDIS配置==================
+  redis:
+    host: 192.168.8.150
+    port: 6335
+    pool:
+      max-idle: 8
+    timeout: 100000
+# 日志配置
+  zipkin:
+    base-url: http://192.168.8.163:9411
+    # 日志收集 100%
+  sleuth:
+    sampler:
+      percentage: 1
+
+server:
+  port: 8081
+
+  #实名认证webService接口开关
+systemConfiguration:
+  recommendBonusSwitch: "1"
+
+  #==============生日祝福定时任务配置=======================
+birthday:
+  switch: 1  #开关
+
+
+topjet:
+  redis:
+    enable: true
+  resource:
+    enable: true
+
+
+#请求响应压缩
+feign:
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+#      defaultZone: http://peer1:8761/eureka/
+      defaultZone: http://localhost:8080/eureka/
+
+
+
+
+
+
+
+

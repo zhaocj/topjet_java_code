@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.UserInfoModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.UserInfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="idNo" property="idNo" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="userType" property="userType" jdbcType="TINYINT" />
+    <result column="useStatus" property="useStatus" jdbcType="TINYINT" />
+    <result column="iconStatus" property="iconStatus" jdbcType="TINYINT" />
+    <result column="userAuthStatus" property="userAuthStatus" jdbcType="TINYINT" />
+    <result column="sex" property="sex" jdbcType="TINYINT" />
+    <result column="walletId" property="walletId" jdbcType="INTEGER" />
+    <result column="isGuaranteed" property="isGuaranteed" jdbcType="TINYINT" />
+    <result column="isAnonymous" property="isAnonymous" jdbcType="TINYINT" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, idNo, username, mobile, userType, useStatus, userAuthStatus, iconStatus, sex, walletId, isGuaranteed,
+    isAnonymous, createTime, deleted
+  </sql>
+
+  <sql id="Criteria_where_clause">
+    <where>
+      <if test="id != null">
+        and id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="idNo != null" >
+        and idNo = #{idNo,jdbcType=VARCHAR}
+      </if>
+      <if test="username != null" >
+        and username = #{username,jdbcType=VARCHAR}
+      </if>
+      <if test="mobile != null" >
+        and mobile = #{mobile,jdbcType=VARCHAR}
+      </if>
+      <if test="userType != null" >
+        and userType = #{userType,jdbcType=TINYINT}
+      </if>
+      <if test="useStatus != null" >
+        and useStatus = #{useStatus,jdbcType=TINYINT}
+      </if>
+      <if test="userAuthStatus != null" >
+        and userAuthStatus = #{userAuthStatus,jdbcType=TINYINT}
+      </if>
+      <if test="iconStatus != null" >
+        and iconStatus = #{iconStatus,jdbcType=TINYINT}
+      </if>
+      <if test="sex != null" >
+        and sex = #{sex,jdbcType=TINYINT}
+      </if>
+      <if test="walletId != null" >
+        and walletId = #{walletId,jdbcType=INTEGER}
+      </if>
+      <if test="isGuaranteed != null" >
+        and isGuaranteed = #{isGuaranteed,jdbcType=TINYINT}
+      </if>
+      <if test="isAnonymous != null" >
+        and isAnonymous = #{isAnonymous,jdbcType=TINYINT}
+      </if>
+      <if test="createTime != null" >
+        and createTime = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="deleted != null" >
+        and deleted = #{deleted,jdbcType=TINYINT}
+      </if>
+    </where>
+  </sql>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from userDB.userInfo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectListByParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from userDB.userInfo
+    <include refid="Criteria_where_clause" />
+  </select>
+
+  <select id="selectListByParams" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from userDB.userInfo
+    <where>
+      <if test="id != null">
+        and id != #{id,jdbcType=INTEGER}
+      </if>
+      <if test="idNo != null" >
+        and idNo = #{idNo,jdbcType=VARCHAR}
+      </if>
+      <if test="username != null" >
+        and username = #{username,jdbcType=VARCHAR}
+      </if>
+      <if test="mobile != null" >
+        and mobile = #{mobile,jdbcType=VARCHAR}
+      </if>
+      <if test="userType != null" >
+        and userType = #{userType,jdbcType=TINYINT}
+      </if>
+      <if test="useStatus != null" >
+        and useStatus = #{useStatus,jdbcType=TINYINT}
+      </if>
+      <if test="userAuthStatus != null" >
+        and userAuthStatus = #{userAuthStatus,jdbcType=TINYINT}
+      </if>
+      <if test="iconStatus != null" >
+        and iconStatus = #{iconStatus,jdbcType=TINYINT}
+      </if>
+      <if test="sex != null" >
+        and sex = #{sex,jdbcType=TINYINT}
+      </if>
+      <if test="walletId != null" >
+        and walletId = #{walletId,jdbcType=INTEGER}
+      </if>
+      <if test="isGuaranteed != null" >
+        and isGuaranteed = #{isGuaranteed,jdbcType=TINYINT}
+      </if>
+      <if test="isAnonymous != null" >
+        and isAnonymous = #{isAnonymous,jdbcType=TINYINT}
+      </if>
+      <if test="createTime != null" >
+        and createTime = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="deleted != null" >
+        and deleted = #{deleted,jdbcType=TINYINT}
+      </if>
+    </where>
+  </select>
+
+
+</mapper>

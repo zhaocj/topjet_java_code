@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.writeMapper.RecommendationBonusInfoModelMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.RecommendationBonusInfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="recommendationId" property="recommendationId" jdbcType="INTEGER" />
+    <result column="userId" property="userId" jdbcType="INTEGER" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="auditProcess" property="auditProcess" jdbcType="TINYINT" />
+    <result column="auditStatus" property="auditStatus" jdbcType="TINYINT" />
+    <result column="settingId" property="settingId" jdbcType="INTEGER" />
+    <result column="firstCallCount" property="firstCallCount" jdbcType="TINYINT" />
+    <result column="secondCallCount" property="secondCallCount" jdbcType="TINYINT" />
+    <result column="pendingCallCount" property="pendingCallCount" jdbcType="TINYINT" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="version" property="version" jdbcType="SMALLINT" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, recommendationId, userId, amount, auditProcess, auditStatus,
+    settingId, firstCallCount, secondCallCount, pendingCallCount, createTime, version, 
+    deleted
+  </sql>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from manageDB.recommendationBonusInfo
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.topjet.manage.domain.model.RecommendationBonusInfoModel" >
+    insert into manageDB.recommendationBonusInfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="recommendationId != null" >
+        recommendationId,
+      </if>
+      <if test="userId != null" >
+        userId,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="auditProcess != null" >
+        auditProcess,
+      </if>
+      <if test="auditStatus != null" >
+        auditStatus,
+      </if>
+      <if test="settingId != null" >
+        settingId,
+      </if>
+      <if test="firstCallCount != null" >
+        firstCallCount,
+      </if>
+      <if test="secondCallCount != null" >
+        secondCallCount,
+      </if>
+      <if test="pendingCallCount != null" >
+        pendingCallCount,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="recommendationId != null" >
+        #{recommendationId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="auditProcess != null" >
+        #{auditProcess,jdbcType=TINYINT},
+      </if>
+      <if test="auditStatus != null" >
+        #{auditStatus,jdbcType=TINYINT},
+      </if>
+      <if test="settingId != null" >
+        #{settingId,jdbcType=INTEGER},
+      </if>
+      <if test="firstCallCount != null" >
+        #{firstCallCount,jdbcType=TINYINT},
+      </if>
+      <if test="secondCallCount != null" >
+        #{secondCallCount,jdbcType=TINYINT},
+      </if>
+      <if test="pendingCallCount != null" >
+        #{pendingCallCount,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=SMALLINT},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="update" parameterType="com.topjet.manage.domain.model.RecommendationBonusInfoModel" >
+    update manageDB.recommendationBonusInfo
+    <set >
+      <if test="recommendationId != null" >
+        recommendationId = #{recommendationId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        userId = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="auditProcess != null" >
+        auditProcess = #{auditProcess,jdbcType=TINYINT},
+      </if>
+      <if test="auditStatus != null" >
+        auditStatus = #{auditStatus,jdbcType=TINYINT},
+      </if>
+      <if test="settingId != null" >
+        settingId = #{settingId,jdbcType=INTEGER},
+      </if>
+      <if test="firstCallCount != null" >
+        firstCallCount = #{firstCallCount,jdbcType=TINYINT},
+      </if>
+      <if test="secondCallCount != null" >
+        secondCallCount = #{secondCallCount,jdbcType=TINYINT},
+      </if>
+      <if test="pendingCallCount != null" >
+        pendingCallCount = #{pendingCallCount,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=SMALLINT},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+</mapper>

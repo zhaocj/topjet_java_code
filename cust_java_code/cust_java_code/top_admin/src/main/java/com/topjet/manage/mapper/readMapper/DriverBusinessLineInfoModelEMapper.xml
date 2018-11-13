@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.DriverBusinessLineInfoModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.DriverBusinessLineInfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="driverId" property="driverId" jdbcType="INTEGER" />
+    <result column="businessLine1" property="businessLine1" jdbcType="VARCHAR" />
+    <result column="businessLine2" property="businessLine2" jdbcType="VARCHAR" />
+    <result column="businessLine3" property="businessLine3" jdbcType="VARCHAR" />
+    <result column="businessLineCityId" property="businessLineCityId" jdbcType="INTEGER" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="deleted" property="deleted" jdbcType="BIT" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, driverId, businessLine1, businessLine2, businessLine3, businessLineCityId, createTime, 
+    updateTime, deleted
+  </sql>
+
+  <sql id="Criteria_where_clause">
+    <where>
+      <if test="driverId != null" >
+        and driverId = #{driverId,jdbcType=INTEGER}
+      </if>
+      <if test="businessLine1 != null" >
+        and businessLine1 = #{businessLine1,jdbcType=VARCHAR}
+      </if>
+      <if test="businessLine2 != null" >
+        and businessLine2 = #{businessLine2,jdbcType=VARCHAR}
+      </if>
+      <if test="businessLine3 != null" >
+        and businessLine3 = #{businessLine3,jdbcType=VARCHAR}
+      </if>
+      <if test="businessLineCityId != null" >
+        and businessLineCityId = #{businessLineCityId,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null" >
+        and createTime = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="updateTime != null" >
+        and updateTime = #{updateTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="deleted != null" >
+        and deleted = #{deleted,jdbcType=BIT}
+      </if>
+    </where>
+  </sql>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from truckDB.driverBusinessLineInfo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectListByParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from truckDB.driverBusinessLineInfo
+    <include refid="Criteria_where_clause" />
+  </select>
+
+
+
+
+</mapper>

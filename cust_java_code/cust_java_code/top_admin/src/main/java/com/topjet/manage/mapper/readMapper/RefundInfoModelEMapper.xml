@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.RefundInfoModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.RefundInfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="billId" property="billId" jdbcType="INTEGER" />
+    <result column="refundMoney" property="refundMoney" jdbcType="DECIMAL" />
+    <result column="orderId" property="orderId" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="csStatus" property="csStatus" jdbcType="TINYINT" />
+    <result column="triggerId" property="triggerId" jdbcType="INTEGER" />
+    <result column="reason" property="reason" jdbcType="INTEGER" />
+    <result column="orderStatus" property="orderStatus" jdbcType="TINYINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="userRemark" property="userRemark" jdbcType="VARCHAR" />
+    <result column="repulseReason" property="repulseReason" jdbcType="INTEGER" />
+    <result column="repulseRemark" property="repulseRemark" jdbcType="VARCHAR" />
+    <result column="version" property="version" jdbcType="SMALLINT" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, billId, refundMoney, orderId, status, csStatus, triggerId, reason, orderStatus, 
+    remark, userRemark, repulseReason, repulseRemark, createTime, createBy, updateTime, 
+    updateBy, version, deleted
+  </sql>
+
+  <sql id="Base_Column_List1">
+        ri.id as id,
+		ri.triggerId as triggerId,
+		ri.orderStatus as rfOrderStatus,
+		ri.billId as billId,
+		ri.refundMoney as refundMoney,
+		ri.orderId as orderId,
+		ri.status as status,
+		ri.csStatus as csStatus,
+		ri.reason AS reason,
+		ri.repulseReason as repulseReason,
+		ri.remark as remark,
+		ri.userRemark as userRemark,
+		ri.createTime as createTime,
+		ri.updateTime as updateTime,
+		ri.version as version,
+		ri.deleted as deleted,
+		ri.repulseRemark as repulseRemark,
+		ush.remark as reditRemark,
+		bi.billNo as billNo,
+		oi.orderNo,
+		oi.orderStatus as oiOrderStatus,
+		oi.freightFee as freightFee,
+		oi.agencyFee as agencyFee,
+		oi.driverId as driverId,
+		oi.ownerId as ownerId,
+		gi.id as goodsId,
+		case when ri.triggerId = oi.driverId then ud.username else ug.username end as triggerName,
+		case when ri.triggerId = oi.ownerId then ud.username else ug.username end as oppositeName,
+		case when ri.triggerId = oi.driverId then oi.driverId else oi.ownerId end as triggerId2,
+		case when ri.triggerId = oi.ownerId then oi.driverId else oi.ownerId end as oppositId,
+		case when ri.triggerId = oi.driverId then ud.mobile else ug.mobile end as triggerMobile,
+		case when ri.triggerId = oi.ownerId then ud.mobile else ug.mobile end as oppositMobile,
+		case when ri.triggerId = oi.driverId then ud.userType else ug.userType end as triggerType,
+		oa.orderFrozenState as orderFrozenState,
+		oa.id as orderAffiliateId,
+		oa.version as orderAffiliateVersion
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from refundInfo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="getRefundsList" resultType="com.topjet.manage.domain.bean.RefundDetail2Bean"
+          parameterType="com.topjet.manage.domain.bean.RefundDetail2Bean">
+    SELECT DISTINCT
+    <include refid="Base_Column_List1" />
+     FROM orderDB.refundInfo ri
+    LEFT JOIN orderDB.orderBillInfo bi ON bi.id = ri.billId
+    LEFT JOIN orderDB.orderInfo oi ON oi.id=ri.orderId
+    LEFT JOIN userDB.userInfo ud ON ud.id =oi.driverId
+    LEFT JOIN userDB.userOtherInfo uo on ud.id = uo.userId
+    LEFT JOIN manageDB.userAuditHistory ush ON ud.id = ush.sourceId
+
+    LEFT JOIN userDB.userInfo ug ON ug.id=oi.ownerId
+    LEFT JOIN userDB.userOtherInfo uoi on ud.id = uoi.userId
+
+    LEFT JOIN userDB.userInfo ur ON ri.triggerId = ur.id
+    LEFT JOIN userDB.userOtherInfo ui on ud.id = ui.userId
+
+    LEFT JOIN orderDB.goodsInfo gi ON gi.id=oi.goodsId
+    LEFT JOIN orderDB.orderAffiliate oa  ON oa.orderId = oi.id AND oa.deleted=0
+    <include refid="Example_Where_Clause" />
+    <if test="sort != null and sort !=''">
+      GROUP BY ri.id
+      order by ri.id
+      DESC
+    </if>
+    limit #{offset},#{limit}
+
+  </select>
+
+  <select id="getRefundsCount" resultType="java.lang.Integer"
+          parameterType="com.topjet.manage.domain.bean.RefundDetail2Bean">
+    SELECT
+    COUNT(DISTINCT ri.id)
+    FROM
+    orderDB.refundInfo ri
+    LEFT JOIN orderDB.orderBillInfo bi ON bi.id = ri.billId
+    LEFT JOIN orderDB.orderInfo oi ON oi.id=ri.orderId
+    LEFT JOIN userDB.userInfo ud ON ud.id =oi.driverId
+    LEFT JOIN userDB.userOtherInfo uo on ud.id = uo.userId
+    LEFT JOIN manageDB.userAuditHistory ush ON ud.id = ush.sourceId
+
+    LEFT JOIN userDB.userInfo ug ON ug.id=oi.ownerId
+    LEFT JOIN userDB.userOtherInfo uoi on ud.id = uoi.userId
+
+    LEFT JOIN userDB.userInfo ur ON ri.triggerId = ur.id
+    LEFT JOIN userDB.userOtherInfo ui on ud.id = ui.userId
+
+    LEFT JOIN orderDB.goodsInfo gi ON gi.id=oi.goodsId
+    LEFT JOIN orderDB.orderAffiliate oa  ON oa.orderId = oi.id AND oa.deleted=0
+    <include refid="Example_Where_Clause" />
+
+  </select>
+
+  <!-- 查询条件 -->
+  <sql id="Example_Where_Clause">
+    WHERE  ri.deleted = 0 and ri.csStatus != 0 and ri.status in (1,5)
+    <trim suffixOverrides=",">
+      <if test="id != null and id != ''">
+        and ri.id = #{id}
+      </if>
+      <if test="flag != null and flag != '' and flag != 0">
+        and (ri.csStatus = 1 or ri.csStatus = 2)
+      </if>
+      <if test="orderNo != null and orderNo != ''">
+        and oi.orderNo like #{orderNo}
+      </if>
+      <if test="mobile != null and mobile != ''">
+        and ur.mobile like #{mobile}
+      </if>
+    <if test="beginDate != null">
+        and DATE_FORMAT(ri.createTime,'%Y-%m-%d') &gt;= DATE_FORMAT(#{beginDate},'%Y-%m-%d')
+    </if>
+    <if test="endDate != null">
+        and DATE_FORMAT(ri.createTime,'%Y-%m-%d') &lt;= DATE_FORMAT(#{endDate},'%Y-%m-%d')
+    </if>
+      <if test="csStatus != null and csStatus != ''">
+        and ri.csStatus = #{csStatus}
+      </if>
+      <if test="csStatus != null and csStatus != ''">
+        and ri.csStatus = #{csStatus}
+      </if>
+      <if test="nickName != null and nickName != ''">
+        and ri.updateBy = (SELECT id from manageDB.sysUser where nickName=#{nickName} and deleted=0 )
+      </if>
+    </trim>
+  </sql>
+
+
+
+</mapper>

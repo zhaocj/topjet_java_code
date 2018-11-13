@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>交运配货</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../../bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../../bootstrap/css/bootstrap-table.min.css">
+    <link rel="stylesheet" type="text/css" href="../../css/flat-ui.min.css">
+    <link rel="stylesheet" type="text/css" href="../../css/demo.css">
+    <link rel="stylesheet/less" type="text/css" href="../../css/easyui.css">
+    <link rel="stylesheet/less" type="text/css" href="../../css/font-awesome.min.css">
+    <link rel="stylesheet/less" type="text/css" href="../../css/jquery.mCustomScrollbar.css">
+    <link rel="stylesheet/less" type="text/css" href="../../css/bootstrap-datetimepicker.css">
+
+    <script type="text/javascript" src="../../resource/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../js/common/modal.js"></script>
+    <script type="text/javascript" src="../../js/common/utils.js"></script>
+    <script type="text/javascript" src="../../js/common/ajaxCall.js"></script>
+    <script type="text/javascript" src="../../js/common/dateformate.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+    <script type="text/javascript" src="../../js/bootbox.min.js"></script>
+    <script type="text/javascript" src="../../js/application.js"></script>
+    <script type="text/javascript" src="../../js/flat-ui.min.js"></script>
+    <script type="text/javascript" src="../../js/common/jquery.cityselect.js"></script>
+</head>
+<body onresize="auto()">
+<div class="contentBox" style="padding:10px">
+    <!--<div class="fixed-table-toolbar">
+        <div class="eachBox" style="margin-top: 5px;height: 55px;text-align: center">
+            <ul>
+                <li>
+                    <label style="width: 130px">服务站分类名称：</label>
+                    <input type="text" name="stationClassifyName" id="stationClassifyName"  class="form-control" style="margin-left: 50px">
+                </li>
+                <li>
+                    <label style="width: 130px">操作人：</label>
+                    <input type="text" name="createName" id="createName"  class="form-control" style="margin-left: 50px">
+                </li>
+            </ul>
+        </div>
+        <div class="clearfix "></div>
+    </div>-->
+    <div class="columns columns-left btn-group pull-right">
+        <button type="button" class="btn btn-info btn-sm" onclick="tableQuery()">查询</button>
+    </div>
+    <div class="columns columns-left btn-group pull-right">
+        <button type="button" class="btn btn-primary btn-sm margin-left-10"
+                onclick="addCust();" data-backdrop="false">新增
+        </button>
+    </div>
+</div>
+<table id='table' class="table table-striped table-bordered table-hover table-condensed"></table>
+<div id='modalEdit' class='modal fade' tabindex='-1' role='dialog' aria-labelledby='myLargeModalLabel'
+     aria-hidden="true">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class='modal-title' id='myModalLabel'>编辑</h4>
+                <div class='modal-body'>
+                    <iframe id='editIframeId' scrolling='no' onLoad='setIframeSizeMax()' frameborder='0'
+                            src=''></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        var columns = [
+            {
+                field: 'createTime',
+                title: '添加日期',
+                align: 'center',
+                formatter: function (value, row, index) {                	
+                    return formatViewDate(new Date(value), "yyyy-MM-dd HH:mm");
+                }
+            },
+            {
+                field: 'memberType',
+                title: '会员类型',
+                align: 'center',
+                formatter:function (value, row, index) {
+                    if(value==1){
+                        return "所有用户";
+                    }else if(value==2){
+                        return "ios、android货主";
+                    }else if(value==3){
+                        return "ios货主";
+                    }else if(value==4){
+                        return "android货主";
+                    }else if(value==5){
+                        return "ios、android司机";
+                    }else if(value==6){
+                        return "ios司机";
+                    }else if(value==7){
+                        return "android司机";
+                    }else if(value==8){
+                        return "单个用户";
+                    }
+                }
+            },
+            /*{
+                field: 'registrationStartTime',
+                title: '会员注册开始时间',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    if(value == null){
+                        return value;
+                    }else{
+                        return formatViewDate(new Date(value), "yyyy-MM-dd HH:mm");
+                    }
+                }
+            },
+            {
+                field: 'registrationEndTime',
+                title: '会员注册结束时间',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    if(value == null){
+                        return value;
+                    }else{
+                        return formatViewDate(new Date(value), "yyyy-MM-dd HH:mm");
+                    }
+                }
+            },*/
+            /*{
+                field: 'transactionCount',
+                title: '签收次数',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    if(value==0){
+                        return "不限"
+                    }else{
+                        return value;
+                    }
+                }
+            },*/
+            {
+                field: 'content',
+                title: '推送内容',
+                align: 'center',
+
+            },
+            {
+                field: 'sendType',
+                title: '推送方式',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    if(value==1){
+                        return "APP推送"
+                    }else{
+                        return "短信推送";
+                    }
+                }
+            },
+            {
+                field: 'status',
+                title: '状态',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    if(value==1){
+                        return "已推送"
+                    }else{
+                        return "未推送";
+                    }
+                }
+            },
+            {
+                field: 'opt',
+                title: '可用操作',
+                align: 'center',
+
+                formatter: function (value, rec, index) {
+                    if(rec.status==2){
+                        var s =['<button type="button"  data-target="#myModal" class="btn btn-primary  btn-xs" href="edit.do" onclick="edit(\''
+                        + rec.id
+                        + '\',\''
+                        + rec.version
+                        + '\')">编辑&nbsp</button> ',
+                            '<button type="button" class="btn btn-primary btn-xs" onclick="details(\'' + rec.content.replace(/[\n]/ig, '<br>') + '\',\'' + arr[rec.memberType-1] + '\')">预览</button>',
+                            '<button type="button" id="sendAnno" class="btn btn-success  btn-xs" onclick="send(\'' + rec.id + '\',\'' + rec.version + '\',\'' + rec.sendType + '\')">推送</button>',
+                            '<button type="button" class="btn btn-danger  btn-xs" onclick="deleteStation('+rec.id+','+index+')">刪除</button>'].join(' ');
+                        return s;
+                    }else if(rec.status==1){
+                        var s =[
+                            '<button type="button" class="btn btn-primary btn-xs" onclick="details(\'' + rec.content.replace(/[\n]/ig, '<br>') + '\',\'' + arr[rec.memberType-1] + '\')">预览</button>',
+                                '<button type="button" class="btn btn-danger  btn-xs" onclick="deleteStation('+rec.id+','+index+')">刪除</button>'].join(' ');
+                        return s;
+                    }
+
+                }
+            }];
+        var url = getRootPath() + '/messageSend/listMessageSend.do';
+        setTableInfo('table', columns, url, getQueryParams, 'toolbar');
+    });
+    function getQueryParams() {
+        var json = {
+            name: $('#stationClassifyName').val(),
+            createName:$("#createName").val(),
+        };
+        return json;
+    }
+
+
+    function addCust() {
+        var url = getRootPath() + '/view/messageSend/messageSendAdd.html';
+        modalEdit(url, '新建推送', 'lg');
+    }
+
+    function edit(id, version) {
+        var url = getRootPath() + '/messageSend/edit.do?id=' + id + '&version=' + version;
+        modalEdit(url, '修改推送', 'lg');
+    }
+
+    function deleteStation(id,index) {
+        bootbox.confirm("确认删除?", function (result) {
+            if (result) {
+                var url = getRootPath() + '/messageSend/delete.do';
+                var data = {'id': id};
+                $.ajaxDefaultCall(url, data,function(){
+                    tableRefresh();
+                    if(index==0){
+                    window.location.href = getRootPath()+'/view/messageSend/list.html'
+                }});
+            }
+        });
+    };
+
+    function send(id, version,type) {
+        bootbox.confirm("确认推送?", function (result) {
+            if (result) {
+                var url = getRootPath() + '/messageSend/send.do?';
+                var data = {'id': id, 'version': version,type:type};
+                $.ajaxDefaultCall(url, data, function () {
+                    tableRefresh();
+                });
+            }
+        });
+    }
+
+    function details(content, title) {
+        var url = getRootPath() + '/view/announcement/detail.html?content=' + encodeURI(content) + '&title=' + encodeURI(title);
+        window.open(url);
+    }
+    var arr = new Array('所有用户','ios、android货主','ios货主','android货主','ios、android司机','ios司机','android司机','单人推送');
+</script>
+</body>
+</html>

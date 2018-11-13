@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.StationAuditHistoryModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.StationAuditHistoryModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="sourceType" property="sourceType" jdbcType="TINYINT" />
+    <result column="sourceId" property="sourceId" jdbcType="INTEGER" />
+    <result column="statusAfter" property="statusAfter" jdbcType="TINYINT" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="createBy" property="createBy" jdbcType="INTEGER" />
+    <result column="auditName" property="auditName" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="deleted" property="deleted" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, sourceType, sourceId, statusAfter, createTime, createBy, auditName, remark, deleted
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from manageDB.stationAuditHistory
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+</mapper>

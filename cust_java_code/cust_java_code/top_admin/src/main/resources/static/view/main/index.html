@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>交运配货网-后台管理</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="" rel="stylesheet">
+<!--<link href="css/jquery.treetable.css" rel="stylesheet" type="text/css" />-->
+<link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="../../bootstrap/css/bootstrap-table.min.css" rel="stylesheet">
+<link href="../../css/flat-ui.min.css" rel="stylesheet">
+<link href="../../css/easyui.css" rel="stylesheet">
+<link href="../../css/demo.css" rel="stylesheet">
+<link href="../../css/font-awesome.min.css" rel="stylesheet">
+<link href="../../css/jquery.mCustomScrollbar.css" rel="stylesheet">
+<link href="../../css/bootstrap-datetimepicker.css" rel="stylesheet">
+<link rel="shortcut icon" href="../../img/faviconindex.ico">
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+<!--[if lt IE 9]>
+      <script src="../../js/vendor/html5shiv.js"></script>
+      <script src="../../js/vendor/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body onresize="auto()">
+<div class="contentBox" style="padding:10px">
+  <div class="fixed-table-toolba bg-success boxtitlenum">
+    <div class="col-xs-3">昨日新增用户：<font>32132132</font></div>
+    <div class="col-xs-3">昨日资金流水：<font>32132132</font></div>
+    <div class="col-xs-3">昨日新增车辆：<font>32132132</font></div>
+    <div class="col-xs-3">昨日交易订单：<font>32132132</font></div>
+  </div>
+  <div id="main_youhu" style="width: 40%;height:400px;" class="margin-top-15 pull-left"></div>
+  <div id="main_loushui" style="width: 60%;height:400px;" class="margin-top-15 pull-right"></div>
+  <div id="main_cheliang" style="width: 40%;height:400px;" class="margin-top-15 pull-left"></div>
+  <div id="main_dingdan" style="width: 60%;height:400px;" class="margin-top-15 pull-right"></div>
+</div>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="../../js/vendor/jquery.min.js"></script>
+<script  src="../../js/vendor/jquery.easyui.min.js"></script>
+<script src="../../js/jquery.mCustomScrollbar.concat.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="../../js/flat-ui.min.js"></script>
+<script src="../../js/application.js"></script>
+<script src="../../bootstrap/js/bootstrap-table.min.js"></script>
+<script src="../../bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+<script src="../../js/bootstrap-datetimepicker.min.js"></script>
+<script src="../../js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="../../js/echarts.min.js"></script>
+<script src="../../iframe/echarts/echarts.js"></script>
+<script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+var myChart = echarts.init(document.getElementById('main_loushui'));
+
+// 指定图表的配置项和数据
+var option = {
+    title: {
+        text: ''
+    },
+    tooltip: {
+        trigger: 'axis'
+    },
+    legend: {
+        data: ['资金流水', '运费托管', '定金托管', '充值', '提现', '转帐']
+    },
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    toolbox: {
+        feature: {
+            saveAsImage: {}
+        }
+    },
+    xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: ['0点', '1点 ', '2点', '3点', '4点', '5点', '6点', '7点', '8点', '9点', '10点', '11点', '12点 ', '13点', '14点', '15点', '16点', '17点', '18点', '19点', '20点', '21点', '22点', '23点']
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [{
+        name: '资金流水',
+        type: 'line',
+        stack: '总量',
+        data: [620, 132, 101, 134, 90, 230, 210, 132, 101, 134, 90, 230, 132, 101, 134, 90, 230, 210, 132, 101, 134, 90, 230, 90]
+    },
+    {
+        name: '运费托管',
+        type: 'line',
+        stack: '总量',
+        data: [20, 182, 191, 234, 290, 330, 10, 182, 191, 234, 90, 30, 182, 191, 234, 290, 330, 10, 182, 191, 234, 90, 30, 234]
+    },
+    {
+        name: '定金托管',
+        type: 'line',
+        stack: '总量',
+        data: [30, 132, 111, 20, 220, 390, 280, 132, 121, 14, 210, 90]
+    },
+    {
+        name: '充值',
+        type: 'line',
+        stack: '总量',
+        data: [40, 132, 111, 104, 220, 390, 280, 32, 121, 214, 210, 70]
+    },
+    {
+        name: '提现',
+        type: 'line',
+        stack: '总量',
+        data: [10, 132, 11, 204, 220, 390, 280, 32, 121, 4, 210, 79]
+    },
+    {
+        name: '转帐',
+        type: 'line',
+        stack: '总量',
+        data: [800, 132, 111, 204, 0, 390, 280, 3, 121, 214, 210, 8]
+    }]
+};
+
+// 使用刚指定的配置项和数据显示图表。
+myChart.setOption(option);
+</script>
+<script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+var myChart = echarts.init(document.getElementById('main_youhu'));
+
+// 指定图表的配置项和数据
+var option_tongji = {
+    title: {
+        text: '昨日数据'
+    },
+    tooltip: {
+        trigger: 'axis'
+    },
+    legend: {
+        data: ['注册用户', '活跃用户']
+    },
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    toolbox: {
+        feature: {
+            saveAsImage: {}
+        }
+    },
+    xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: ['0点', '1点 ', '2点', '3点', '4点', '5点', '6点', '7点', '8点', '9点', '10点', '11点', '12点 ', '13点', '14点', '15点', '16点', '17点', '18点', '19点', '20点', '21点', '22点', '23点']
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [{
+        name: '注册用户',
+        type: 'line',
+        stack: '总量',
+        data: [9020, 132, 101, 134, 90, 230, 210, 132, 101, 134, 90, 230, 132, 101, 134, 90, 230, 210, 132, 101, 134, 90, 230, 90]
+    },
+    {
+        name: '活跃用户',
+        type: 'line',
+        stack: '总量',
+        data: [220, 182, 191, 234, 290, 330, 310, 182, 191, 234, 290, 330, 182, 191, 234, 290, 330, 310, 182, 191, 234, 290, 330, 234]
+    }]
+};
+
+// 使用刚指定的配置项和数据显示图表。
+myChart.setOption(option_tongji);
+    </script>
+<script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main_cheliang'));
+
+        // 指定图表的配置项和数据
+        var option = {
+    title: {
+        text: ''
+    },
+    tooltip: {
+        trigger: 'axis'
+    },
+    legend: {
+        data:['所有车辆','承运车辆']
+    },
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    toolbox: {
+        feature: {
+            saveAsImage: {}
+        }
+    },
+    xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: ['0点', '1点 ', '2点', '3点', '4点', '5点', '6点', '7点', '8点', '9点', '10点', '11点', '12点 ', '13点', '14点', '15点', '16点', '17点', '18点', '19点', '20点', '21点', '22点', '23点']
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [
+        {   
+		    name:'承运车辆',
+            type:'line',
+            stack: '总量',
+            data:[320, 132, 101, 134, 90, 230, 210, 132, 101, 134, 90, 230,320, 132, 101, 134, 90, 230, 210, 132, 101, 134, 90]
+            
+        },{
+            name:'所有车辆',
+            type:'line',
+            stack: '总量',
+            data:[220, 182, 191, 234, 290, 330, 310, 182, 191, 234, 290, 330, 182, 191, 234, 290, 330, 310, 182, 191, 234]
+        }
+    ]
+};
+
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main_dingdan'));
+
+        // 指定图表的配置项和数据
+        var option_day = {
+    title: {
+        text: ''
+    },
+    tooltip: {
+        trigger: 'axis'
+    },
+    legend: {
+        data:['所有订单','成交订单','成交城内订单','成交城际订单']
+    },
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    toolbox: {
+        feature: {
+            saveAsImage: {}
+        }
+    },
+    xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: ['1日','2日','3日','4日','5日','6日','7日','8日','9日','10日','11日','12日','13日','14日','15日','16日','17日','18日','19日','20日','21日','22日','23日','24日','25日','26日','27日','28日','29日','30日','31日','32日']
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [
+	{
+            name:'所有订单',
+            type:'line',
+            stack: '总量',
+            data:[1220, 432, 301, 334, 290, 130, 510, 332, 201, 234, 290, 430, 432, 301, 334, 290, 130, 510, 332, 201, 234, 290, 432, 301, 334, 290, 130, 510, 332, 201]
+        },
+        {
+            name:'成交订单',
+            type:'line',
+            stack: '总量',
+            data:[432, 301, 334, 290, 130, 510, 332, 201, 234, 290, 432, 301, 334, 290, 130, 510, 332, 201, 234, 290,520, 132, 101, 134, 90, 230, 210, 132, 101, 134, 90, 230]
+        },
+        {
+            name:'成交城内订单',
+            type:'line',
+            stack: '总量',
+            data:[123, 182, 191, 234, 290, 330, 310, 182, 191, 234, 290, 330, 182, 191, 234, 290, 330, 310, 182, 191, 234, 290, 182, 191, 234, 290, 330, 310, 182, 191]
+        }
+		,
+        {
+            name:'成交城际订单',
+            type:'line',
+            stack: '总量',
+            data:[45, 132, 111, 204, 220, 390, 280, 132, 121, 214, 210, 300, 132, 111, 204, 220, 390, 280, 132, 121, 214, 210, 132, 111, 204, 220, 390, 280, 132, 121]
+        }
+    ]
+};
+
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option_day);
+        
+        
+
+        var RW_conent;
+        var i=1;
+        var mydate = new Date();
+        var str = mydate.getFullYear()+"-"+(mydate.getMonth()+1)+"-"+mydate.getDate()+" "+mydate.getHours()+":"+mydate.getMinutes();
+        $(function() {
+            auto();
+            $("#contentmenu").mCustomScrollbar();
+        	//var ss = $('body').find('.contentBox');  
+            //var tt = ss.clone(true);  
+        	//var conent='<div class="col-xs-12 addRW numP">'+tt+'</div>';
+        	//$(".contentBox").append(tt);
+        })
+        $(".form_datetime").datetimepicker({
+                linkFormat: "yyyy-mm-dd hh:ii",
+        		language: 'zh-CN',
+        		startDate: str
+            });
+        //菜单展开动画
+        jQuery(document).ready(function(e) {
+            e(".dropmenu").click(function(t) {
+                t.preventDefault();
+                e(this).parent().find("ul").first().slideToggle();
+                e(this).find(".icodown").hasClass("glyphicon-chevron-up") ? e(this).find(".icodown").removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down") : e(this).find(".icodown").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up")
+            })
+        })
+        //菜单打开iframe链接
+        var avtieArr = null;
+        function addTab(title, url, e) {
+            if (avtieArr == null) {
+                avtieArr = e.addClass("avtie")
+            } else {
+                avtieArr.removeClass("avtie");
+                avtieArr = null;
+                avtieArr = e.addClass("avtie");
+            }
+
+            arr = e.addClass("avtie");
+            if ($('#tt').tabs('exists', title)) {
+                $('#tt').tabs('select', title);
+            } else {
+
+                var content = '<iframe class="iframeId" scrolling="auto" frameborder="0"  src="' + url + '" style="width:100%;"></iframe>';
+                $('#tt').tabs('add', {
+                    title: title,
+                    content: content,
+                    closable: true,
+                    height: "auto"
+                });
+            }
+        	auto()
+        }
+        //复选框全选
+        function checkAll(obj, className) {
+
+            $(className + " input[type='checkbox']").prop('checked', $(obj).prop('checked'));
+        }
+        $('body').on('hidden.bs.modal', '.modal',
+        function() {
+            $(this).removeData('bs.modal');
+        });
+        //加减方法
+        function addNum(id) {
+            var addvar = $(id).val();
+            addvar++;
+            $(id).val(addvar);
+        }
+        function delNum(id) {
+            var delvar = $(id).val();
+            if (delvar > 0) {
+                delvar--;
+                $(id).val(delvar);
+            } else {
+                $(delvar).val(0)
+            };
+        }
+        //自适应高度方法 
+        function auto() {
+            $("#contentmenu").css("height", window_h = $(window).height() - 53);
+            if ($(".iframeId").length > 0) {
+                $(".iframeId").css("height", window_h = $(window).height() - 98);
+            }
+        }
+        $(window).resize(function() { 
+            auto()
+        });
+
+    </script>
+ </body>
+</html>

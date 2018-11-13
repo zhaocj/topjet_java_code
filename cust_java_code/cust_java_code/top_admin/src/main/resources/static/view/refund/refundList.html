@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>交运配货</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <script type="text/javascript" src="../../resource/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="../../resource/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../../resource/bootstrap-theme.css">
+<link rel="stylesheet" type="text/css" href="../../resource/bootstrap.css">
+<script type="text/javascript" src="../../js/common/modal.js"></script>
+<script type="text/javascript" src="../../js/common/utils.js"></script>
+<script type="text/javascript" src="../../js/common/ajaxCall.js"></script>
+<script type="text/javascript" src="../../js/common/dateformate.js"></script>
+<!-- bootstrap-table 表格-->
+<link rel="stylesheet" type="text/css" href="../../resource/bootstrap-table.css">
+<script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+<script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+<link rel="stylesheet" type="text/css" href="../../css/demo.css">
+<link rel="stylesheet" type="text/css" href="../../less/modules/buttons.less">
+<style>
+  #editIframeId{width:100% !important;height:auto !important;min-height:500px !important;overflow: auto;}
+</style>
+</head>
+<body onresize="auto()">
+	<form class="form-inline queryParameters-margin">
+		<div class="fixed-table-toolbar">
+			<div class="eachBox">
+				<ul>
+					<li>
+						<label for="mobile">手机号码：</label>
+						<input type="text" name="mobile"   id="mobile" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"  placeholder="输入审请人手机号">
+					</li>
+					<li>
+						<label for="orderNo">订单号：</label>
+						<input  type="text" name="orderNo"  id="orderNo" placeholder="输入订单号">
+					</li>
+					<li>
+						<label for="mobile">审核人:</label>
+						<input type="text" id="auditName" placeholder="输入审核人姓名">
+					</li>
+					<li id="csStatusdisId">
+						<label for="csStatus">客服状态 </label>
+						<select name="csStatus"   id="csStatus">
+							<option value="">不限</option>
+							<option value="1">发起方申请客服介入</option>
+							<option value="2">接收方申请客服介入</option>
+							<option value="3">客服同意退款</option>
+							<option value="4">客服关闭退款</option>
+							<option value="5">待处理</option>
+						</select>
+					</li>
+					<div class="line10"></div>
+					<li>
+						<label for="beginDate">开始时间：</label>
+						<input type="date"
+							   name="beginDate"
+							   id="beginDate" placeholder="选择开始时间">
+					</li>
+					<li>
+						<label for="endDate">截至时间：</label>
+						<input type="date" name="endDate"
+							   id="endDate" placeholder="选择结束时间">
+					</li>
+
+				</ul>
+				<div class="clearfix "></div>
+
+			</div>
+			<div id="toolbar" class="columns columns-left btn-group pull-right">
+				<button type="button" class="btn btn-info btn-sm" onclick="tableQuery();">查询</button>
+			</div>
+		</div>
+	</form>
+	<table id='table'  class="table table-striped table-bordered table-hover table-condensed"></table>
+
+	<div id='modalEdit' class='modal fade' tabindex='-1' role='dialog' aria-labelledby='myLargeModalLabel' aria-hidden="true" >
+		<div class='modal-dialog'>
+			<div class='modal-content'>
+				<div class='modal-header'>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class='modal-title' id='myModalLabel'>编辑</h4>
+					<div class='modal-body' >
+						<iframe id='editIframeId' scrolling='yes'   frameborder='0' src=''></iframe>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<script type="text/javascript">
+$(function () {
+	var columns = [
+		         	{
+						field : 'createTime',
+						title : '申请时间',
+						align : 'center',
+						sortable : true,
+						formatter : function(value, row, index) {
+							return  formatDate(new Date(value),"yyyy-MM-dd");
+						}
+					},
+					{
+						field : 'triggerName',
+						title : '申请人',
+						align : 'center',
+						sortable : true,
+						formatter : function (value,row,index) {
+							if(value != null && value != "") {
+								return '<a  href="#" onclick="modifiedInfo(\''
+										+ row.triggerId2+ '\',\'退款申请\',\'' + row.reditRemark + '\')">'+value+'</a>';
+							}
+							       return "-";
+						}
+					},{
+						field : 'triggerMobile',
+						title : '申请人手机号',
+						align : 'center',
+					},{
+						field : 'triggerType',
+						title : '申请人身份',
+						align : 'center',
+						sortable : true,
+						formatter : function(value, row) {
+							if(value == 1){
+								return "司机";
+							}else if(value == 2){
+								return "货主";
+							}else if(value == 3){
+								return "信息部/配货部";
+							}else if(value == 4){
+								return "物流公司";
+							}
+						}
+					},
+					{
+						field : 'orderNo',
+						title : '订单编号',
+						align : 'center',
+						sortable : true,
+						formatter : function(value, row) {
+							if(value != null && value != "") {
+								return '<a  href="#" onclick="getCommentDetails(\''
+										+ row.orderId+ '\',\'退款申请\')">'+value+'</a>'
+							}
+							return "-";
+						}
+					},
+					{
+						field : 'reason',
+						title : '退款原因',
+						align : 'center',
+					},
+					{
+						field : 'csStatus',
+						title : '处理结果',
+						align : 'center',
+						sortable : true,
+						formatter : function(value, rec) {
+							var d = "";
+							if(rec.csStatus == 3){
+								d = '客服已同意退款';
+							}else if(rec.csStatus == 4){
+								d = '客服已关闭退款';
+							}else if(rec.csStatus == 1){
+								d = "发起方申请客服介入";
+							}else if(rec.csStatus == 2){
+								d = "接收方申请客服介入";
+							}else if(rec.csStatus == 5){
+								d = "待处理";
+							}
+							return d;
+						}
+					},
+				{
+					field : 'option',
+					title : '可用操作',
+					align : 'center',
+					formatter : function(value, rec,index) {
+					    var s ="";
+                        if((rec.oiOrderStatus == 4 || rec.oiOrderStatus == 5  ||rec.oiOrderStatus == 6 ) && (rec.csStatus != 3 &&  rec.csStatus != 4) && rec.orderFrozenState != 1){
+                            s='<button type="button" class="btn btn-info btn-xs" onclick="deFrozen(\'' + rec.orderId + '\',\'' + rec.orderAffiliateVersion + '\',\'' + rec.goodsId + '\')">冻结</button>'
+                        }
+
+                       if(  (rec.csStatus != 3 &&  rec.csStatus != 4)   &&  rec.orderFrozenState == 1){
+                            s='<button type="button" class="btn btn-info btn-xs" onclick="frozen(\'' + rec.orderId + '\',\'' + rec.orderAffiliateVersion + '\',\'' + rec.goodsId + '\')">解冻</button>'
+                        }
+						if(rec.status == 4 || rec.status == 1 || rec.status == 5){
+							if(rec.rfOrderStatus == rec.oiOrderStatus ){
+								if(rec.csStatus == 1 || rec.csStatus == 2){
+									 s=s+'<button type="button" class="btn btn-primary btn-xs" onclick="getRefundDetails('+rec.id+')">查看详情</button>';
+                                    return s;
+								}
+							}
+							   s=s+'<button type="button" class="btn btn-default btn-xs" onclick="getRefundDetails('+rec.id+')">查看详情</button>';
+                               return s;
+                        }
+                        return s;
+					}
+				}
+];
+	$("#beginDate").val(getDate7());
+	var url=getRootPath()+'/refund/list.do';
+	setTableInfo('table', columns, url,getQueryParams,'toolbar');
+	})
+
+   function getQueryParams() {
+	   var beginDate = $("#beginDate").val();
+	   var endDate = $("#endDate").val();
+
+	   var beginDateData = {}
+	   var endDateData = {}
+
+	   if (!isNull(beginDate)) {
+		   beginDate = StringToDate(beginDate);
+		   beginDateData = {'beginDate': beginDate};
+	   }
+	   if (!isNull(endDate)) {
+		   endDate = StringToDate(endDate);
+		   endDateData = { 'endDate': endDate};
+	   }
+	   var param = window.location.search;
+	   var flag = 0;
+	   if(param != ""){
+		   $('#csStatusdisId').css("display","none");
+		   flag = 1
+	   }else{
+		   $('#csStatusdisId').css("display","block");
+	   }
+ 		var json = {
+			'mobile' : $('#mobile').val(),
+			'orderNo': $('#orderNo').val(),
+			'flag' : flag,
+			'csStatus': $('#csStatus').val(),
+            'nickName': $('#auditName').val()
+		};
+ 		return $.extend(json,beginDateData,endDateData);
+	}
+	function getStatusValue(value){
+		var json = {"1":"竞价中/抢单中","2":"待确认/待承接","3":"定向订单待指派","4":"待支付定金","5":"待支付运费",
+				    "6":"提货中","7":"配送中","8":"待评价/已签收","9":"货主已评价司机未评价","10":"司机已评价货主未评价",
+				    "11":"已评价","12":"系统到达提货时间撤销/已过期","13":"货主主动撤销","14":"退款导致的撤销"};
+
+		return json[value];
+	}
+
+	function getRefundDetails(id) {
+		window.location.href= getRootPath()+'/refund/getRefundInfo.do?id='+id;
+	}
+	//自适应高度方法
+	function auto() {
+	    $("#contentmenu").css("height", window_h = $(window).height() - 53);
+	    if ($(".iframeId").length > 0) {
+	        $(".iframeId").css("height", window_h = $(window).height() - 98);
+	    }
+	}
+	$(window).resize(function() {
+	    auto()
+	});
+
+	var flag  ;//标记是冻结还是解冻  0 冻结 1 解冻
+	/**
+	 * 订单冻结
+	 * @param id
+	 * @param version
+	 */
+	function deFrozen(id,version,goodsId){
+		flag =0;
+		var url =getRootPath() + '/view/refund/doFrozen.html?id='+id+'&version='+version+'&flag='+flag+'&goodsId='+goodsId;
+		modalEdit(url,'订单冻结','lg');
+	}
+	/**
+	 * 订单解冻
+	 * @param id
+	 * @param version
+	 */
+	function frozen(id,version,goodsId){
+		flag =1;
+		var url = getRootPath()+'/view/refund/doFrozen.html?id='+id+'&version='+version+'&flag='+flag+'&goodsId='+goodsId;
+		modalEdit(url,'订单解冻','lg');
+	}
+
+</script>
+</body>
+</html>

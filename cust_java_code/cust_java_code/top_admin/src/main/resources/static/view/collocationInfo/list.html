@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>交运配货</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../../bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../../bootstrap/css/bootstrap-table.min.css">
+    <link rel="stylesheet" type="text/css" href="../../css/flat-ui.min.css">
+    <link rel="stylesheet" type="text/css" href="../../css/demo.css">
+    <link rel="stylesheet/less" type="text/css" href="../../css/easyui.css">
+    <link rel="stylesheet/less" type="text/css" href="../../css/font-awesome.min.css">
+    <link rel="stylesheet/less" type="text/css" href="../../css/jquery.mCustomScrollbar.css">
+    <link rel="stylesheet/less" type="text/css" href="../../css/bootstrap-datetimepicker.css">
+
+    <script type="text/javascript" src="../../resource/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../js/common/modal.js"></script>
+    <script type="text/javascript" src="../../js/common/utils.js"></script>
+    <script type="text/javascript" src="../../js/common/ajaxCall.js"></script>
+    <script type="text/javascript" src="../../js/common/dateformate.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+    <script type="text/javascript" src="../../js/bootbox.min.js"></script>
+    <script type="text/javascript" src="../../js/application.js"></script>
+    <script type="text/javascript" src="../../js/flat-ui.min.js"></script>
+    <script type="text/javascript" src="../../js/common/jquery.cityselect.js"></script>
+</head>
+<body onresize="auto()">
+<div class="contentBox" style="padding:10px">
+    <div class="fixed-table-toolbar">
+    	<div class="navmenu" id="navTitle"><a href="queryIndex.html" >货源配置管理</a> / <span id="typeName"></span></div>
+    </div>
+    
+    <div class="columns columns-left btn-group pull-right" id="updateResource">
+        <button type="button" class="btn btn-primary btn-sm margin-left-10"
+                onclick="updateResource();" data-backdrop="false">确定生效
+        </button>
+    </div>
+    
+    
+    <div class="columns columns-left btn-group pull-right">
+        <button type="button" class="btn btn-info btn-sm margin-left-10"
+                onclick="addCust();" data-backdrop="false">新增
+        </button>
+    </div>
+
+</div>
+<table id='table' class="table table-striped table-bordered table-hover table-condensed"></table>
+<div id='modalEdit' class='modal fade' tabindex='-1' role='dialog' aria-labelledby='myLargeModalLabel'
+     aria-hidden="true">
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class='modal-title' id='myModalLabel'>编辑</h4>
+                <div class='modal-body'>
+                    <iframe id='editIframeId' scrolling='no' onLoad='setIframeSizeMax()' frameborder='0' src=''></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+//1 首页底部 2 首页中间 3 城市文件 4 车型 5 车长 6 包装方式 7 装卸方式 8 货物类型 9 货物计量单位
+		var typeArr = {"8":"货物类型","6":"包装方式","7":"装卸方式","4":"调研报告","9":"订单计量单位"};
+		var collocationType = getUrlParam("collocationType");
+		var typeName = typeArr[collocationType];
+        if(collocationType ==4){
+            document.getElementById('updateResource').style.display = 'none';
+        }
+
+    $(function () {
+  			$("#typeName").html(typeName);
+
+        var columns = [
+            {
+                field: 'collocationName',
+                title: '名称',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    if (value == null) {
+                        return "";
+                    } else {
+                        return value;
+                    }
+                }
+            },
+            {
+                field: 'createTime',
+                title: '创建时间',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    return formatViewDate(new Date(value), "yyyy-MM-dd HH:mm");
+                }
+            },
+            {
+                field: 'opt',
+                title: '可用操作',
+                align: 'center',
+
+                formatter: function (value, rec, index) {
+                    var s =['<button type="button"  data-target="#myModal" class="btn btn-primary  btn-xs" href="edit.do" onclick="edit(\''
+                    + rec.id
+                    + '\')">修改&nbsp</button> ',
+                        '<button type="button" class="btn btn-danger  btn-xs" onclick="deleteStation('+rec.id+')">刪除</button>'].join(' ');
+                    return s;
+                }
+            }];
+        var url = getRootPath() + '/collocationInfo/list.do?collocationType='+collocationType;
+        setTableInfo('table', columns, url, getQueryParams, 'toolbar');
+    });
+    function getQueryParams() {
+        var json = {};
+        return json;
+    }
+
+
+    function addCust() {
+        var url = getRootPath() + '/view/collocationInfo/collocationInfoAdd.html?collocationType='+collocationType;
+        modalEdit(url, '新增'+typeName, 'lg');
+    }
+
+    function edit(id, version) {
+        var url = getRootPath() + '/collocationInfo/edit.do?id=' + id + '&version=' + version+"&collocationType="+collocationType;
+        modalEdit(url, '修改'+typeName, 'lg');
+    }
+
+    function deleteStation(id) {
+        bootbox.confirm("确认删除?", function (result) {
+            if (result) {
+                var url = getRootPath() + '/collocationInfo/delete.do';
+                var data = {'id': id};
+                $.ajaxDefaultCall(url, data,function(){tableRefresh();});
+            }
+        });
+    };
+    
+    function getUrlParam(collocationName) {
+			var reg = new RegExp("(^|&)" + collocationName + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+			 var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+			if (r != null) return unescape(r[2]); return ""; //返回参数值
+	}
+
+    function updateResource() {
+        //资源文件类型  6.包装方式 7.装卸方式 8.货物类型 9 货物单位
+        var resourceType = {"8":"8","6":"6","7":"7","9":"9"};
+        bootbox.confirm("确认更新?", function (result) {
+           if (result) {
+               var json = {
+                'resourceType':resourceType[collocationType]
+               }
+               var url = getRootPath() + '/collocationInfo/updateResource.do';
+               $.ajaxDefaultCall(url, json, function () {
+
+               })
+           }
+        });
+    }
+
+</script>
+</body>
+</html>

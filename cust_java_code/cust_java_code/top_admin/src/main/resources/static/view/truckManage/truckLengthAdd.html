@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>交运配货网-后台管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="" rel="stylesheet">
+    <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="../../bootstrap/css/bootstrap-table.min.css" rel="stylesheet"/>
+    <link href="../../css/flat-ui.min.css" rel="stylesheet"/>
+    <link href="../../css/easyui.css" rel="stylesheet"/>
+    <link href="../../css/demo.css" rel="stylesheet"/>
+    <link href="../../css/font-awesome.min.css" rel="stylesheet"/>
+    <link href="../../css/jquery.mCustomScrollbar.css" rel="stylesheet"/>
+    <link href="../../css/bootstrap-datetimepicker.css" rel="stylesheet"/>
+    <link href="../../less/modules/buttons.less" rel="stylesheet"/>
+    <link rel="shortcut icon" href="../../img/faviconindex.ico"/>
+    <link href="../../bootstrap/formValidation/formValidation.css"/>
+
+    <script src="../../resource/jquery-1.11.3.min.js"></script>
+    <script src="../../js/common/utils.js"></script>
+    <script src="../../js/bootbox.min.js"></script>
+    <script type="text/javascript" src="../../bootstrap/formValidation/formValidation.js"></script>
+    <script type="text/javascript" src="../../bootstrap/formValidation/bootstrap.js"></script>
+    <script type="text/javascript" src="../../bootstrap/formValidation/validData.js"></script>
+    <script src="../../js/vendor/jquery.easyui.min.js"></script>
+    <script src="../../js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../../js/flat-ui.min.js"></script>
+    <script src="../../js/application.js"></script>
+    <script src="../../js/bootstrap-datetimepicker.min.js"></script>
+    <script src="../../js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="../../js/echarts.min.js"></script>
+    <script src="../../js/common/index.js"></script>
+    <script src="../../js/common/ajaxCall.js"></script>
+</head>
+<body>
+<div class="modal-body  fontsize-14" id="myModal">
+    <form id="myForm">
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>车长显示名称</label>
+                <input type="text" id="displayNameId" name="displayName" class="form-control input-sm" required>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>车长</label>
+                <input type="text" id="lengthId" name="length" class="form-control input-sm"
+                       onkeyup="this.value=this.value.replace(/[^\d\.]/g,'')"
+                       onblur="validLength()" required="true">
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>是否可用</label>
+                <div class="clearfix"></div>
+                <select id="isValid" required class="form-control" name="valid" >
+                    <option value="">请选择</option>
+                    <option value="0">不可用</option>
+                    <option value="1">可用</option>
+                </select>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="clearfix"></div>
+<div class="modal-footer margin-top-15">
+    <button type="button" id="myButton" onclick="submitCreateClick()" class="btn btn-primary center-block">　提　交　
+    </button>
+</div>
+
+<script type="text/javascript">
+
+    function validLength() {
+        var url = getRootPath() + '/truckLength/validLength.do';
+        var dataJson = {'truckLength': $("#lengthId").val()};
+        $.ajax({
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded;charset=utf-8",
+            url: url,
+            data: dataJson,
+            dataType: "json",
+            success: function (data) {
+                if (!data) {
+//                    bootbox.alert({
+//                        size: 'small',
+//                        message: "车长已经存在"
+//                    });
+                    alert("车长已经存在,请重新输入！");
+                    $("#lengthId").val("")
+
+                }
+            }
+        })
+
+    }
+
+    function submitCreateClick() {
+        var bt = $('#myButton').button('loading');
+        number = parseInt($("#lengthId").val());
+        if(number > 100){
+            bootbox.alert({
+                size:'small',
+                message:"请输入100以内的长度!",
+            });
+            bt.button('reset');
+            $("#lengthId").val("");
+            return;
+        }
+
+        if (!$.topjectIsValidate('myForm')) {
+            bt.button('reset');
+            return;
+        }
+        var json = {
+            'displayName': $("#displayNameId").val(),
+            'length': $("#lengthId").val(),
+            'valid': $("#isValid").val()
+        }
+        var url = getRootPath() + '/truckLength/create.do';
+        $.ajaxDefaultCall(url, json, function () {window.parent.location.href = getRootPath()+'/view/truckManage/truckLengthList.html'})
+    }
+    $(function () {
+        $.topjectValidate('myForm');
+    })
+
+</script>
+</body>
+</html>

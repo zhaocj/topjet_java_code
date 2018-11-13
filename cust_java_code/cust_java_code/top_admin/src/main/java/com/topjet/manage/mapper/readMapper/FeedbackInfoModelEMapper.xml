@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.FeedbackInfoModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.FeedbackInfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="opinion" property="opinion" jdbcType="VARCHAR" />
+    <result column="userId" property="userId" jdbcType="INTEGER" />
+    <result column="createBy" property="createBy" jdbcType="INTEGER" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateBy" property="updateBy" jdbcType="INTEGER" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="version" property="version" jdbcType="SMALLINT" />
+    <result column="deleted" property="deleted" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    id, opinion, userId, createBy, createTime, updateBy, updateTime, version, deleted, 
+    remark, type
+  </sql>
+
+
+  <sql id="Criteria_where_clause">
+    <where>
+      <if test="id != null" >
+        and id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="opinion != null" >
+        and opinion = #{opinion,jdbcType=VARCHAR}
+      </if>
+      <if test="userId != null" >
+        and userId = #{userId,jdbcType=INTEGER}
+      </if>
+      <if test="createBy != null" >
+        and createBy = #{createBy,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null" >
+        and createTime = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="updateBy != null" >
+        and updateBy = #{updateBy,jdbcType=INTEGER}
+      </if>
+      <if test="updateTime != null" >
+        and updateTime = #{updateTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="version != null" >
+        and version = #{version,jdbcType=SMALLINT}
+      </if>
+      <if test="deleted != null" >
+        and deleted = #{deleted,jdbcType=INTEGER}
+      </if>
+      <if test="remark != null" >
+        and remark = #{remark,jdbcType=VARCHAR}
+      </if>
+      <if test="type != null" >
+        and type = #{type,jdbcType=INTEGER}
+      </if>
+    </where>
+  </sql>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from userDB.feedbackInfo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectListByParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from userDB.feedbackInfo
+    <include refid="Criteria_where_clause" />
+  </select>
+
+  <sql id="Base_Column_List1" >
+    fbi.id, fbi.opinion, fbi.userId, fbi.createBy, fbi.createTime, fbi.updateBy,fbi.updateTime ,fbi.remark, fbi.type,ur.mobile, ur.username AS name, ui.nickName as actionName
+  </sql>
+  <select id="listFeedBackInfo" resultType="com.topjet.manage.domain.bean.FeedbackInfoBean" parameterType="com.topjet.manage.domain.bean.FeedbackInfoBean" >
+    select
+    <include refid="Base_Column_List1" />
+    from userDB.feedbackInfo fbi
+    left join userDB.userInfo ur on fbi.userId = ur.id
+    left join manageDB.sysUser ui on fbi.updateBy = ui.id
+    <include refid="Example_Where_Clause" />
+    order by ${sort} ${order}
+    limit #{offset}, #{limit}
+  </select>
+
+
+  <select id="countFeedBackInfo" parameterType="com.topjet.manage.domain.bean.FeedbackInfoBean" resultType="java.lang.Integer" >
+    select count(*)
+    from userDB.feedbackInfo fbi
+    left join userDB.userInfo ur on fbi.userId = ur.id
+    <include refid="Example_Where_Clause" />
+  </select>
+
+  <sql id="Example_Where_Clause">
+    WHERE fbi.deleted=0
+    <trim suffixOverrides=",">
+      <if test="type != null and type != ''">
+        AND fbi.type = #{type}
+      </if>
+      <if test="mobile != null and mobile != ''">
+        AND ur.mobile = #{mobile}
+      </if>
+      <if test="createTime != null">
+        AND DATE_FORMAT(fbi.createTime, '%Y-%m-%d') = DATE_FORMAT(#{createTime}, '%Y-%m-%d')
+      </if>
+    </trim>
+  </sql>
+
+
+</mapper>

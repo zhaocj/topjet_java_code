@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>交运配货网-后台管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <link rel="stylesheet/less" type="text/css" href="../../../bootstrap/formValidation/formValidation.css">
+
+    <script type="text/javascript" src="../../../js/flat-ui.js"></script>
+    <script type="text/javascript" src="../../../js/application.js"></script>
+
+    <script type="text/javascript" src="../../../bootstrap/formValidation/formValidation.js"></script>
+    <script type="text/javascript" src="../../../bootstrap/formValidation/bootstrap.js"></script>
+    <script type="text/javascript" src="../../../bootstrap/formValidation/validData.js"></script>
+
+</head>
+<body >
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title">新增或者修改</h4>
+</div>
+<form id ="myForm">
+    <div class="modal-body  fontsize-14">
+        <input type="hidden" id="id" name="id" value="">
+        <input type="hidden" id="version" name="version" value="">
+        <input type="hidden" id="isForcedFlag" name="isForcedFlag" value="">
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label for="type">系统类型</label>
+                <select id="type" name="type" onchange="attrValue(this.value)" data-toggle="select" class="form-control select select-default select-sm" required>
+                    <option value="" >请选择</option>
+                    <option value="1">安卓司机版</option>
+                    <option value="2" >安卓货主版</option>
+                    <option value="3">IOS司机版</option>
+                    <option value="4">IOS货主版</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label for="isForced">是否强制更新</label>
+                <select id="isForced" name="isForced" data-toggle="select" class="form-control select select-default select-sm" required>
+                    <option value="">请选择</option>
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>系统版本号</label>
+                <input type="text" id="systemVersion" name="systemVersion" class="form-control input-sm" placeholder="请输入系统版本号" required>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>内部版本号</label>
+                <input type="text" id="innoVersion" name="innoVersion" class="form-control input-sm"  placeholder="请输入内部版本号" required>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label>下载地址</label>
+                <input type="text" id="downloadAddress" name="downloadAddress" class="form-control input-sm"  placeholder="请输入下载地址" required>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label >升级相关描述</label>
+                <textarea id="description" name="description" class="form-control" rows="3" placeholder="相关描述"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="modal-footer margin-top-15">
+        <button type="button" id="myButton" class="btn btn-primary center-block" onclick="upGrade()">　提　交　</button>
+    </div>
+</form>
+</div>
+
+<script type="text/javascript">
+    function upGrade(){
+        if($('#isForcedFlag').val() != '' && $('#isForced').val() == ''){
+            $("#isForced").val($('#isForcedFlag').val());
+        }
+        var bt=$('#myButton').button('loading');
+        if(!$.topjectIsValidate('myForm')){
+            bt.button('reset');
+            return;
+        }
+        var url = getRootPath() + '/appUpgrade/saveOrUpdate.do';
+        var json = {
+            'id': $('#id').val(),
+            'type': $("#type").val(),
+            'isForced': $("#isForced").val(),
+            'systemVersion': $("#systemVersion").val(),
+            'innoVersion': $("#innoVersion").val(),
+            'downloadAddress': $("#downloadAddress").val(),
+            'description': $("#description").val(),
+        }
+        $.ajaxDefaultCall(url,json,function(){$('#myModal').modal('hide');tableRefresh()});
+        $("#myForm")[0].reset();
+        $("select").val("").trigger("change");
+        $(".form-group").removeClass("has-success");
+        $(".form-control-feedback").attr("style","display:none");
+    }
+    $(function (){
+        $.topjectValidate('myForm');
+    })
+
+
+    function attrValue(type){
+        $.ajax({
+            type : 'post',
+            url :getRootPath()+'/appUpgrade/queryByType.do',
+            data : {
+                type : type
+            },
+            success : function(data) {
+                if(data!=null){
+                    $("#systemVersion").val(data.systemVersion);
+                    $("#innoVersion").val(data.innoVersion);
+                    $("#downloadAddress").val(data.downloadAddress);
+                    $("#description").val(data.description);
+                    $("#isForcedFlag").val(data.isForced);
+                   // $("#isForced").val(data.isForced);
+                     //$("#isForced").find("option[value=1]").attr("selected","selected");
+                    if(data.isForced == 1){
+                        $("#isForced").siblings("div").children(".select2-choice").children(".select2-chosen").text("是");
+                    }else{
+                        $("#isForced").siblings("div").children(".select2-choice").children(".select2-chosen").text("否");
+                    }
+                 /*   $("#downloadAddress").closest(".has-success").removeClass("has-success");
+                    $("#downloadAddress").closest(".form-group").find('.form-control-feedback').attr("style","display:none");*/
+                    $("#id").val(data.id);
+//                    $("#version").val(data.version);
+                }else{
+                    $("#systemVersion").val("");
+                    $("#innoVersion").val("");
+                    $("#downloadAddress").val("");
+                    $("#description").val("");
+                    $("#isForced").val("");
+                    $("#id").val("");
+                }
+            }
+        });
+    };
+</script>
+</body>
+</html>

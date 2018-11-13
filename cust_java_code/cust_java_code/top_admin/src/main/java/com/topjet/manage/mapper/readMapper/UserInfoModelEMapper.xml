@@ -1,0 +1,622 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.UserInfoModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.UserInfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="idNo" property="idNo" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="userType" property="userType" jdbcType="TINYINT" />
+    <result column="userNature" property="userNature" jdbcType="TINYINT" />
+    <result column="companyStatus" property="companyStatus" jdbcType="TINYINT" />
+    <result column="useStatus" property="useStatus" jdbcType="TINYINT" />
+    <result column="iconStatus" property="iconStatus" jdbcType="TINYINT" />
+    <result column="userAuthStatus" property="userAuthStatus" jdbcType="TINYINT" />
+    <result column="sex" property="sex" jdbcType="TINYINT" />
+    <result column="walletId" property="walletId" jdbcType="INTEGER" />
+    <result column="isGuaranteed" property="isGuaranteed" jdbcType="TINYINT" />
+    <result column="isAnonymous" property="isAnonymous" jdbcType="TINYINT" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="version" property="version" jdbcType="SMALLINT" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, idNo, username, mobile, userType, userNature,companyStatus,useStatus, userAuthStatus, iconStatus, sex, walletId, isGuaranteed,
+    isAnonymous, createTime,version, deleted
+  </sql>
+
+  <sql id="Criteria_where_clause">
+    <where>
+      <if test="id != null">
+        and id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="idNo != null" >
+        and idNo = #{idNo,jdbcType=VARCHAR}
+      </if>
+      <if test="username != null" >
+        and username = #{username,jdbcType=VARCHAR}
+      </if>
+      <if test="mobile != null" >
+        and mobile = #{mobile,jdbcType=VARCHAR}
+      </if>
+      <if test="userType != null" >
+        and userType = #{userType,jdbcType=TINYINT}
+      </if>
+      <if test="userNature != null" >
+        and userNature = #{userNature,jdbcType=TINYINT}
+      </if>
+      <if test="companyStatus != null" >
+        and companyStatus = #{companyStatus,jdbcType=TINYINT}
+      </if>
+
+      <if test="useStatus != null" >
+        and useStatus = #{useStatus,jdbcType=TINYINT}
+      </if>
+      <if test="userAuthStatus != null" >
+        and userAuthStatus = #{userAuthStatus,jdbcType=TINYINT}
+      </if>
+      <if test="iconStatus != null" >
+        and iconStatus = #{iconStatus,jdbcType=TINYINT}
+      </if>
+      <if test="sex != null" >
+        and sex = #{sex,jdbcType=TINYINT}
+      </if>
+      <if test="walletId != null" >
+        and walletId = #{walletId,jdbcType=INTEGER}
+      </if>
+      <if test="isGuaranteed != null" >
+        and isGuaranteed = #{isGuaranteed,jdbcType=TINYINT}
+      </if>
+      <if test="isAnonymous != null" >
+        and isAnonymous = #{isAnonymous,jdbcType=TINYINT}
+      </if>
+      <if test="createTime != null" >
+        and createTime = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="deleted != null" >
+        and deleted = #{deleted,jdbcType=TINYINT}
+      </if>
+    </where>
+  </sql>
+
+
+  <sql id="Example_Where_Clause_ForGetMemberAuditList">
+    where 1=1 and ur.deleted=0
+    <trim suffixOverrides=",">
+      <if test="mobile != null and mobile != ''">
+        and ur.mobile = #{mobile}
+      </if>
+      <if test="registerOrAuditFlag != null and registerOrAuditFlag != '' and registerOrAuditFlag == 1">
+        and ur.useStatus = 1 and ti.type = 1
+      </if>
+      <if test="registerOrAuditFlag != null and registerOrAuditFlag != '' and registerOrAuditFlag == 2">
+        and ur.userAuthStatus = 1 and ur.useStatus = 2 and ti.type = 2
+      </if>
+      <if test="flag != null and flag != '' and flag == 1">
+        and ur.id in (select ti.sourceId from manageDB.taskInfo ti left join manageDB.taskBucketInfo tb on ti.bucketId = tb.id where tb.deleted = 0 and ti.deleted = 0  and tb.invalid = 1 and tb.TYPE = 1 and tb.sysUserId =#{sysUserId})
+      </if>
+      <if test="flag != null and flag != '' and flag == 2">
+        and ur.id in (select ti.sourceId from manageDB.taskInfo ti left join manageDB.taskBucketInfo tb on ti.bucketId = tb.id where tb.deleted = 0 and ti.deleted = 0  and tb.invalid = 1 and tb.TYPE = 2 and tb.sysUserId =#{sysUserId})
+      </if>
+    </trim>
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from userDB.userInfo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from userDB.userInfo
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+
+  <insert id="insert" parameterType="com.topjet.manage.domain.model.UserInfoModel" >
+    insert into userDB.userInfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="idNo != null" >
+        idNo,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="userType != null" >
+        userType,
+      </if>
+      <if test="useStatus != null" >
+        useStatus,
+      </if>
+      <if test="userAuthStatus != null" >
+        userAuthStatus,
+      </if>
+      <if test="iconStatus != null" >
+        iconStatus,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="walletId != null" >
+        walletId,
+      </if>
+      <if test="isGuaranteed != null" >
+        isGuaranteed,
+      </if>
+      <if test="isAnonymous != null" >
+        isAnonymous,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="idNo != null" >
+        #{idNo,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        #{userType,jdbcType=TINYINT},
+      </if>
+      <if test="useStatus != null" >
+        #{useStatus,jdbcType=TINYINT},
+      </if>
+      <if test="userAuthStatus != null" >
+        #{userAuthStatus,jdbcType=TINYINT},
+      </if>
+      <if test="iconStatus != null" >
+        #{iconStatus,jdbcType=TINYINT},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=TINYINT},
+      </if>
+      <if test="walletId != null" >
+        #{walletId,jdbcType=INTEGER},
+      </if>
+      <if test="isGuaranteed != null" >
+        #{isGuaranteed,jdbcType=TINYINT},
+      </if>
+      <if test="isAnonymous != null" >
+        #{isAnonymous,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.topjet.manage.domain.model.UserInfoModel" >
+    update userDB.userInfo
+    <set >
+      <if test="idNo != null" >
+        idNo = #{idNo,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        userType = #{userType,jdbcType=TINYINT},
+      </if>
+      <if test="useStatus != null" >
+        useStatus = #{useStatus,jdbcType=TINYINT},
+      </if>
+      <if test="userAuthStatus != null" >
+        userAuthStatus = #{userAuthStatus,jdbcType=TINYINT},
+      </if>
+      <if test="iconStatus != null" >
+        iconStatus = #{iconStatus,jdbcType=TINYINT},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=TINYINT},
+      </if>
+      <if test="walletId != null" >
+        walletId = #{walletId,jdbcType=INTEGER},
+      </if>
+      <if test="isGuaranteed != null" >
+        isGuaranteed = #{isGuaranteed,jdbcType=TINYINT},
+      </if>
+      <if test="isAnonymous != null" >
+        isAnonymous = #{isAnonymous,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.topjet.manage.domain.model.UserInfoModel" >
+    update userDB.userInfo
+    set idNo = #{idNo,jdbcType=VARCHAR},
+    username = #{username,jdbcType=VARCHAR},
+    mobile = #{mobile,jdbcType=VARCHAR},
+    userType = #{userType,jdbcType=TINYINT},
+    useStatus = #{useStatus,jdbcType=TINYINT},
+    userAuthStatus = #{userAuthStatus,jdbcType=TINYINT},
+    iconStatus = #{iconStatus,jdbcType=TINYINT},
+    sex = #{sex,jdbcType=TINYINT},
+    walletId = #{walletId,jdbcType=INTEGER},
+    isGuaranteed = #{isGuaranteed,jdbcType=TINYINT},
+    isAnonymous = #{isAnonymous,jdbcType=TINYINT},
+    createTime = #{createTime,jdbcType=TIMESTAMP},
+    deleted = #{deleted,jdbcType=TINYINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectListByParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from userDB.userInfo
+    <include refid="Criteria_where_clause" />
+  </select>
+
+
+  <select id="selectListByEntity" resultMap="BaseResultMap" parameterType="com.topjet.manage.domain.model.SysUserModel" >
+    select
+    <include refid="Base_Column_List" />
+    from userDB.userInfo
+    <include refid="Criteria_where_clause" />
+    order by id desc
+  </select>
+
+  <select id="selectPageListByParam" resultMap="BaseResultMap" parameterType="com.topjet.manage.domain.model.SysUserModel">
+    select
+    <include refid="Base_Column_List" />
+    from userDB.userInfo
+    <include refid="Criteria_where_clause" />
+    order by id desc
+    limit
+    #{offset}, #{limit}
+  </select>
+
+  <select id="getCountByParam" resultType="java.lang.Integer"
+          parameterType="java.util.Map">
+    select count(id)
+    from userDB.userInfo
+    <include refid="Criteria_where_clause" />
+  </select>
+
+  <sql id="Base_Column_List_ForGetMemberAuditList" >
+    DISTINCT ur.id,ur.userName,ur.mobile,ur.userType,ur.userNature,ur.companyStatus,ur.createTime,ur.useStatus,ur.userAuthStatus,ur.version,uoi.reditRemark,(select YEAR(NOW())-SUBSTR(ur.idNo FROM 7 FOR 4)) as age,tb.name as assignName
+  </sql>
+  <select id="getMemberAuditList" resultType="com.topjet.manage.domain.bean.MemberAuditListResponseBean"
+          parameterType="com.topjet.manage.domain.bean.MemberAuditListRequestBean">
+    select
+    <include refid="Base_Column_List_ForGetMemberAuditList" />
+    from userDB.userInfo ur
+    LEFT JOIN userDB.userOtherInfo uoi on ur.id = uoi.userId
+    LEFT JOIN manageDB.taskInfo ti on ti.sourceId = ur.id  and ti.deleted = 0
+    LEFT JOIN manageDB.taskBucketInfo tb on tb.id = ti.bucketId and tb.deleted = 0
+    <include refid="Example_Where_Clause_ForGetMemberAuditList" />
+    GROUP BY ur.id
+    order by ur.createTime DESC
+    limit #{offset}, #{limit}
+  </select>
+
+
+
+
+  <!--用户会员审核管理 查询列表条数count-->
+  <select id="getMemberAuditListCount" resultType="java.lang.Integer"
+          parameterType="Object">
+    select count(DISTINCT ur.id)
+    from userDB.userInfo ur
+    LEFT JOIN manageDB.taskInfo ti on ti.sourceId = ur.id  and ti.deleted = 0
+    LEFT JOIN manageDB.taskBucketInfo tb on tb.id = ti.bucketId and tb.deleted = 0
+    <include refid="Example_Where_Clause_ForGetMemberAuditList" />
+  </select>
+
+  <select id="selectUserInfoByIdNo" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from userDB.userInfo
+    <where>
+      <if test="idNo != null" >
+        and idNo = #{idNo,jdbcType=VARCHAR}
+      </if>
+      <if test="deleted != null" >
+        and deleted = #{deleted,jdbcType=TINYINT}
+      </if>
+      <if test="code != null">
+        and useStatus in (${code})
+      </if>
+    </where>
+  </select>
+  <!--管理平台用户详情里的所有Count-->
+  <select id="getAllCountById" parameterType="java.lang.Integer" resultType="com.topjet.manage.domain.bean.UserInfoBean">
+    select count(u.id),
+    (select count(od.id) from orderDB.orderInfo od where od.deleted = 0 and od.driverId = #{id}) as driverOrderCount ,
+    (select count(ow.id) from orderDB.orderInfo ow where ow.deleted = 0 and ow.ownerId = #{id}) as ownerOrderCount ,
+    (select count(tc.id) from truckDB.driverTruckInfo tc where tc.deleted = 0 and tc.driverId = #{id}) as truckCount ,
+    (select count(rr.id) from userDB.recommendRelationship rr where rr.deleted = 0 and rr.recommendUserId = #{id}) as recommendCount ,
+    (select count(ot.id) from truckDB.ownerTruckInfo ot where ot.deleted = 0 and ot.ownerId = #{id}) as ownerTruckCount,
+    (select a.recommendMobile from userDB.recommendRelationship a where a.deleted = 0 and a.recommendedUserId = #{id}) as recommendUserMobile,
+    (select count(uc.id) from userDB.userCommentInfo uc where uc.deleted = 0 and uc.commentUser = #{id}) as commentedCount ,
+    (select count(ucd.id) from userDB.userCommentInfo ucd where ucd.deleted = 0 and ucd.commentedUser = #{id}) as commentCount,
+    ugi.credit  as credit,
+    ugi.driverCommentLevel  as driverCommentLevel,
+    ugi.ownerCommentLevel as ownerCommentLevel
+    from userDB.userInfo u
+    left JOIN  userDB.userGradeInfo ugi on ugi.userId =u.id
+    where u.id = #{id}
+  </select>
+  <!--根据手机号码查询-->
+  <select id="getMobile" parameterType="java.lang.String" resultType="com.topjet.manage.domain.model.UserInfoModel">
+    select
+    <include refid="Base_Column_List_ForMemberList"/>
+    from userDB.userInfo ur
+    LEFT JOIN userDB.userOtherInfo uo on ur.id = uo.userId
+    LEFT JOIN manageDB.userAuditHistory ush ON ur.id = ush.sourceId
+    LEFT JOIN resourceDB.city ct on ct.adcode = uo.registeredCityId
+    LEFT JOIN manageDB.orderAuditHistory odih on ur.id = odih.sourceId
+    LEFT JOIN truckDB.ownerTruckInfo oti on ur.id = oti.ownerId
+    where 1=1 and ur.deleted=0 and ur.mobile = #{mobile}
+  </select>
+  <!--根据userId查询用户-->
+  <select id="findUserById" parameterType="java.lang.Integer" resultType="com.topjet.manage.domain.model.UserInfoModel">
+    select
+    <include refid="Base_Column_List_ForMemberList"/>
+    from userDB.userInfo ur
+    LEFT JOIN userDB.userOtherInfo uo on ur.id = uo.userId
+    LEFT JOIN manageDB.userAuditHistory ush ON ur.id = ush.sourceId
+    LEFT JOIN resourceDB.city ct on ct.adcode = uo.registeredCityId
+    LEFT JOIN manageDB.orderAuditHistory odih on ur.id = odih.sourceId
+    LEFT JOIN truckDB.ownerTruckInfo oti on ur.id = oti.ownerId
+    LEFT JOIN userDB.userBlackListInfo ub on ur.id = ub.userId
+    where 1=1 and ur.deleted=0 and ur.id = #{id} GROUP BY ur.id
+  </select>
+  <!--根据userId查询用户-->
+  <select id="findById" parameterType="java.lang.Integer" resultType="com.topjet.manage.domain.model.UserInfoModel">
+    select DISTINCT ur.id,ur.idNo,ur.username,ur.mobile,ur.userType,ur.useStatus,ur.userAuthStatus,ur.iconStatus,ur.sex,ur.walletId,
+    ur.isGuaranteed,ur.isAnonymous,ur.createTime,ur.deleted
+    from userDB.userInfo ur
+    where 1=1 and ur.deleted=0 and ur.id = #{id} GROUP BY ur.id
+  </select>
+  <!--会员管理页数-->
+  <select id="getMemberCount" resultType="java.lang.Integer" parameterType="Object">
+    select count(DISTINCT ur.id)
+    FROM userDB.userInfo ur
+    <if test="residentStart != null and residentStart != ''">
+        LEFT JOIN userDB.userOtherInfo uo ON uo.userId=ur.id
+    </if>
+    <if test="memberStatus != null  and memberStatus != ''">
+        <if test="memberStatus == 1">
+          left join userDB.`userBlackListInfo` ub on ub.userId=ur.id
+        </if>
+    </if>
+    <if test="sourceType != null and sourceType != '' and auditAllName != null and auditAllName != ''">
+      LEFT JOIN manageDB.userAuditHistory ush  ON ur.id = ush.sourceId
+    </if>
+    <include refid="Example_Where_Clause_ForMemberList" />
+  </select>
+  <!--会员管理页面显示列表-->
+  <select id="getMemberList" parameterType="com.topjet.manage.domain.bean.MemberListRequestBean"
+          resultType="com.topjet.manage.domain.bean.MemberListResponseBean">
+    select
+    <include refid="Base_Column_List_ForMemberList"/>
+    FROM userDB.userInfo ur
+    LEFT JOIN userDB.userOtherInfo uo ON uo.userId=ur.id
+    left join userDB.`userBlackListInfo` ub on ub.userId=ur.id
+    LEFT JOIN manageDB.userAuditHistory ush ON ur.id = ush.sourceId
+    <include refid="Example_Where_Clause_ForMemberList" />
+    GROUP by ur.id
+    order by
+    ur.id DESC
+    limit #{offset}, #{limit}
+  </select>
+
+  <sql id="Base_Column_List_ForMemberList" >
+    DISTINCT ur.id, ur.username,(SELECT YEAR (NOW()) - SUBSTR(ur.idNo FROM 7 FOR 4)) AS age,
+    ur.mobile,ur.userType, ur.userNature,ur.companyStatus, ur.createTime,uo.resident1,uo.resident2,uo.residentCityId,uo.registeredCityId as residentCity,ur.useStatus,ur.userAuthStatus,ur.iconStatus,IFNULL(ub.bType,0) AS bType,
+    IFNULL(ub.id,"") as ubid,ub.createTime AS BlackCreateTime,IFNULL(ub.deleted,1)as deleted,ub.updateTime,
+    IFNULL(ush.sourceType,"") as sourceType,IFNULL(ush.statusAfter,"") as statusAfter,IFNULL(ush.remark,"") as remark,
+    (select count(*) from orderDB.goodsInfo where userId=ur.id) ownerOrderCount,
+    (select count(*) from orderDB.orderInfo where driverId=ur.id) driverOrderCount,
+    (select auditName from manageDB.`userAuditHistory` where sourceType=1 and sourceId=ur.id and statusAfter IN (1, 2) <if test="sourceType == 1 and auditAllName != null and auditAllName != ''"> and auditName=#{auditAllName} </if> order by createTime desc limit 1) auditName,
+    IFNULL((SELECT remark FROM manageDB.`userAuditHistory` WHERE sourceType=1 AND sourceId=ur.id and statusAfter IN (1, 2) ORDER BY createTime DESC LIMIT 1),"")as reditRemark,
+    (SELECT remark FROM manageDB.`userAuditHistory` WHERE sourceType=2 AND sourceId=ur.id and statusAfter IN (3,4) ORDER BY createTime DESC LIMIT 1) auditIDReason,
+    (SELECT auditName FROM manageDB.`userAuditHistory` WHERE sourceType=2 AND sourceId=ur.id AND statusAfter IN (3,4) <if test="sourceType ==2 and auditAllName != null and auditAllName != ''"> and auditName=#{auditAllName} </if> ORDER BY createTime DESC LIMIT 1) idAuditName,
+    (SELECT auditName FROM manageDB.`userAuditHistory` WHERE sourceType=3 AND sourceId=ur.id AND statusAfter IN (5,6) <if test="sourceType ==3 and auditAllName != null and auditAllName != ''"> and auditName=#{auditAllName} </if> ORDER BY createTime DESC LIMIT 1) headAuditName
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Example_Where_Clause_ForMemberList">
+    where 1=1 and ur.deleted=0  and ur.userNature = 0
+    <trim suffixOverrides=",">
+      <if test="mobile != null and mobile != ''">
+        and ur.mobile = #{mobile}
+      </if>
+      <if test="beginDate != null">
+        and DATE_FORMAT(ur.createTime,'%Y-%m-%d') &gt;= DATE_FORMAT(#{beginDate},'%Y-%m-%d')
+      </if>
+      <if test="endDate != null">
+        and DATE_FORMAT(ur.createTime,'%Y-%m-%d') &lt;= DATE_FORMAT(#{endDate},'%Y-%m-%d')
+      </if>
+      <if test="userType!= null and userType != '' ">
+        and ur.userType= #{userType}
+      </if>
+      <if test="useStatus != null and useStatus != ''">
+        and ur.useStatus = #{useStatus}
+      </if>
+      <if test="userAuthStatus != null and userAuthStatus != ''">
+        and ur.userAuthStatus = #{userAuthStatus}
+      </if>
+      <if test="sourceType != null and sourceType != '' and auditAllName != null and auditAllName != ''">
+        and ush.sourceType = #{sourceType} and ush.auditName = #{auditAllName}
+      </if>
+
+      <if test="iconStatus != null and iconStatus != ''">
+        and ur.iconStatus = #{iconStatus}
+      </if>
+      <if test="memberStatus != null  and memberStatus != ''">
+        <if test="memberStatus == 2">
+          and ur.id not in(select userid from userDB.userBlackListInfo where deleted = 0)  /* ur.useStatus != 4*/
+        </if>
+        <if test="memberStatus == 1">
+          and ur.useStatus = 2 and ub.deleted = 0
+        </if>
+      </if>
+      <if test="residentStart != null and residentStart != ''">
+        and uo.registeredCityId BETWEEN  #{residentStart} and #{residentEnd}
+      </if>
+    </trim>
+  </sql>
+  <!-- 用户头像查询条件 -->
+  <!--flag;//标记是否为分配任务客服   1：注册 2：身份 3 ：头像-->
+  <sql id="Example_Where_Clause_ForGetHeadList">
+    where ur.deleted = 0 and ur.iconStatus = 1 and ti.type = 10
+    <trim suffixOverrides=",">
+      <if test="mobile != null and mobile != ''">
+        and ur.mobile = #{mobile}
+      </if>
+      <if test="flag != null and flag != '' and flag == 3">
+        and ur.id in (select ti.sourceId from manageDB.taskInfo ti left join  manageDB.taskBucketInfo tb on ti.bucketId = tb.id where tb.deleted = 0 and ti.deleted = 0  and tb.invalid = 1 and tb.TYPE = 10 and tb.sysUserId =#{sysUserId})
+      </if>
+    </trim>
+  </sql>
+  <!--头像认证审核列表-->
+  <select id="getHeadList" parameterType="com.topjet.manage.domain.bean.MemberListRequestBean"
+          resultType="com.topjet.manage.domain.bean.MemberListResponseBean">
+    SELECT DISTINCT ur.id,ur.username,ur.mobile,ur.userType,ur.createTime,ur.useStatus,ur.userAuthStatus,uoi.reditRemark,
+    (select YEAR(NOW())-SUBSTR(ur.idNo FROM 7 FOR 4)) as age,tb.name as assignName,
+    ur.iconStatus
+    from userDB.userInfo ur
+    LEFT JOIN userDB.userOtherInfo uoi on ur.id = uoi.userId
+    LEFT JOIN manageDB.taskInfo ti on ti.sourceId = ur.id  and ti.deleted = 0
+    LEFT JOIN manageDB.taskBucketInfo tb on tb.id = ti.bucketId and tb.deleted = 0
+    <include refid="Example_Where_Clause_ForGetHeadList" />
+    order by ti.id
+    limit #{offset}, #{limit}
+  </select>
+  <!--头像认证审核列表页数-->
+  <select id="getHeadCount" resultType="java.lang.Integer" parameterType="Object">
+    select count(DISTINCT ur.id)
+    from userDB.userInfo ur
+    LEFT JOIN userDB.userOtherInfo uoi on ur.id = uoi.userId and ur.deleted = 0
+    LEFT JOIN manageDB.taskInfo ti on ti.sourceId = ur.id  and ti.deleted = 0
+    <include refid="Example_Where_Clause_ForGetHeadList" />
+  </select>
+  <!--用户头像详情-->
+  <select id="getUserInfo" parameterType="java.lang.Integer" resultType="com.topjet.manage.domain.bean.UserInfoBean">
+    SELECT DISTINCT ur.id,ur.username,ur.mobile,ur.userType,ur.createTime,ur.useStatus,ur.userAuthStatus,uoi.reditRemark,
+    (select YEAR(NOW())-SUBSTR(ur.idNo FROM 7 FOR 4)) as age,
+    ur.iconStatus
+    from userDB.userInfo ur
+    LEFT JOIN userDB.userOtherInfo uoi on ur.id = uoi.userId
+    where ur.deleted = 0 and ur.id = #{id} GROUP BY ur.id
+  </select>
+  <!--会员冻结日志-->
+  <select id="getUserOperationLog" parameterType="com.topjet.manage.domain.model.UserAuditHistoryModel"
+          resultType="com.topjet.manage.domain.model.UserAuditHistoryModel">
+    select uh.id,uh.sourceId,uh.sourceType,uh.statusAfter,uh.auditName,uh.remark,uh.createBy,uh.deleted,uh.createTime
+    from manageDB.userAuditHistory uh where  uh.statusAfter IN (7,13) and  uh.sourceId = #{sourceId} ORDER BY uh.createTime DESC
+  </select>
+
+
+  <!--企业认证审核列表-->
+  <select id="companyAuditList" parameterType="com.topjet.manage.domain.bean.CompanyAuditBean"
+          resultType="com.topjet.manage.domain.bean.CompanyAuditBean">
+    SELECT
+    ui.id as id,
+    ui.userNature  as userNature,
+    ui.companyStatus as companyStatus,
+    ui.createTime as createTime,
+    ui.mobile  as mobile,
+    uoi.companyName as companyName,
+    uoi.identityType as identityType,
+    tb.name as assignName
+    FROM userDB.userInfo  ui
+    LEFT JOIN userDB.userOtherInfo uoi  on  uoi.userId = ui.id
+    LEFT JOIN manageDB.taskInfo ti on ti.sourceId = ui.id  and ti.deleted = 0
+    LEFT JOIN manageDB.taskBucketInfo tb on tb.id = ti.bucketId and tb.deleted = 0
+    <include refid="Example_Where_Clause_ForCompanyAuditList" />
+    order by ti.id
+    limit #{offset}, #{limit}
+  </select>
+  <!--企业认证审核列表页数-->
+  <select id="getCompanyAuditCount" resultType="java.lang.Integer" parameterType="Object">
+    select count(DISTINCT ui.id)
+    FROM userDB.userInfo  ui
+    LEFT JOIN userDB.userOtherInfo uoi  on  uoi.userId = ui.id
+    LEFT JOIN manageDB.taskInfo ti on ti.sourceId = ui.id  and ti.deleted = 0
+    LEFT JOIN manageDB.taskBucketInfo tb on tb.id = ti.bucketId and tb.deleted = 0
+    <include refid="Example_Where_Clause_ForCompanyAuditList" />
+  </select>
+
+  <!-- 企业认证查询条件 -->
+  <sql id="Example_Where_Clause_ForCompanyAuditList">
+    where  ui.deleted =0
+    and ui.userNature = 1
+    and ti.type = 11
+    <if test="sysUserId != null and sysUserId != ''">
+      and ui.id in (select ti.sourceId from manageDB.taskInfo ti
+            left join  manageDB.taskBucketInfo tb on ti.bucketId = tb.id
+            where tb.deleted = 0 and ti.deleted = 0  and tb.invalid = 1 and tb.TYPE = 11 and tb.sysUserId =#{sysUserId}
+      )
+
+    </if>
+
+  </sql>
+
+
+  <!--会员管理页面显示列表-->
+  <select id="getTmsUserInfo" parameterType="java.lang.Integer"
+          resultType="com.topjet.manage.domain.bean.UserInfoBean">
+    select
+    DISTINCT ur.id as id,
+    ur.username as username,
+    ur.mobile as mobile,
+    ur.companyStatus as companyStatus,
+    ur.walletId as walletId,
+    ur.createTime as createTime,
+    uo.companyName as companyName,
+    uo.businessAddress as businessAddress,
+    uo.businessAddressCityId as  businessAddressCityId,
+    uo.businessAddressLongitude as businessAddressLongitude,
+    uo.businessAddressLatitude as businessAddressLatitude,
+    uo.registeredCityId as registeredCityId,
+    uo.telephone as telephone,
+    uo.creditCode as creditCode,
+    uo.internalRemark as internalRemark,
+    ush.auditName as auditName,
+    ush.remark as remark,
+    ush.createTime as auditCreateTime,
+    (SELECT  url from  userDB.photoInfo   where userId =ur.id  and type=6  and deleted=0) as businessPhotoUrlTobe,
+    (SELECT  url from  userDB.photoInfo   where userId =ur.id  and type=7  and deleted=0) as shopFrontPhotoUrlTobe,
+    ua.userPass as userPass
+    from userDB.userInfo ur
+    LEFT JOIN userDB.userOtherInfo uo ON uo.userId=ur.id
+    LEFT JOIN userDB.userAccount ua ON ua.userId=ur.id
+    LEFT JOIN manageDB.userAuditHistory ush ON ur.id = ush.sourceId  and ush.sourceType=11  and  ush.deleted =0
+    left JOIN userDB.photoInfo  pi  on pi.userId =ur.id
+    where 1=1 and ur.deleted=0 and ur.id = #{id}
+    GROUP BY ur.id
+  </select>
+
+
+</mapper>

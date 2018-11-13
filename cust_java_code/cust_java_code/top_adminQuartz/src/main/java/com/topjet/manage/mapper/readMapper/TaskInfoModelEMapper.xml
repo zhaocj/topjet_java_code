@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.TaskInfoModelEMapper" >
+
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.TaskInfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="sourceId" property="sourceId" jdbcType="INTEGER" />
+    <result column="bucketId" property="bucketId" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="createBy" property="createBy" jdbcType="INTEGER" />
+    <result column="updateBy" property="updateBy" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="SMALLINT" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, sourceId, bucketId, type, createTime, updateTime, createBy, updateBy, version,
+    deleted
+  </sql>
+
+  <sql id="Criteria_where_clause">
+    <where>
+      <if test="id != null" >
+        and id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="sourceId != null" >
+        and sourceId = #{sourceId,jdbcType=INTEGER}
+      </if>
+      <if test="bucketId != null" >
+        and bucketId = #{bucketId,jdbcType=INTEGER}
+      </if>
+      <if test="type != null" >
+        and type = #{type,jdbcType=TINYINT}
+      </if>
+      <if test="createTime != null" >
+        and createTime = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="updateTime != null" >
+        and updateTime = #{updateTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="createBy != null" >
+        and createBy = #{createBy,jdbcType=INTEGER}
+      </if>
+      <if test="updateBy != null" >
+        and updateBy = #{updateBy,jdbcType=INTEGER}
+      </if>
+      <if test="version != null" >
+        and version = #{version,jdbcType=SMALLINT}
+      </if>
+      <if test="deleted != null" >
+        and deleted = #{deleted,jdbcType=TINYINT}
+      </if>
+    </where>
+  </sql>
+
+  <!--<select id="getMinCountUserByType" resultType="com.topjet.manage.domain.model.TaskBucketInfoModel" parameterType="java.lang.Integer" >
+    SELECT a.id,a.taskCount,a.version,a.type,a.name FROM taskBucketInfo a INNER JOIN (
+    SELECT MIN(taskCount) as taskCount FROM manageDB.taskBucketInfo  where deleted = 0 and invalid = 1 and type = #{type}) b ON a.taskCount=b.taskCount where a.deleted = 0 and a.invalid = 1 and a.type = #{type} LIMIT 1
+  </select>-->
+  <select id="getMinCountUserByType" resultType="com.topjet.manage.domain.model.TaskBucketInfoModel" parameterType="java.lang.Integer" >
+    SELECT `type`,`name`,MIN(taskCount) AS taskCount,id,`version` FROM manageDB.taskBucketInfo  WHERE deleted = 0 AND invalid = 1 AND type = #{type} GROUP BY sysUserId ORDER BY taskCount LIMIT 1
+  </select>
+
+  <!--定时任务 查询待处理的数据，然后将其生成task-->
+  <!-- /*会员注册审核*/-->
+  <!--<insert id="createUserAssignTasks" >-->
+  <!--insert into taskInfo(sourceId,type) (select id ,1  from user where deleted = 0 and status = 2 and id not in (select sourceId from taskInfo where type = 1 and deleted = 0))-->
+  <!--</insert>-->
+  <!--<select id="createUserAssignTasks" resultType = "com.topjet.manage.domain.model.TaskInfoModel">-->
+    <!--select id as sourceId ,1 as type from userDB.userInfo where deleted = 0 and useStatus = 1 and id not in (select sourceId from manageDB.taskInfo where type = 1 and deleted = 0)-->
+  <!--</select>-->
+
+  <!-- /*身份认证审核*/-->
+  <!--<insert id="createUserStatusTasks" >-->
+  <!--insert into taskInfo(sourceId,type) (select id ,2  from user where deleted = 0 and status = 3 and authStatus = 1 and id not in (select sourceId from taskInfo where type = 2  and deleted = 0))-->
+  <!--</insert>-->
+  <!--<select id="createUserStatusTasks" resultType = "com.topjet.manage.domain.model.TaskInfoModel">-->
+    <!--select id as sourceId ,2 as type  from userDB.userInfo where deleted = 0 and useStatus = 2 and userAuthStatus = 1 and id not in (select sourceId from manageDB.taskInfo where type = 2  and deleted = 0)-->
+  <!--</select>-->
+
+  <!--*会员车辆审核*-->
+  <!--<insert id="createUserTruckTasks" >-->
+  <!--insert into taskInfo(sourceId,type) (select id ,3  from  driverTruckInfo  where deleted = 0 and auditStatus = 3 and id not in (select sourceId from taskInfo where type = 3 and deleted = 0))-->
+  <!--</insert>-->
+  <!--<select id="createUserTruckTasks" resultType = "com.topjet.manage.domain.model.TaskInfoModel" >
+    select dr.id as sourceId ,3 as type from  truckDB.driverTruckInfo dr, user as us where dr.deleted = 0 and dr.auditStatus = 3
+    and dr.id not in (select sourceId from manageDB.taskInfo where type = 3 and deleted = 0)
+    and dr.driverId=us.id and us.`status`=3 and us.authStatus=3
+  </select>-->
+
+  <!--*运费补贴一审*-->
+  <!--<insert id="createFrightFirstTasks" >-->
+  <!--insert into taskInfo(sourceId,type) (select id ,4  from orderBonusInfo  where deleted = 0 and firstAuditStatus = 1 and type = 1 and id not in (select sourceId from taskInfo where type = 4 and deleted = 0))-->
+  <!--</insert>-->
+  <!--<select id="createFrightFirstTasks" resultType = "com.topjet.manage.domain.model.TaskInfoModel">-->
+   <!--select id as sourceId ,4 as type from orderDB.orderBonusInfo  where deleted = 0 and firstAuditStatus = 1 and type = 1 and id not in (select sourceId from manageDB.taskInfo where type = 4 and deleted = 0)-->
+  <!--</select>-->
+
+  <!--*运费补贴二审*-->
+  <!--<insert id="createFrightSecondTasks" >-->
+  <!--insert into taskInfo(sourceId,type) (select id ,5  from  orderBonusInfo  where deleted = 0 and secondAuditStatus = 1 and firstAuditStatus!='1' and firstAuditStatus != '3' and type = 1 and id not in (select sourceId from taskInfo where type = 5 and deleted = 0))-->
+  <!--</insert>-->
+  <!--<select id="createFrightSecondTasks" resultType = "com.topjet.manage.domain.model.TaskInfoModel" >-->
+    <!--select id as sourceId ,5 as type from  orderDB.orderBonusInfo  where deleted = 0 and secondAuditStatus = 1 and firstAuditStatus!='1' and firstAuditStatus != '3' and type = 1 and id not in (select sourceId from manageDB.taskInfo where type = 5 and deleted = 0)-->
+  <!--</select>-->
+
+  <!--*中介费补贴一审*-->
+  <!--<insert id="createAgencyFirstTasks" >-->
+  <!--insert into taskInfo(sourceId,type) (select id ,6  from orderBonusInfo  where deleted = 0 and firstAuditStatus = 1 and type = 2 and id not in (select sourceId from taskInfo where type = 6 and deleted = 0))-->
+  <!--</insert>-->
+  <select id="createAgencyFirstTasks" resultType = "com.topjet.manage.domain.model.TaskInfoModel">
+    select id as sourceId ,6 as type from orderDB.orderBonusInfo  where deleted = 0 and firstAuditStatus = 1 and type = 2 and id not in (select sourceId from manageDB.taskInfo where type = 6 and deleted = 0)
+  </select>
+
+  <!--*中介费补贴二审*-->
+  <!--<insert id="createAgencySecondTasks" >-->
+  <!--insert into taskInfo(sourceId,type) (select id ,7  from  orderBonusInfo  where deleted = 0 and secondAuditStatus = 1 and firstAuditStatus!='1' and firstAuditStatus != '3' and type = 2 and id not in (select sourceId from taskInfo where type = 7 and deleted = 0))-->
+  <!--</insert>-->
+  <select id="createAgencySecondTasks" resultType = "com.topjet.manage.domain.model.TaskInfoModel">
+    select id as sourceId ,7 as type  from  orderDB.orderBonusInfo  where deleted = 0 and secondAuditStatus = 1 and firstAuditStatus!='1' and firstAuditStatus != '3' and type = 2 and id not in (select sourceId from manageDB.taskInfo where type = 7 and deleted = 0)
+  </select>
+
+  <!--*推荐补贴一审*-->
+  <!--<insert id="createRecoFirstTasks" >-->
+  <!--insert into taskInfo(sourceId,type) (select id ,8  from recommendationBonusInfo  where deleted = 0 and firstAuditStatus = 1  and id not in (select sourceId from taskInfo where type = 8 and deleted = 0) ORDER BY createTime)-->
+  <!--</insert>-->
+  <!--<select id="createRecoFirstTasks" resultType = "com.topjet.manage.domain.model.TaskInfoModel" >-->
+    <!--select id as sourceId ,8 as type  from manageDB.recommendationBonusInfo  where deleted = 0 and auditStatus = 0  and id not in (select sourceId from manageDB.taskInfo where type = 8 and deleted = 0) ORDER BY createTime-->
+  <!--</select>-->
+
+  <!--*推荐补贴二审*-->
+  <!--<insert id="createRecoSecondTasks" >-->
+  <!--insert into taskInfo(sourceId,type) SELECT a.id,9 FROM recommendationBonusInfo a LEFT JOIN  taskInfo b ON a.id=b.sourceId AND b.type=9 AND b.deleted=0 WHERE a.firstAuditStatus=2 AND a.secondAuditStatus = 1-->
+  <!--AND a.deleted=0-->
+  <!--AND  b.id IS NULL-->
+  <!--UNION ALL-->
+  <!--SELECT a.id,9 FROM recommendationBonusInfo a LEFT JOIN  taskInfo b ON a.id=b.sourceId AND b.type=9 AND b.deleted=0 WHERE a.firstAuditStatus=5 AND a.secondAuditStatus = 1-->
+  <!--AND a.deleted=0-->
+  <!--AND  b.id IS NULL-->
+  <!--UNION ALL-->
+  <!--SELECT a.id,9 FROM recommendationBonusInfo a LEFT JOIN  taskInfo b ON a.id=b.sourceId AND b.type=9 AND b.deleted=0 WHERE a.firstAuditStatus=6 AND a.secondAuditStatus = 1-->
+  <!--AND a.deleted=0-->
+
+  <!--AND  b.id IS NULL-->
+  <!--</insert>-->
+  <!--<select id="createRecoSecondTasks" resultType = "com.topjet.manage.domain.model.TaskInfoModel">-->
+    <!--SELECT a.id as sourceId,9 as type FROM manageDB.recommendationBonusInfo a LEFT JOIN  manageDB.taskInfo b ON a.id=b.sourceId AND b.type=9 AND b.deleted=0 WHERE a.auditStatus in (1,2,3)-->
+    <!--AND a.deleted=0-->
+    <!--AND  b.id IS NULL-->
+
+  <!--</select>-->
+
+  <!--*头像认证审核*-->
+  <!--<insert id="createUserHeadTasks" >-->
+  <!--insert into taskInfo(sourceId,type) (select id ,10  from userDataUpdate  where deleted = 0 and isSolve=0 AND type = 1 and id not in (select sourceId from taskInfo where type = 10 and deleted = 0))-->
+  <!--</insert>-->
+  <!--<select id="createUserHeadTasks" resultType = "com.topjet.manage.domain.model.TaskInfoModel">-->
+    <!--select id as sourceId ,10 as type from userDB.userInfo  where deleted = 0 AND iconStatus = 1 and id not in (select sourceId from taskInfo where type = 10 and deleted = 0)-->
+  <!--</select>-->
+
+  <select id="selectListByParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from taskInfo
+    <include refid="Criteria_where_clause" />
+  </select>
+
+
+</mapper>

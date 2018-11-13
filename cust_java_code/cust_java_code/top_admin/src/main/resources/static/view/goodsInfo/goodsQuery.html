@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>车辆管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="../../resource/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap.css">
+    <script type="text/javascript" src="../../js/common/modal.js"></script>
+    <script type="text/javascript" src="../../js/common/utils.js"></script>
+    <script type="text/javascript" src="../../js/common/ajaxCall.js"></script>
+    <script type="text/javascript" src="../../js/common/dateformate.js"></script>
+    <!-- bootstrap-table 表格-->
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap-table.css">
+    <script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../css/demo.css">
+    <link rel="stylesheet" type="text/css" href="../../less/modules/buttons.less">
+
+    <script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+    <script type="text/javascript" src="../../js/bootbox.min.js"></script>
+
+</head>
+<body onresize="auto()">
+<form class="form-inline queryParameters-margin">
+    <div class="fixed-table-toolbar">
+        <div class="eachBox">
+            <ul>
+                <li>
+                    <label>装车时间</label>
+                    <select name="loadDateType" id="loadDateType">
+                        <option value="">请选择提货时间类型</option>
+                        <option value="0">具体时间</option>
+                        <option value="1">今定今装</option>
+                        <option value="2">今定明装</option>
+                        <option value="3">随到随走</option>
+                    </select>
+                </li>
+                    <li>
+                        <label for="loadDate">装车时间</label>
+                        <input type="date" name="loadDate" id="loadDate" value="" placeholder="输入截止装车时间">
+                    </li>
+                <li>
+                    <label for="freightFeeStatus" >托管运费</label>
+                    <select name="freightFeeStatus" id="freightFeeStatus" >
+                        <option value="">不限</option>
+                        <option value="1">是</option>
+                        <option value="0">否</option>
+                    </select>
+                </li>
+                <li>
+                    <label for="ownerMobile">手机号：</label>
+                    <input type="text" name="ownerMobile"   id="ownerMobile" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"  placeholder="输入发布人手机号">
+                </li>
+                <div class="line10"></div>
+                <li>
+                    <label for="goodsStatus">货源状态：</label>
+                    <select name="goodsStatus" id="goodsStatus">
+                        <option value="">请选择</option>
+                        <option value="1">新建货源</option>
+                        <option value="2">生成订单</option>
+                        <option value="3">货主撤销订单</option>
+                        <option value="4">司机放弃订单</option>
+                        <option value="5">货源过期</option>
+                        <!--<option value="6">订单已退款成功</option>-->
+                    </select>
+                </li>
+                <li>
+                    <label>所需车型</label>
+                    <select name="TruckTypedisplayName" id="TruckTypedisplayName" onchange="findTypeId(this.options[this.options.selectedIndex].value)">
+                        <option value="">请选择车型</option>
+                    </select>
+                </li>
+                <li>
+                    <label>车长</label>
+                    <select name="truckLength" id="truckLength" onchange="findLengthId(this.options[this.options.selectedIndex].value)">
+                        <option value="">请选择车长</option>
+                    </select>
+                </li>
+                <li>
+                    <label for="serialNo">货源单号</label>
+                    <input type="text" name="serialNo" id="serialNo" placeholder="输入货源单号">
+                </li>
+
+            </ul>
+            <div class="clearfix "></div>
+        </div>
+        <div id="toolbar" class="columns columns-left btn-group pull-right">
+            <button type="button" class="btn btn-info btn-sm" onclick="tableQuery();">查询</button>
+        </div>
+    </div>
+</form>
+<table id='table' class="table table-striped table-bordered table-hover table-condensed"></table>
+<script type="text/javascript" src="../../js/common/truckType.js"></script>
+<script type="text/javascript">
+
+
+    $(function () {
+        var columns = [
+            {
+                field: 'serialNo',
+                align: 'center',
+                title: '货源号',
+                formatter: function (value, row,index) {
+                    var a = '<a  href="#" onclick="getCommentGoodsDetails(\''
+                            + row.goodsId+ '\',\'货源管理\')">'+value+'</a>';
+                    return a;
+                }
+            },
+            {
+                field: 'depart1',
+                align: 'center',
+                title: '出发地',
+                formatter: function (value, row, index) {
+                    return row.depart2 + row.depart3;
+                }
+            }, {
+                field: 'destination2',
+                align: 'center',
+                title: '目的地'
+            }, {
+                field: 'quantityType',
+                title: '货物数量',
+                align: 'center',
+                formatter : function(value, row,
+                                     index) {
+                    if (row.quantityType == 1) {
+                        return row.quantityMax;
+                    }
+                    else if(row.quantityType == 2){
+                        return row.quantityMax---row.quantityMin;
+                    }
+                }
+            },
+            {
+                field: 'unit',
+                align: 'center',
+                title: '货物单位'
+            },
+            {
+                field: 'goodsStatus',
+                title: '货源状态',
+                width:'10%',
+                sortable: true,
+                align: 'center',
+                formatter: function (value, row) {
+                    if (value == 1) {
+                        return "新建货源";
+                    } else if (value == 2) {
+                        return "生成订单";
+                    } else if (value == 3) {
+                        return "货主撤销";
+                    } else if (value == 4) {
+                        return "司机放弃订单";
+                    } else if (value == 5) {
+                        return "货源过期";
+                    } else if (value == 6) {
+                        return "订单已退款成功";
+                    }
+                }
+            },
+            {
+                field: 'loadDateType',
+                title: '装车时间类型',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    if (value == '0') {
+                        return "具体时间";
+                    } else if(value == '1'){
+                        return '今定今装';
+                    }else if(value == '2'){
+                        return '今定明装';
+                    }else if(value == '3'){
+                        return '随到随走';
+                    }
+                }
+            },
+            {
+                field: 'loadDate',
+                title: '装车时间',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    return formatViewDate(new Date(value),"yyyy-MM-dd HH:mm");
+                }
+            },{
+                field: 'typeAndLength',
+                title: '车型车长',
+                align: 'center'/*,
+                formatter: function (value, row, index) {
+                    if(row.truckTypeName==null){
+                        row.truckTypeName="";
+                    }
+                    if(row.truckLength==null){
+                        row.truckLength="";
+                    }
+                    return row.truckTypeName+"/"+row.truckLength;
+                }*/
+            }, {
+                field: 'ownerName',
+                title: '发布人姓名',
+                align: 'center',
+                formatter : function (value,row,index) {
+                    return '<a  href="#" onclick="modifiedInfo(\''
+                            + row.ownerId+ '\',\'货源查询\',\'' + row.reditRemark + '\')">'+value+'</a>';
+                }
+            },
+            {
+                field: 'ownerMobile',
+                align: 'center',
+                title: '发布人手机号',
+                formatter : function (value,row,index) {
+                    return '<a  href="#" onclick="modifiedInfo(\''
+                            + row.ownerId+ '\',\'货源查询\',\'' + row.reditRemark + '\')">'+value+'</a>';
+                }
+            },
+            {
+                field: 'destinationDetail',
+                title: '发布人常驻地',
+                align: 'center'
+            },
+            {
+                field: 'freightFeeStatus',
+                title: '托管运费',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    if (value == 0) {
+                        return "否";
+                    } else if(value == 1){
+                        return '是';
+                    }
+                }
+            },
+            {
+                field: 'agencyFee',
+                title: '定金',
+                align: 'center',
+                formatter : function(value, row,
+                                     index) {
+                    if (value != null) {
+                        return value.toFixed(2);
+                    }
+                    else{
+                        return "0.00";
+                    }
+
+                }
+            }, {
+                field: 'isHidden',
+                title: '订单状态',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    if (value == 0) {
+                        return "正常";
+                    } else {
+                        return '虚假';
+                    }
+                }
+            },
+            {
+                field: 'isHidden',
+                title: '操作',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    var s = '<button type="button" class="btn btn-primary btn-xs" onclick="getCommentGoodsDetails(\''
+                            + row.goodsId+ '\',\'货源管理\')">货源详情</button>&nbsp;'
+                    if (value == 1) {
+                        s=s+'<button type="button" class="btn btn-default btn-xs" onclick="shows(\'' + row.goodsId + '\',\'' + row.version + '\')">显示</button>'
+                    } else  {
+                        s=s+'<button type="button" class="btn btn-info btn-xs" onclick="doshows(\'' + row.goodsId + '\',\'' + row.version + '\')">隐藏</button>'
+                    }
+                    return s;
+                }
+            }
+        ];
+        $("#loadDate").val(getDate10());
+        var url = getRootPath() + '/goods/getGoodsList.do';
+        setTableInfo('table', columns, url, getQueryParams, 'toolbar');
+    })
+
+    var typeId;
+    var  lengthId;
+    function findTypeId(id) {
+        typeId = id;
+    }
+    function findLengthId(id) {
+        lengthId = id;
+    }
+
+
+    function getQueryParams() {
+        var displayName=$('#TruckTypedisplayName  option:selected').text();
+        if(displayName=="请选择车型"){
+            displayName="";
+        }
+        var truckLength = $('#truckLength option:selected').text();
+        if(truckLength=="请选择车长"){
+            truckLength="";
+        }
+        var loadDate =  {};
+        if($("#loadDate").val() != ""){
+            loadDate = {"loadDate":StringToDate($("#loadDate").val() + ' 23:59:59')};
+        }
+
+        var json = {
+            'loadDateType':$('#loadDateType').val(),
+            'truckType':displayName,
+            'ownerMobile': $('#ownerMobile').val(),
+            'truckLength': truckLength,
+            'freightFeeStatus':$('#freightFeeStatus').val(),
+            'serialNo':$("#serialNo").val(),
+            'goodsStatus':$("#goodsStatus").val(),
+            'typeId':typeId,
+            'lengthId':lengthId
+        };
+        return $.extend({},json,loadDate);
+    }
+
+    function shows(goodsId,version) {
+        bootbox.confirm("是否显示。", function(result) {
+            if(result){
+                var url = getRootPath()+'/goods/isHidden.do';
+                var data={'goodsId':goodsId,"version":version,'isHidden':0};
+                $.ajaxDefaultCall(url,data,function () {
+                    $tableDom.bootstrapTable('refresh');
+                });
+            }
+        });
+    };
+    function doshows(goodsId,version) {
+        bootbox.confirm("是否隐藏。", function(result) {
+            if(result){
+                var url = getRootPath()+'/goods/isHidden.do';
+                var data={'goodsId':goodsId,"version":version,'isHidden':1};
+                $.ajaxDefaultCall(url,data,function () {
+                    $tableDom.bootstrapTable('refresh');
+                });
+            }
+        });
+    };
+
+    //自适应高度方法
+    function auto() {
+        $("#contentmenu").css("height", window_h = $(window).height() - 53);
+        if ($(".iframeId").length > 0) {
+            $(".iframeId").css("height", window_h = $(window).height() - 98);
+        }
+    }
+    $(window).resize(function () {
+        auto()
+    });
+
+</script>
+</body>
+</html>

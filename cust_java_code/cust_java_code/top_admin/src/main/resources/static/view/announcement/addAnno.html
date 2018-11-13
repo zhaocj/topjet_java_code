@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>交运配货网-后台管理</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="" rel="stylesheet">
+	<link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+	<link href="../../bootstrap/css/bootstrap-table.min.css" rel="stylesheet"/>
+	<link href="../../css/flat-ui.min.css" rel="stylesheet"/>
+	<link href="../../css/easyui.css" rel="stylesheet"/>
+	<link href="../../css/demo.css" rel="stylesheet"/>
+	<link href="../../css/font-awesome.min.css" rel="stylesheet"/>
+	<link href="../../css/jquery.mCustomScrollbar.css" rel="stylesheet"/>
+	<link href="../../css/bootstrap-datetimepicker.css" rel="stylesheet"/>
+	<link href="../../less/modules/buttons.less" rel="stylesheet"/>
+	<link rel="shortcut icon" href="../../img/faviconindex.ico"/>
+	<link href="../../bootstrap/formValidation/formValidation.css"/>
+
+	<script src="../../resource/jquery-1.11.3.min.js"></script>
+	<script src="../../js/common/utils.js"></script>
+	<script src="../../js/bootbox.min.js"></script>
+	<script type="text/javascript" src="../../bootstrap/formValidation/formValidation.js"></script>
+	<script type="text/javascript" src="../../bootstrap/formValidation/bootstrap.js"></script>
+	<script type="text/javascript" src="../../bootstrap/formValidation/validData.js"></script>
+	<script src="../../js/vendor/jquery.easyui.min.js"></script>
+	<script src="../../js/jquery.mCustomScrollbar.concat.min.js"></script>
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="../../js/flat-ui.min.js"></script>
+	<script src="../../js/application.js"></script>
+	<script src="../../js/bootstrap-datetimepicker.min.js"></script>
+	<script src="../../js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+	<script src="../../js/echarts.min.js"></script>
+	<script src="../../js/common/index.js"></script>
+	<script src="../../js/common/ajaxCall.js"></script>
+
+</head>
+<style>
+	.checkbox input{
+		position: absolute;
+		margin-top: 6px;
+	}
+	.checkbox-inline{
+		padding-left: 0 !important;
+	}
+</style>
+<body >
+<input type="hidden" id="type" value="">
+<div class="fixed-table-toolbar">
+	<div class="navmenu"><a href="#" onclick="javascript:history.back(-1); return false">公告管理</a> / 新增公告</div>
+</div>
+<div class="modal-body  fontsize-14">
+	<form id="myForm">
+	<div class="col-xs-6">
+		<div class="form-group">
+			<label>公告标题</label>
+			<input type="text" name="title" id="title"  required class="form-control input-sm" placeholder="标题文字不能超过32字符">
+		</div>
+	</div>
+
+	<div class="col-xs-6">
+		<div class="form-group">
+			<label>优先级</label>
+			<input type="text" id="priority" name="priority" class="form-control input-sm"  required  placeholder="默认为-1,显示最前边">
+		</div>
+	</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label>跳转Url</label>
+				<input type="text" id="redirectURL" name="redirectURL" class="form-control input-sm"   placeholder="URL">
+			</div>
+		</div>
+	<div class="col-xs-6">
+		<div class="form-group">
+			<label>是否开启</label>
+			<select id="valid" name="valid" data-toggle="select" class="form-control select select-default select-sm">
+				<option value="1">开启</option>
+				<option value="0">关闭</option>
+			</select>
+		</div>
+	</div>
+	<div class="col-xs-6">
+		<div class="form-group">
+			<label>开始日期</label>
+			<input type="text" name="beginDate" id="beginDate" class="form-control input-sm"  required  placeholder="不能小于当前时间"><!--不能小于当前时间不能开启-->
+		</div>
+	</div>
+	<div class="col-xs-6">
+		<div class="form-group">
+			<label>结束日期</label>
+			<input type="text" name="endDate" id="endDate"  class="form-control input-sm"  required placeholder="不能小于当前时间"><!--不能小于当前时间不能开启-->
+		</div>
+	</div>
+	<div class="col-xs-12">
+		<div class="form-group">
+			<label>推送范围</label>
+			<div class="checkbox checkbox-inline">
+				<input id="IOSOwnerFlag" value="4" type="checkbox">
+				<label for="IOSOwnerFlag" style="padding-right: 10px;">IOS发货版</label>
+				<input id="IOSDriverFlag" value="3"   type="checkbox">
+				<label for="IOSDriverFlag" style="padding-right: 10px;">IOS接货版</label>
+				<input id="AndiorOwnerFlag" value="2"   type="checkbox">
+				<label for="AndiorOwnerFlag" style="padding-right: 10px;">Android发货版</label>
+				<input id="AndiorDriverFlag" value="1"   type="checkbox">
+				<label for="AndiorDriverFlag">Android接货版</label>
+			</div>
+		</div>
+	</div>
+	<div class="col-xs-12">
+		<div class="form-group">
+			<label>公告详情</label>
+			<textarea class="form-control" id="contentId"  name="content" rows="3"   cols="50" required  placeholder="相关描述"></textarea>
+		</div>
+	</div>
+	</form>
+</div>
+<div class="clearfix"></div>
+<div class="modal-footer margin-top-15">
+	<button type="button" class="btn btn-primary center-block" id="myButton" onclick="tijiao()">　提　交　</button>
+</div>
+<script type="text/javascript">
+    $("#beginDate,#endDate").datetimepicker({
+        format: "yyyy-mm-dd hh:ii",
+        todayBtn: true,
+        autoclose: true,
+        todayHighlight: true,
+        showMeridian: true,
+        pickerPosition: "bottom-left",
+        language: 'zh-CN',//中文，需要引用zh-CN.js包
+        startView: 2,//月视图
+        minView: 0//日期时间选择器所能够提供的最精确的时间选择视图
+    });
+	var param = window.location.search;
+	var appType = param.split("=")[1];
+	if(appType == 4){
+		$("#IOSOwnerFlag").attr("checked","checked");
+	}else if(appType == 3){
+		$("#IOSDriverFlag").attr("checked","checked");
+	}else if(appType == 2){
+		$("#AndiorOwnerFlag").attr("checked","checked");
+	}else if(appType == 1){
+		$("#AndiorDriverFlag").attr("checked","true");
+	}
+
+    function tijiao(){
+		var bt=$('#myButton').button('loading');
+		var typeFlag = ""
+		$.each($('.checkbox-inline input'),function(indx,ele){
+			if($(this).is(":checked")){
+				typeFlag += $(this).val();
+			}
+		})
+		if(typeFlag == ""){
+			bootbox.alert({
+				size: 'small',
+				message: "请选择推送范围!"
+			});
+			bt.button('reset');
+			return;
+		}
+		if(!$.topjectIsValidate('myForm')){
+			bt.button('reset');
+			return;
+		}
+		var beginDate = StringToDate($('#beginDate').val());
+		var endDate = StringToDate($('#endDate').val());
+		if(endDate<=beginDate){
+			bootbox.alert({
+				size : 'small',
+				message :"结束日期不能小于开始日期!",
+			});
+			bt.button('reset');
+			return false;
+		}
+
+        var content =  $('#contentId').val();
+        content = content.replace(/ /g,"");
+        $('#contentId').val(content);
+		var json = {
+			"beginDate": StringToDate($('#beginDate').val()),
+			"endDate": StringToDate($('#endDate').val()),
+			'priority':$('#priority').val(),
+			'typeFlag' : typeFlag,
+			'content': $('#contentId').val(),
+			'redirectURL':$('#redirectURL').val(),
+			'title': $('#title').val(),
+			'valid': $('#valid').val()
+		};
+		var url = getRootPath()+'/announcementInfo/saveOrUpdate.do';
+		$.ajaxDefaultCall(url,json,function () {
+            window.history.back();
+		});
+	}
+	$(function (){
+		$.topjectValidate('myForm');
+	})
+
+</script>
+</body>
+</html>

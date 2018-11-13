@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.BonusBillInfoModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.BonusBillInfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="billNo" property="billNo" jdbcType="VARCHAR" />
+    <result column="parentId" property="parentId" jdbcType="INTEGER" />
+    <result column="payerId" property="payerId" jdbcType="INTEGER" />
+    <result column="billType" property="billType" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="sourceId" property="sourceId" jdbcType="INTEGER" />
+    <result column="payeeId" property="payeeId" jdbcType="INTEGER" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="createBy" property="createBy" jdbcType="INTEGER" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="updateBy" property="updateBy" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="SMALLINT" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, billNo, parentId, payerId, billType, status, amount, sourceId, payeeId, createTime,
+    createBy, updateTime, updateBy, version, deleted
+  </sql>
+
+
+  <!-- 中介费运费 -->
+  <resultMap id="transportFeeBounsBillDeatailBeanResultMap" type="com.topjet.manage.domain.bean.TransportFeeBounsBillDeatailBean" >
+    <constructor >
+      <arg column="billId"    javaType="java.lang.String" />
+      <arg column="createTime"    javaType="java.lang.String" />
+      <arg column="billType"    javaType="java.lang.String" />
+      <arg column="orderId"    javaType="java.lang.String" />
+      <arg column="billNo"    javaType="java.lang.String" />
+      <arg column="serialNo"    javaType="java.lang.String" />
+      <arg column="payeeId"    javaType="java.lang.String" />
+      <arg column="driverId"    javaType="java.lang.String" />
+      <arg column="ownerId"    javaType="java.lang.String" />
+      <arg column="ownerName"       javaType="java.lang.String" />
+      <arg column="ownerMobile" 		javaType="java.lang.String" />
+      <arg column="driverName" 		javaType="java.lang.String" />
+      <arg column="driverMobile"  javaType="java.lang.String" />
+      <arg column="site" 	javaType="java.lang.String" />
+      <arg column="freightFee" 	javaType="java.lang.String" />
+      <arg column="agencyFee"  javaType="java.lang.String" />
+      <arg column="ownerAmount"  javaType="java.lang.String" />
+      <arg column="driverAmount" 	javaType="java.lang.String" />
+      <arg column="thirdAuditUser" 	javaType="java.lang.String" />
+      <arg column="status"  javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+
+
+  <sql id="Criteria_where_clause">
+    <where>
+      <if test="id != null" >
+        and id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="billNo != null" >
+        and billNo = #{billNo,jdbcType=VARCHAR}
+      </if>
+      <if test="parentId != null" >
+        and parentId = #{parentId,jdbcType=INTEGER}
+      </if>
+      <if test="payerId != null" >
+        and payerId = #{payerId,jdbcType=INTEGER}
+      </if>
+      <if test="billType != null" >
+        and billType = #{billType,jdbcType=INTEGER}
+      </if>
+      <if test="status != null" >
+        and status = #{status,jdbcType=TINYINT}
+      </if>
+      <if test="amount != null" >
+        and amount = #{amount,jdbcType=DECIMAL}
+      </if>
+      <if test="sourceId != null" >
+        and sourceId = #{sourceId,jdbcType=INTEGER}
+      </if>
+      <if test="payeeId != null" >
+        and payeeId = #{payeeId,jdbcType=INTEGER}
+      </if>
+      <if test="createTime != null" >
+        and createTime = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="createBy != null" >
+        and createBy = #{createBy,jdbcType=INTEGER}
+      </if>
+      <if test="updateTime != null" >
+        and updateTime = #{updateTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="updateBy != null" >
+        and updateBy = #{updateBy,jdbcType=INTEGER}
+      </if>
+      <if test="version != null" >
+        and version = #{version,jdbcType=SMALLINT}
+      </if>
+      <if test="deleted != null" >
+        and deleted = #{deleted,jdbcType=TINYINT}
+      </if>
+    </where>
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from manageDB.bonusBillInfo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+  <select id="selectListByParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from manageDB.bonusBillInfo
+    <include refid="Criteria_where_clause" />
+  </select>
+
+  <select id="selectPageListByParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from manageDB.bonusBillInfo
+    <include refid="Criteria_where_clause" />
+    order by id desc
+    limit
+    #{offset}, #{limit}
+  </select>
+
+  <select id="getCountByParam" resultType="java.lang.Integer" parameterType="java.util.Map">
+    select count(id)
+    from manageDB.bonusBillInfo
+    <include refid="Criteria_where_clause" />
+  </select>
+
+
+  <select id="selectListByEntity" resultMap="BaseResultMap" parameterType="com.topjet.manage.domain.model.BonusBillInfoModel">
+    select
+    <include refid="Base_Column_List" />
+    from manageDB.bonusBillInfo
+    <include refid="Criteria_where_clause" />
+  </select>
+
+  <select id="getRecommendationFeeBounsBillAllCount"  resultType="com.topjet.manage.domain.model.BonusBillInfoModel" parameterType="com.topjet.manage.domain.model.RecommendationBonusInfoModel">
+    select *
+    FROM manageDB.bonusBillInfo
+    WHERE deleted = 0 and  SUBSTR(createTime,1,10)=DATE(NOW()) AND billType=1  and status =1 and payeeId = #{userId}
+  </select>
+
+  <resultMap id="BaseResultMapTwo" type="com.topjet.manage.domain.bean.BonusBillInfoBean" >
+    <constructor >
+      <arg column="createTime" javaType="java.lang.String" />
+      <arg column="billType" javaType="java.lang.String" />
+      <arg column="countId" javaType="java.lang.String" />
+      <arg column="sumAmt" javaType="java.lang.String" />
+      <arg column="sumAmtOk" javaType="java.lang.String" />
+      <arg column="countIdOk" javaType="java.lang.String" />
+      <arg column="countIdNo" javaType="java.lang.String" />
+      <arg column="sumAmtNo" javaType="java.lang.String" />
+      <arg column="status" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+
+
+  <!-- 查询条件 -->
+  <sql id="Example_Where_Clause">
+    WHERE  a.deleted = 0 and (a.billType IN('1','2','4','10','11') or (a.billType = 1 and a.createTime &lt;= date(now()))) AND a.status IN('1','3') AND a.amount>0 AND a.parentId = 0
+    <trim suffixOverrides=",">
+      <if test="createTime != null and createTime != ''">
+        AND date(a.createTime) &gt; #{createTime}
+      </if>
+      <if test="billType != null and billType != ''">
+        <if test="billType == 1">
+          AND a.billType = 1
+        </if>
+      </if>
+      <if test="status != null and status != ''">
+        AND a.status = #{status}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 财务补贴订单分类 -->
+  <select id="getBillInfo" resultMap="BaseResultMapTwo" parameterType="com.topjet.manage.domain.bean.BonusBillInfoBean">
+    select createTime,billType,status ,sum(amount) as sumAmt,count(*) as countId,0 as sumAmtOk,0 as countIdOk,0 as sumAmtNo,0 as countIdNo from
+    (select DATE_FORMAT(a.createTime,'%Y-%m-%d') as createTime,
+    a.billType,
+    a.status,
+    (CASE WHEN billType=1 THEN (
+    CASE WHEN a.amount > (SELECT rs.maxAmountPerDay FROM manageDB.recommendationBonusSetting rs WHERE rs.id = (SELECT rbi.settingId FROM manageDB.recommendationBonusInfo rbi	WHERE rbi.id = a.sourceId))
+    THEN (SELECT rs.maxAmountPerDay FROM manageDB.recommendationBonusSetting rs WHERE rs.id = (SELECT rbi.settingId FROM manageDB.recommendationBonusInfo rbi WHERE rbi.id = a.sourceId )
+    )ELSE
+    a.amount
+    END
+    )
+    ELSE
+    a.amount
+    END
+    ) as amount
+    FROM manageDB.bonusBillInfo a
+    <include refid="Example_Where_Clause"></include>
+    ) t  group by createTime,billtype,status order by createTime desc
+    ${mysqlQueryLimit}
+  </select>
+
+  <!-- 财务补贴订单查询总数 -->
+  <select id="getBillCount" resultType="java.lang.Integer" parameterType="com.topjet.manage.domain.bean.BonusBillInfoBean">
+    select count(1) from (SELECT SUBSTR(a.createTime,1,10) AS createTime,a.billType
+    FROM manageDB.bonusBillInfo a
+    <include refid="Example_Where_Clause"></include>
+    GROUP BY SUBSTR(a.createTime,1,10),a.billtype,a.status) as t
+  </select>
+
+  <select id="getBonusBillInfo" parameterType="java.util.Map"  resultType="com.topjet.manage.domain.model.BonusBillInfoModel">
+    SELECT * FROM manageDB.bonusBillInfo
+    WHERE deleted=0 AND date(createTime) = CURDATE()
+    AND billType=1 and status =1
+    <if test="payeeId != null and userId != ''">
+      AND payeeId = #{payeeId}
+    </if>
+    <if test="sourceId != null and sourceId != ''">
+      AND sourceId = #{sourceId}
+    </if>
+  </select>
+
+
+  <!-- 推荐费补贴订单明细 -->
+  <select id="getRecommendationFeeBounsBillDeatailBean" resultType="com.topjet.manage.domain.bean.RecommendationFeeBounsBillDeatailBean" parameterType="com.topjet.manage.domain.bean.RecommendationFeeBounsBillDeatailBean">
+    SELECT DATE(a.createTime) createTime,d.username AS recommendName,a.payeeId as recommendId ,d.mobile as recommendMobile,a.id AS billId,
+    CASE WHEN a.amount>(SELECT rs.maxAmountPerDay FROM manageDB.recommendationBonusSetting rs WHERE rs.id =(select rbi.settingId from manageDB.recommendationBonusInfo rbi where rbi.id = a.sourceId))
+    THEN (SELECT rs.maxAmountPerDay FROM manageDB.recommendationBonusSetting rs WHERE rs.id =(select rbi.settingId from manageDB.recommendationBonusInfo rbi where rbi.id = a.sourceId))ELSE a.amount END AS amount,
+    a.status FROM `bonusBillInfo`  a
+    INNER JOIN userDB.`userInfo` d ON a.payeeId=d.`id`
+    WHERE  a.deleted = 0 and a.billType=#{billType} AND a.status=#{status} and a.`createTime`>=date(#{createTime}) AND a.`createTime` &lt; DATE_ADD(#{createTime},INTERVAL 1 DAY)
+    <if test="recommendMobile != null and recommendMobile != ''">
+      AND d.mobile=#{recommendMobile}
+    </if>
+    GROUP BY a.payeeId
+    ${mysqlQueryLimit}
+  </select>
+
+  <!-- 推荐费订单明细统计 -->
+  <select id="getRecommendationFeeBounsBillDeatailBeanCount"  resultType="java.lang.Integer" parameterType="com.topjet.manage.domain.bean.RecommendationFeeBounsBillDeatailBean">
+    select count(1) from (
+    SELECT DATE(a.createTime)
+    FROM manageDB.`bonusBillInfo`  a
+    INNER JOIN userDB.`userInfo` d ON a.payeeId=d.`id`
+    WHERE  a.deleted = 0 and a.billType=#{billType} AND a.status=#{status} and a.`createTime`>=date(#{createTime}) AND a.`createTime` &lt; DATE_ADD(#{createTime},INTERVAL 1 DAY)
+    <if test="recommendMobile != null and recommendMobile != ''">
+      AND d.mobile=#{recommendMobile}
+    </if>
+    GROUP BY a.payeeId
+    ) a
+  </select>
+
+  <select id="getBillInfoModelBean" resultType="com.topjet.manage.domain.bean.BonusBillInfoModelBean" parameterType="com.topjet.manage.domain.bean.BonusBillInfoBean">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM manageDB.bonusBillInfo
+    WHERE deleted = 0 and SUBSTR(createTime,1,10)=#{createTime} AND billType=#{billType}  AND status='1' AND amount>0 AND parentId = 0
+  </select>
+
+
+
+  <!-- 运费中介费订单明细统计 -->
+  <select id="getTransportFeeBounsBillDeatailBeanCount"  resultType="java.lang.Integer" parameterType="com.topjet.manage.domain.bean.TransportFeeBounsBillDeatailBean">
+    select count(1) from (
+    SELECT 1 FROM bonusBillInfo a
+    LEFT JOIN orderBonusInfo b ON a.sourceId=b.id
+    LEFT JOIN userDB.userInfo c ON b.ownerId=c.id
+    LEFT JOIN userDB.userInfo d ON b.driverId=d.id
+    LEFT JOIN orderDB.orderInfo g ON b.orderId=g.id
+    LEFT JOIN orderDB.goodsInfo f ON g.goodsId=f.id
+    LEFT JOIN orderDB.goodsDetailInfo e ON f.id = e.goodsId
+    WHERE a.deleted = 0 and date(a.createTime) = #{createTime} AND a.billType=#{billType}  AND a.status = #{status}
+    <if test="ownerMobile != null and ownerMobile != ''">
+      AND (c.mobile=#{ownerMobile} or d.mobile=#{ownerMobile})
+    </if>
+    <if test="serialNo != null and serialNo != ''">
+      AND g.orderNo=#{serialNo}
+    </if>
+    ) a
+  </select>
+  <!-- 运费中介费补贴订单明细 -->
+  <select id="getTransportFeeBounsBillDeatailBean" resultMap="transportFeeBounsBillDeatailBeanResultMap" parameterType="com.topjet.manage.domain.bean.TransportFeeBounsBillDeatailBean">
+    SELECT
+    a.id as billId,
+    SUBSTR(b.createTime,1,10) AS createTime,
+    a.billType,
+    g.id as orderId,
+    a.billNo,
+    g.orderNo AS serialNo,
+    g.driverId,
+    g.ownerId,
+    a.payeeId,
+    c.username AS ownerName,
+    c.mobile AS ownerMobile,
+    d.username AS driverName,
+    d.mobile AS driverMobile,
+    CONCAT_WS(' ',e.depart1,e.depart2,e.destination1,e.destination2)AS site,
+    g.freightFee,
+    g.agencyFee,
+    b.ownerAmount,
+    b.driverAmount,
+    "" AS thirdAuditUser,
+    a.status
+    FROM bonusBillInfo a
+    LEFT JOIN orderBonusInfo b ON a.sourceId=b.id
+    LEFT JOIN userDB.userInfo c ON b.ownerId=c.id
+    LEFT JOIN userDB.userInfo d ON b.driverId=d.id
+    LEFT JOIN orderDB.orderInfo g ON b.orderId=g.id
+    LEFT JOIN orderDB.goodsInfo f ON g.goodsId=f.id
+    LEFT JOIN orderDB.goodsDetailInfo e ON f.id = e.goodsId
+    WHERE a.deleted = 0 and  date(a.createTime) = #{createTime} AND a.billType=#{billType} AND  a.status = #{status} AND a.parentId != 0
+    <if test="ownerMobile != null and ownerMobile != ''">
+      AND (c.mobile=#{ownerMobile} or d.mobile=#{ownerMobile})
+    </if>
+    <if test="serialNo != null and serialNo != ''">
+      AND g.orderNo=#{serialNo}
+    </if>
+    ${mysqlQueryLimit}
+  </select>
+
+</mapper>

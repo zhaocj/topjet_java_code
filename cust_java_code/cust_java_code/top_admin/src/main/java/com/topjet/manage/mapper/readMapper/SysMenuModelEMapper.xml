@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.SysMenuModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.SysMenuModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="parentId" property="parentId" jdbcType="INTEGER" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="rank" property="rank" jdbcType="TINYINT" />
+    <result column="actions" property="actions" jdbcType="VARCHAR" />
+    <result column="createBy" property="createBy" jdbcType="INTEGER" />
+    <result column="updateBy" property="updateBy" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="SMALLINT" />
+    <result column="cssStyle" property="cssStyle" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="BaseResultMapTwo" type="com.topjet.manage.domain.model.SysMenuModel" >
+    <result column="id" property="id"/>
+    <result column="name" property="name"/>
+    <result column="url" property="url"/>
+    <result column="parentId" property="parentId"/>
+    <result column="deleted" property="deleted"/>
+    <result column="createTime" property="createTime"/>
+    <result column="updateTime" property="updateTime"/>
+    <result column="rank" property="rank"/>
+    <result column="actions" property="actions"/>
+  </resultMap>
+
+  <resultMap id="BaseResultMapBean" type="com.topjet.manage.domain.bean.SysMenuBean" >
+    <result column="id" property="id"/>
+    <result column="name" property="name"/>
+    <result column="url" property="url"/>
+    <result column="parentId" property="parentId"/>
+    <result column="deleted" property="deleted"/>
+    <result column="createTime" property="createTime"/>
+    <result column="updateTime" property="updateTime"/>
+    <result column="rank" property="rank"/>
+    <result column="actions" property="actions"/>
+  </resultMap>
+
+
+
+  <!-- 扩展字段 -->
+  <resultMap id="ExtResultMap" extends="BaseResultMap" type="com.topjet.manage.domain.bean.SysMenuBean" >
+    <result column="subCount" property="subCount"/>
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, name, url, parentId, deleted, createTime, updateTime, rank, actions, createBy, 
+    updateBy, version, cssStyle
+  </sql>
+
+  <!-- sysMenu table all fields -->
+  <sql id="Base_Column_List1" >
+    id,name,url,parentId,deleted,createTime,updateTime,rank,actions
+  </sql>
+
+  <sql id="Criteria_where_clause">
+    <where>
+      <if test="name != null" >
+        and name = #{name,jdbcType=VARCHAR}
+      </if>
+      <if test="url != null" >
+        and url = #{url,jdbcType=VARCHAR}
+      </if>
+      <if test="parentId != null" >
+        and parentId = #{parentId,jdbcType=INTEGER}
+      </if>
+      <if test="deleted != null" >
+        and deleted = #{deleted,jdbcType=TINYINT}
+      </if>
+      <if test="createTime != null" >
+        and createTime = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="updateTime != null" >
+        and updateTime = #{updateTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="rank != null" >
+        and rank = #{rank,jdbcType=TINYINT}
+      </if>
+      <if test="actions != null" >
+        and actions = #{actions,jdbcType=VARCHAR}
+      </if>
+      <if test="createBy != null" >
+        and createBy = #{createBy,jdbcType=INTEGER}
+      </if>
+      <if test="updateBy != null" >
+        and updateBy = #{updateBy,jdbcType=INTEGER}
+      </if>
+      <if test="version != null" >
+        and version = #{version,jdbcType=SMALLINT}
+      </if>
+      <if test="cssStyle != null" >
+        and cssStyle = #{cssStyle,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Example_Where_Clause">
+    where 1=1   and deleted =  0
+    <trim  suffixOverrides="," >
+      <if test="id != null" >
+        and id =  #{id}
+      </if>
+      <if test="name != null and name != ''" >
+        and name like CONCAT('%', #{name}, '%')
+      </if>
+      <if test="url != null and url != ''" >
+        and url =  #{url}
+      </if>
+
+      <if test="parentId != null" >
+        and parentId =  #{parentId}
+      </if>
+      <!-- 如果parentId为空,这查询顶级菜单 -->
+      <if test="parentId == null" >
+        and parentId = 0
+      </if>
+
+      <if test="createTime != null" >
+        and createTime =  #{createTime}
+      </if>
+      <if test="rank != null" >
+        and rank =  #{rank}
+      </if>
+      <if test="actions != null and actions != ''" >
+        and actions =  #{actions}
+      </if>
+    </trim>
+  </sql>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from manageDB.sysMenu
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from manageDB.sysMenu
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <select id="selectListByParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from manageDB.sysMenu
+    <include refid="Criteria_where_clause" />
+    order by rank asc
+  </select>
+
+  <select id="selectPageListByParam" resultMap="BaseResultMap" parameterType="com.topjet.manage.domain.model.SysUserModel">
+    select
+    <include refid="Base_Column_List" />
+    from manageDB.sysMenu
+    <include refid="Criteria_where_clause" />
+    order by id desc
+    limit
+    #{offset}, #{limit}
+  </select>
+
+  <select id="getCountByParam" resultType="java.lang.Integer"
+          parameterType="java.util.Map">
+    select count(id)
+    from manageDB.sysMenu
+    <include refid="Criteria_where_clause" />
+  </select>
+
+  <!--菜单列表-->
+  <select id="getMenuList" resultMap="ExtResultMap" parameterType="com.topjet.manage.domain.model.SysMenuModel">
+    select
+    <include refid="Base_Column_List1"/>
+    ,(SELECT COUNT(*) FROM sysMenu c WHERE m.id = c.`parentId` and c.deleted= 0) AS subCount
+    from manageDB.sysMenu m
+    <include refid="Example_Where_Clause"/>
+    order by id
+    DESC
+    limit #{offset} , #{limit}
+  </select>
+  <!--菜单页数-->
+  <select id="getMenuCount" resultType="java.lang.Integer" parameterType="com.topjet.manage.domain.model.SysMenuModel">
+    select count(1) from manageDB.sysMenu
+    <include refid="Example_Where_Clause"/>
+  </select>
+  <!-- 获取顶级菜单 -->
+  <select id="getRootMenu"  resultMap="BaseResultMapTwo" parameterType="Object">
+    select id,name,url,parentId,actions,cssStyle,rank from manageDB.sysMenu where deleted= 0 and parentId = 0
+    <if test="menuId != null" >
+      and  id != #{menuId}
+    </if>
+    order by rank asc
+  </select>
+
+  <!--获取次级菜单-->
+  <select id="selectSecondMenuListByParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from manageDB.sysMenu
+    <where>
+      <if test="deleted != null" >
+        and deleted = #{deleted,jdbcType=INTEGER}
+      </if>
+    </where>
+    AND parentId is not NULL
+    order by rank asc
+  </select>
+
+  <select id="getRootMenuByUser"  resultMap="BaseResultMapTwo" parameterType="Object">
+    SELECT DISTINCT id,NAME,url,parentId,actions,cssStyle,rank
+    FROM manageDB.sysMenu mm
+    WHERE deleted= 0 AND id IN(
+    SELECT parentId
+    FROM sysMenu m
+    WHERE deleted= 0 and parentId>0 AND id IN(
+    SELECT mr.sysMenuId from manageDB.sysMenuRoleRel mr LEFT JOIN manageDB.sysUserRoleRel ur on mr.roleId = ur.roleId where ur.sysUserId = #{userId}
+    )
+    )
+    order by mm.rank asc
+  </select>
+
+  <select id="getChildMenuByUser"  resultMap="BaseResultMapTwo" parameterType="Object">
+    SELECT DISTINCT id,NAME,url,parentId,actions,cssStyle ,rank FROM manageDB.sysMenu m
+    WHERE deleted= 0 AND parentId >0
+    AND EXISTS (
+    SELECT 1 from manageDB.sysUserRoleRel ur LEFT JOIN manageDB.sysMenuRoleRel mr ON ur.roleId = mr.roleId where ur.sysUserId = #{userId} and m.id = mr.sysMenuId
+    )
+    order by m.rank asc
+  </select>
+
+
+  <!-- 根据角色Id获取菜单（不需要父菜单） -->
+  <select id="getMenuByRoleId"  resultMap="BaseResultMapBean" parameterType="Object">
+    SELECT id,NAME,url,parentId,actions,rank FROM manageDB.sysMenu m WHERE deleted= 0 <!-- AND parentId IS NOT NULL -->
+    AND EXISTS (
+    SELECT * FROM manageDB.sysMenuRoleRel r WHERE r.sysMenuId = m.id
+    AND r.roleId = #{roleId}
+    )
+    order by m.rank asc
+  </select>
+</mapper>

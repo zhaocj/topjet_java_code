@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.DriverTruckInfoModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.DriverTruckInfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="driverId" property="driverId" jdbcType="INTEGER" />
+    <result column="truckId" property="truckId" jdbcType="INTEGER" />
+    <result column="auditStatus" property="auditStatus" jdbcType="BIT" />
+    <result column="orderCount" property="orderCount" jdbcType="SMALLINT" />
+    <result column="auditRemark" property="auditRemark" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="deleted" property="deleted" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, driverId, truckId, auditStatus, orderCount, auditRemark, createTime, updateTime, 
+    deleted
+  </sql>
+
+    <sql id="Criteria_where_clause">
+        <where>
+            <if test="id != null" >
+                and id = #{id,jdbcType=INTEGER}
+            </if>
+            <if test="driverId != null" >
+                and driverId = #{driverId,jdbcType=INTEGER}
+            </if>
+            <if test="truckId != null" >
+                and truckId = #{truckId,jdbcType=INTEGER}
+            </if>
+            <if test="auditStatus != null" >
+                and auditStatus = #{auditStatus,jdbcType=TINYINT}
+            </if>
+            <if test="deleted != null" >
+                and deleted = #{deleted,jdbcType=TINYINT}
+            </if>
+        </where>
+    </sql>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from truckDB.driverTruckInfo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!--司机位置查询-->
+  <select id="getDriverOptionList" parameterType="com.topjet.manage.domain.bean.MatchCenterDriverBean" resultType="com.topjet.manage.domain.bean.MatchCenterDriverBean">
+    select DISTINCT
+	gps.id as gpsid,
+	di.id as driverTruckid,
+	COALESCE(gps.userId,u.id) as userId,
+	gps.address1 as address1,
+	gps.address2 as address2,
+	gps.address3 as address3,
+	gps.detail as detail,
+	gps.cityId as cityId,
+	gps.createTime as createTime,
+	gps.updateTime as updateTime,
+	u.username as userName,
+	u.mobile as mobile,
+	u.userType as userType,
+	ui.resident1 as resident1,
+	ui.resident2 as resident2,
+	ui.resident3 as resident3,
+    di.status as status,
+	ti.plateNo1,ti.plateNo2,ti.plateNo3,
+	ttd.code as truckType,
+	ttd.`displayName` as truckTypeName,
+	tld.`displayName` as truckLength,
+	dblI.businessLine1,dblI.businessLine2,dblI.businessLine3,
+	dblI.businessLineCityId,
+    IFNULL((SELECT remark FROM manageDB.`userAuditHistory` WHERE sourceType=1 AND sourceId=u.id and statusAfter IN (1, 2) ORDER BY createTime DESC LIMIT 1),"")as reditRemark
+    from
+    truckDB.driverTruckInfo di
+    LEFT JOIN userDB.userGpsInfo gps on di.driverId = gps.userId
+    LEFT JOIN userDB.userInfo u on di.driverId = u.id
+    LEFT JOIN userDB.userOtherInfo ui on u.id = ui.userId
+    LEFT JOIN truckDB.truckInfo ti on ti.id = di.truckId
+    LEFT JOIN resourceDB.truckTypeDictionary ttd on ti.truckType = ttd.id
+    and ttd.deleted = 0
+    LEFT JOIN resourceDB.truckLengthDictionary tld on ti.truckLength = tld.id
+    and tld.deleted = 0
+    LEFT JOIN truckDB.driverBusinessLineInfo dblI on di.driverId = dblI.driverId
+    <include refid="base_list_where"/>
+    GROUP BY di.id
+    order by gps.updateTime desc
+    limit #{offset}, #{limit}
+  </select>
+  <sql id="base_list_where">
+    where  di.deleted = 0
+    <if test="updateTime != null">
+      and  gps.updateTime  &gt;= #{updateTime}
+    </if>
+    <if test="address1 != null and address1 != '' ">
+      and  gps.address1 = #{address1}
+    </if>
+    <if test="address2 != null and address2 != '' ">
+      and  gps.address2 = #{address2}
+    </if>
+    <if test="address3 != null and address3 != '' ">
+      and  gps.address3 = #{address3}
+    </if>
+    <if test="status != null and status != '' ">
+      and  di.status = #{status}
+    </if>
+    <if test="resident1 != null and resident1 != '' ">
+      <choose>
+        <when test="resident2 != null and resident2 != ''" >
+          and  dblI.businessLine1 like #{resident1} and dblI.businessLine2 like #{resident2}
+        </when>
+        <otherwise>
+          and  (dblI.businessLine1 like #{resident1})
+        </otherwise>
+      </choose>
+    </if>
+    <if test="truckType != null and truckType != '' ">
+      and  ttd.displayName = #{truckType}
+    </if>
+    <if test="truckLength != null and truckLength != '' ">
+      and  tld.displayName = #{truckLength}
+    </if>
+  </sql>
+  <!--司机位置查询页数-->
+  <select id="getDriverOptionCount" parameterType="com.topjet.manage.domain.bean.MatchCenterDriverBean" resultType="java.lang.Integer">
+    select
+      count(DISTINCT di.id)
+    from
+        truckDB.driverTruckInfo di
+    LEFT JOIN userDB.userGpsInfo gps on di.driverId = gps.userId
+    LEFT JOIN userDB.userInfo u on di.driverId = u.id
+    LEFT JOIN userDB.userOtherInfo ui on u.id = ui.userId
+    LEFT JOIN truckDB.truckInfo ti on ti.id = di.truckId
+    LEFT JOIN resourceDB.truckTypeDictionary ttd on ti.truckType = ttd.id
+    and ttd.deleted = 0
+    LEFT JOIN resourceDB.truckLengthDictionary tld on ti.truckLength = tld.id
+    and tld.deleted = 0
+    LEFT JOIN truckDB.driverBusinessLineInfo dblI on di.driverId = dblI.driverId
+    <include refid="base_list_where"/>
+  </select>
+
+
+    <select id="listTruckVerifyList" resultType="com.topjet.manage.domain.vo.TruckListVerifyVO" parameterType="com.topjet.manage.domain.vo.TruckListVerifyQuery">
+        SELECT
+        t.id,
+        dt.truckId,
+        u.username AS name,
+        u.mobile,
+        DATE_FORMAT(t.createTime, '%Y-%m-%d %T') AS createTime,
+        CONCAT(t.plateNo1,t.plateNo2,t.plateNo3) AS plateNo,
+        CONCAT(
+        ttd.`displayName`,
+        '/',
+        tld.`displayName`
+        ) AS typeAndLength,
+        dt.auditStatus AS 'status',
+        ah.auditName AS auditUser,
+        ah.remark as remark,
+        u.id as uid,
+        tb.name as assignName
+        FROM
+        truckDB.truckInfo t
+        LEFT JOIN userDB.userInfo u ON t.ownerId = u.id and u.deleted=0
+        LEFT JOIN resourceDB.truckTypeDictionary ttd ON t.truckType = ttd.id and ttd.deleted=0
+        LEFT JOIN resourceDB.truckLengthDictionary tld ON t.truckLength = tld.id and tld.deleted=0
+        LEFT JOIN truckDB.driverTruckInfo dt ON t.id = dt.truckId and dt.deleted=0
+        LEFT JOIN manageDB.truckAuditHistory ah ON ah.sourceId=dt.id and ah.sourceType=1 AND ah.id=(select a.id from manageDB.truckAuditHistory a where a.sourceId=dt.id order by createTime desc limit 1)
+        LEFT JOIN manageDB.taskInfo ti on ti.sourceId = dt.id and ti.type = 3 and ti.deleted = 0
+        LEFT JOIN manageDB.taskBucketInfo tb on tb.id = ti.bucketId and tb.deleted = 0
+        WHERE t.deleted=0 AND dt.auditStatus!=0 AND dt.auditStatus!=1 and dt.deleted=0 and u.useStatus = 2 and u.userAuthStatus = 3
+        <trim suffixOverrides=",">
+            <if test="auditUser != null and auditUser != ''">
+                AND ah.auditName = #{auditUser}
+            </if>
+            <if test="mobile != null and mobile != ''">
+                AND u.mobile=#{mobile}
+            </if>
+            <if test="plateNo != null and plateNo != ''">
+                AND t.plateNo1=#{plateNo1} AND t.plateNo2 = #{plateNo2} AND t.plateNo3 = #{plateNo3}
+            </if>
+            <if test="auditStatus != null and auditStatus != ''">
+                <if test="auditStatus == '1'">
+                    AND (dt.auditStatus=#{auditStatus} OR dt.auditStatus=0)
+                </if>
+                <if test="auditStatus != '1'">
+                    AND dt.auditStatus=#{auditStatus}
+                </if>
+            </if>
+            <if test="flag != null and flag != '' and flag == 1">
+                and dt.id in (select ti.sourceId from manageDB.taskInfo ti left join manageDB.taskBucketInfo
+                tb on ti.bucketId = tb.id where tb.deleted = 0 and ti.deleted = 0 and tb.invalid = 1 and tb.TYPE = 3 and
+                tb.sysUserId =#{sysUserId} )
+            </if>
+            order by dt.id asc
+            limit #{offset}, #{limit}
+        </trim>
+    </select>
+
+    <select id="countTruckVerifyList" resultType="java.lang.Integer" parameterType="com.topjet.manage.domain.vo.TruckListVerifyQuery">
+        SELECT
+        count(t.id)
+        FROM
+        truckDB.truckInfo t
+        LEFT JOIN userDB.userInfo u ON t.ownerId = u.id and u.deleted=0
+        LEFT JOIN resourceDB.truckTypeDictionary ttd ON t.truckType = ttd.id and ttd.deleted=0
+        LEFT JOIN resourceDB.truckLengthDictionary tld ON t.truckLength = tld.id and tld.deleted=0
+        LEFT JOIN truckDB.driverTruckInfo dt ON t.id = dt.truckId and dt.deleted=0
+        LEFT JOIN manageDB.truckAuditHistory ah ON ah.sourceId=dt.id and ah.sourceType=1 AND ah.id=(select a.id from manageDB.truckAuditHistory a where a.sourceId=dt.id order by createTime desc limit 1)
+        WHERE t.deleted=0 AND dt.auditStatus!=0 AND dt.auditStatus!=1 and dt.deleted=0 and u.useStatus = 2 and u.userAuthStatus = 3
+        <trim suffixOverrides=",">
+            <if test="auditUser != null and auditUser != ''">
+                AND ah.auditName = #{auditUser}
+            </if>
+            <if test="mobile != null and mobile != ''">
+                AND u.mobile=#{mobile}
+            </if>
+            <if test="plateNo != null and plateNo != ''">
+                AND t.plateNo1=#{plateNo1} AND t.plateNo2=#{plateNo2} AND t.plateNo3=#{plateNo3}
+            </if>
+            <if test="auditStatus != null and auditStatus != ''">
+                <if test="auditStatus == '1'">
+                    AND (dt.auditStatus=#{auditStatus} OR dt.auditStatus=0)
+                </if>
+                <if test="auditStatus != '1'">
+                    AND dt.auditStatus=#{auditStatus}
+                </if>
+            </if>
+            <if test="flag != null and flag != '' and flag == 1">
+                and dt.id in (select ti.sourceId from manageDB.taskInfo ti left join manageDB.taskBucketInfo
+                tb on ti.bucketId = tb.id where tb.deleted = 0 and ti.deleted = 0 and tb.invalid = 1 and tb.TYPE = 3 and
+                tb.sysUserId =#{sysUserId} )
+            </if>
+        </trim>
+    </select>
+
+    <select id="selectListByParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select
+        <include refid="Base_Column_List" />
+        from truckDB.driverTruckInfo
+        <include refid="Criteria_where_clause" />
+    </select>
+</mapper>

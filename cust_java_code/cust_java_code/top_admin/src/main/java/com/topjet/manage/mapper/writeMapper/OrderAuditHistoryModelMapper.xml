@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.writeMapper.OrderAuditHistoryModelMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.OrderAuditHistoryModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="sourceType" property="sourceType" jdbcType="TINYINT" />
+    <result column="sourceId" property="sourceId" jdbcType="INTEGER" />
+    <result column="statusAfter" property="statusAfter" jdbcType="TINYINT" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="createBy" property="createBy" jdbcType="INTEGER" />
+    <result column="auditName" property="auditName" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="deleted" property="deleted" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, sourceType, sourceId, statusAfter, createTime, createBy, auditName, remark, deleted
+  </sql>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from orderAuditHistory
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.topjet.manage.domain.model.OrderAuditHistoryModel" >
+    insert into orderAuditHistory (id, sourceType, sourceId, 
+      statusAfter, createTime, createBy, 
+      auditName, remark, deleted
+      )
+    values (#{id,jdbcType=INTEGER}, #{sourceType,jdbcType=TINYINT}, #{sourceId,jdbcType=INTEGER}, 
+      #{statusAfter,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=INTEGER}, 
+      #{auditName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{deleted,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.topjet.manage.domain.model.OrderAuditHistoryModel" >
+    insert into orderAuditHistory
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="sourceType != null" >
+        sourceType,
+      </if>
+      <if test="sourceId != null" >
+        sourceId,
+      </if>
+      <if test="statusAfter != null" >
+        statusAfter,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="createBy != null" >
+        createBy,
+      </if>
+      <if test="auditName != null" >
+        auditName,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="deleted != null" >
+        deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="sourceType != null" >
+        #{sourceType,jdbcType=TINYINT},
+      </if>
+      <if test="sourceId != null" >
+        #{sourceId,jdbcType=INTEGER},
+      </if>
+      <if test="statusAfter != null" >
+        #{statusAfter,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="auditName != null" >
+        #{auditName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null" >
+        #{deleted,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.topjet.manage.domain.model.OrderAuditHistoryModel" >
+    update orderAuditHistory
+    <set >
+      <if test="sourceType != null" >
+        sourceType = #{sourceType,jdbcType=TINYINT},
+      </if>
+      <if test="sourceId != null" >
+        sourceId = #{sourceId,jdbcType=INTEGER},
+      </if>
+      <if test="statusAfter != null" >
+        statusAfter = #{statusAfter,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        createBy = #{createBy,jdbcType=INTEGER},
+      </if>
+      <if test="auditName != null" >
+        auditName = #{auditName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null" >
+        deleted = #{deleted,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

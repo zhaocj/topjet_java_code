@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.BrokerInfoModelEMapper">
+
+	<select id="listBrokerRouteInfo" parameterType="com.topjet.manage.domain.model.BrokerRouteInfoModel" resultType="com.topjet.manage.domain.model.BrokerRouteInfoModel">
+		select id,beginCity,endCity from brokerRouteInfo where brokerId=#{brokerId} and deleted=0
+	</select>
+
+	<select id="getBrokerInfo" parameterType="com.topjet.manage.domain.model.BrokerInfoModel" resultType="com.topjet.manage.domain.model.BrokerInfoModel">
+		select bi.id,bi.userId,us.mobile, us.username as userName
+		from brokerInfo bi
+		left join userDB.userInfo us on bi.userId=us.id
+		where bi.deleted=0
+		<if test="userId &gt; 0">
+			and bi.userId=#{userId}
+		</if>
+		<if test="id &gt; 0">
+			and bi.id=#{id}
+		</if>
+
+	</select>
+
+	<select id="listBroker" parameterType="com.topjet.manage.domain.model.BrokerInfoModel" resultType="java.util.Map">
+		select d.id,
+		d.userId,
+		e.username,
+		e.mobile,
+		d.createTime,
+		group_concat(b.cityName,'->',c.cityName) as routeInfo,
+		d.brokerStatus,
+		d.browseCount as displayNum,
+		d.calledCount  as calledNum
+		from brokerRouteInfo a
+		left join resourceDB.city b on a.beginCity=b.adcode
+		left join resourceDB.city c on a.endCity=c.adcode
+		left join brokerInfo d on d.id=a.brokerId
+		left join userDB.userInfo e on e.id=d.userId
+		where a.deleted=0 and d.deleted=0
+		<if test='mobile !=null and mobile !="" '>
+			and e.mobile = #{mobile}
+		</if>
+		<if test="brokerStatus !=null and brokerStatus  &gt; -1">
+			and d.brokerStatus = #{brokerStatus}
+		</if>
+		<if test="beginCity &gt; 0 ">
+			and a.beginCity = #{beginCity}
+		</if>
+		<if test="endCity &gt; 0 ">
+			and a.endCity = #{endCity}
+		</if>
+		group by brokerId
+	</select>
+
+
+</mapper>

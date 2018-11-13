@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>交运配货网-后台管理</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" type="text/css" href="../../bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="../../css/flat-ui.min.css">
+	<link rel="stylesheet" type="text/css" href="../../bootstrap/css/bootstrap-table.min.css">
+
+	<link rel="stylesheet" type="text/css" href="../../css/demo.css">
+	<link rel="stylesheet/less" type="text/css" href="../../css/easyui.css">
+	<link rel="stylesheet/less" type="text/css" href="../../css/font-awesome.min.css">
+	<link rel="stylesheet/less" type="text/css" href="../../css/jquery.mCustomScrollbar.css">
+	<link rel="stylesheet/less" type="text/css" href="../../css/bootstrap-datetimepicker.css">
+
+	<link rel="stylesheet/less" type="text/css" href="../../bootstrap/formValidation/formValidation.css">
+
+	<script type="text/javascript" src="../../resource/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="../../js/common/modal.js"></script>
+	<script type="text/javascript" src="../../js/common/utils.js"></script>
+	<script type="text/javascript" src="../../js/common/ajaxCall.js"></script>
+	<script type="text/javascript" src="../../js/common/dateformate.js"></script>
+	<script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+	<script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+	<script type="text/javascript" src="../../js/bootbox.min.js"></script>
+	<script type="text/javascript" src="../../js/application.js"></script>
+	<script type="text/javascript" src="../../js/flat-ui.min.js"></script>
+	<script type="text/javascript" src="../../bootstrap/formValidation/formValidation.js"></script>
+	<script type="text/javascript" src="../../bootstrap/formValidation/bootstrap.js"></script>
+	<script type="text/javascript" src="../../bootstrap/formValidation/validData.js"></script>
+
+</head>
+<body onresize="auto()">
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	<h4 class="modal-title">人工发放积分</h4>
+</div>
+<div class="modal-body  fontsize-14">
+<form id="myForm">
+	<input type="hidden"  name="userId" id="userIdId">
+	<input type="hidden"  name="resident" id="residentId">
+	<input type="hidden"  name="companyName" id="companyNameId">
+
+	<div class="col-xs-12">
+		<div class="input-group">
+			<input type="text" class="form-control" name="mobile" id="mobileId"  placeholder="请输入用户的手机号">
+        <span class="input-group-btn">
+        <button class="btn btn-default" onclick="query()" type="button">查询</button>
+        </span> </div>
+	</div>
+	<div class="col-xs-6">
+		<div class="form-group">
+			<label>用户姓名</label>
+			<input type="text" name="name" id="nameId" class="form-control input-sm" readonly>
+		</div>
+	</div>
+	<div class="col-xs-6">
+		<div class="form-group">
+			<label>身份证号</label>
+			<input type="text" name="idNo" id="idNoId" class="form-control input-sm"  disabled>
+		</div>
+	</div>
+	<div class="col-xs-6">
+		<div class="form-group">
+			<label>常用身份</label>
+			<input type="text" name="type" id="typeId" class="form-control input-sm"  disabled>
+		</div>
+	</div>
+	<div class="col-xs-6">
+		<div class="form-group">
+			<label>奖励积分</label>
+			<input type="text" class="form-control input-sm"
+				   onkeyup="this.value=this.value.replace(/\D/g,'');this.value=this.value.substring(0, 4)"
+				   name="value" id="valueId" placeholder="请输入奖励的积分">
+		</div>
+	</div>
+	<div class="col-xs-12">
+		<div class="form-group">
+			<label for="contentId">奖励原因</label>
+			<textarea class="form-control" rows="2" id="contentId"  name="cause" rows="10" cols="140" required  placeholder="请输入奖的励原因"></textarea>
+		</div>
+	</div>
+</form>
+</div>
+<div class="clearfix"></div>
+<div class="modal-footer margin-top-15">
+	<button type="button" class="btn btn-primary center-block" id="myButton" onclick="submitClick()" >　提　交　</button>
+</div>
+
+<script type="text/javascript">
+	$(function () {
+		$("#companyNameId").val('');
+		$("#userIdId").val('');
+		$("#residentId").val('');
+	})
+
+	function ajaxcalls(){
+		var url = getRootPath() + '/scoreGrantAction/submitGrant.do';
+		window.parent.$.ajaxDefaultCall(url,$('#myForm').serialize(),function(){
+			hidModal();tableRefresh();
+		});
+	}
+	function query() {
+		var mobile = $("#mobileId").val();
+		if(!(/^1[3|4|5|7|8][0-9]\d{4,8}$/.test(mobile)) || mobile.length !=11){
+			bootbox.alert({
+				size : 'small',
+				message :'手机号码格式不正确!',
+			});
+			return false;
+		}
+		$.ajax({
+			type : 'post',
+			url :getRootPath() + '/scoreGrantAction/queryMobile.do',
+			data : {
+				mobile : mobile
+			},
+			success : function(data) {
+				if (!isNull(data.msg)) {
+					bootbox.alert({
+						size : 'small',
+						message :data.msg,
+					});
+				} else {
+					$("#nameId").val(data.name);
+					$("#idNoId").val(data.idNo);
+					if (data.type == 1) {
+						$("#typeId").val("司机/车主");
+					}
+					if (data.type == 2) {
+						$("#typeId").val("货主");
+					}
+					if (data.type == 3) {
+						$("#typeId").val("信息部/配货部");
+					}
+					if (data.type == 4) {
+						$("#typeId").val("物流公司");
+					}
+					$("#companyNameId").val(data.companyName);
+					$("#userIdId").val(data.userId);
+					$("#residentId").val(data.resident1+ data.resident2);
+				}
+			}
+
+		})
+	}
+
+	function submitClick() {
+		var bt=$('#myButton').button('loading');
+		if(isNull($("#userIdId").val())){
+			bootbox.alert({
+				size : 'small',
+				message :'请点击查询按钮补全信息!',
+			});
+			bt.button('reset');
+			return;
+		}
+		if(isNull($("#idNoId").val())){
+			bootbox.alert({
+				size : 'small',
+				message :'身份证号不能为空!',
+			});
+			bt.button('reset');
+			return;
+		}
+		if(isNull($("#valueId").val())){
+			bootbox.alert({
+				size : 'small',
+				message :'奖励积分不能为空!',
+			});
+			bt.button('reset');
+			return;
+		}
+		if(isNull($("#contentId").val())){
+			bootbox.alert({
+				size : 'small',
+				message :'奖励原因不能为空!',
+			});
+			bt.button('reset');
+			return;
+		}
+
+		$.ajax({
+			type : 'post',
+			url : getRootPath() +'/scoreGrantAction/beforeSubmitGrant.do',
+			data : $('#myForm').serialize(),
+			success : function(data) {
+				if (data == 0) {
+					ajaxcalls();
+				}else if (data == 1) {
+					bootbox.confirm("该用户是黑名单用户，是否还要继续?", function(result) {
+						if(result){
+							ajaxcalls();
+						}
+					});
+				}else if(data==2){
+					bootbox.alert({
+						size : 'small',
+						message :"您输入的手机号账户不存在，请重新输入。",
+					});
+					bt.button('reset');
+				}else{
+					bootbox.alert({
+						size : 'small',
+						message :data.msg,
+					});
+					bt.button('reset');
+				}
+
+			}
+		})
+	}
+</script>
+</body>
+</html>
+
+

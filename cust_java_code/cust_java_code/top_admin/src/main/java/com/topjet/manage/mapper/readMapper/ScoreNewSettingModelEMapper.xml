@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.ScoreNewSettingModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.ScoreNewSettingModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="ruleId" property="ruleId" jdbcType="INTEGER" />
+    <result column="scoreType" property="scoreType" jdbcType="SMALLINT" />
+    <result column="controlCount" property="controlCount" jdbcType="SMALLINT" />
+    <result column="everyTimeScore" property="everyTimeScore" jdbcType="SMALLINT" />
+    <result column="scoreMax" property="scoreMax" jdbcType="INTEGER" />
+    <result column="createBy" property="createBy" jdbcType="INTEGER" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateBy" property="updateBy" jdbcType="INTEGER" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="valid" property="valid" jdbcType="TINYINT" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+    <result column="version" property="version" jdbcType="TINYINT" />
+  </resultMap>
+
+  <resultMap id="BaseResultMaps" type="com.topjet.manage.domain.bean.ScoreNewSettingBean" >
+    <id column="id" property="id"/>
+    <result column="ruleId" property="ruleId"/>
+    <result column="scoreType" property="scoreType"/>
+    <result column="controlCount" property="controlCount"/>
+    <result column="everyTimeScore" property="everyTimeScore"/>
+    <result column="scoreMax" property="scoreMax"/>
+    <result column="createBy" property="createBy"/>
+    <result column="createTime" property="createTime"/>
+    <result column="updateBy" property="updateBy"/>
+    <result column="updateTime" property="updateTime"/>
+    <result column="valid" property="valid"/>
+    <result column="deleted" property="deleted"/>
+    <result column="version" property="version"/>
+    <result column="ruleName" property="ruleName"/>
+    <result column="ruleDescription" property="ruleDescription"/>
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    id, ruleId, scoreType, controlCount, everyTimeScore, scoreMax, createBy, createTime, 
+    updateBy, updateTime, valid, deleted, version
+  </sql>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from scoreNewSetting
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectScoreSettingList" parameterType="com.topjet.manage.domain.bean.ScoreNewSettingBean" resultMap="BaseResultMaps">
+    SELECT ir.ruleName, ir.ruleDescription, ss.*
+    FROM resourceDB.scoreNewSetting ss
+    LEFT JOIN resourceDB.integralRruleInfo ir ON ss.ruleId = ir.id
+    <where>
+      <if test="deleted != null" >
+        AND ss.deleted = #{deleted,jdbcType=INTEGER}
+      </if>
+      <if test="scoreType != null" >
+        AND ss.scoreType = #{scoreType,jdbcType=SMALLINT}
+      </if>
+    </where>
+  </select>
+</mapper>

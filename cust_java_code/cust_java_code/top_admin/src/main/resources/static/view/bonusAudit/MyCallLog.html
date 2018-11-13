@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>交运配货</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="../../resource/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap-table.css">
+    <link rel="stylesheet" type="text/css" href="../../css/demo.css">
+    <link rel="stylesheet/less" type="text/css" href="../../less/modules/buttons.less">
+
+    <script type="text/javascript" src="../../js/common/modal.js"></script>
+    <script type="text/javascript" src="../../js/common/utils.js"></script>
+    <script type="text/javascript" src="../../js/common/ajaxCall.js"></script>
+    <script type="text/javascript" src="../../js/common/dateformate.js"></script>
+
+    <script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+    <script type="text/javascript" src="../../js/bootbox.min.js"></script>
+</head>
+<body onresize="auto()">
+<div class="contentBox" style="padding:10px">
+
+    <div class="fixed-table-toolbar">
+        <div class="eachBox">
+            <ul>
+                <div id="depart">
+                    <li>
+                        <label for="originCallNo">手机号：</label>
+                        <input type="text" name="originCallNo"   id="originCallNo" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"  placeholder="输入发布人手机号">
+                    </li>
+                    <li>
+                        <label>接听人：</label>
+                        <select id="createByName" name="createByName">
+                            <option value="">请选择</option>
+                        </select>
+                    </li>
+                </div>
+            </ul>
+            <div class="clearfix "></div>
+        </div>
+        <div class="columns columns-left btn-group pull-right">
+            <button type="button" onclick="tableQuery()" class="btn btn-info btn-sm">查询</button>
+        </div>
+    </div>
+</div>
+    <table id='table' class="table table-striped table-bordered table-hover table-condensed"></table>
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">修改通话备注</h4>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>业务类型</label>
+                        <select id="businessType" style="width:240px">
+                            <option value="">请选择</option>
+                            <option value="1">注册认证咨询</option>
+                            <option value="2">产品使用操作咨询</option>
+                            <option value="3">充值及提现到账咨询</option>
+                            <option value="4">运营补贴咨询</option>
+                            <option value="5">积分兑换咨询</option>
+                            <option value="6">招商代理咨询</option>
+                            <option value="7">投诉建议</option>
+                            <option value="8">其它咨询</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="remark">通话备注:</label>
+                        <input id="remark" name="remark" class="form-control" id=exampleInputEmail1" placeholder="最多输入150个字符">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary center-block" onclick="submitRemark()">　提　交　</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+<script>
+    var sysUserJson = [];
+    var sysUserOption ="";
+    $(function () {
+        $.ajax({
+            type:"POST",
+            contentType: "application/x-www-form-urlencoded;charset=utf-8",
+            url:getRootPath()+'/callCenter/getSysUser.do',
+            data:[],
+            dataType:"json",
+            cache:false,
+            traditional:true,
+            success:function(list){
+                debugger;
+                if(list != null && list.length>0){
+                    $.each(list[0],function (index,data2) {
+                        sysUserJson.push({'id':data2.sysUserId,'name':data2.name});
+                    });
+                    $.each(sysUserJson,function (indx,length1) {
+                        if(list[1] == length1['id']){
+                            sysUserOption+="<option  selected value='"+length1['id']+"'>"+length1['name']+"</option>";
+                        }else{
+                            sysUserOption+="<option value='"+length1['id']+"'>"+length1['name']+"</option>";
+                        }
+                    });
+                }
+                $('#createByName').append(sysUserOption);
+                getList();
+            }
+        });
+    })
+</script>
+<script type="text/javascript">
+
+    function  getList() {
+        var columns = [
+        {
+            field: 'originCallNo',
+            align: 'center',
+            title: '呼叫号码',
+            sortable: true
+        },{
+            field: 'originCalledNo',
+            align: 'center',
+            title: '被呼叫号码',
+            sortable: true
+        },{
+            field: 'callType',
+            align: 'center',
+            title: '通话类型',
+            sortable: true,
+            formatter: function (value, row, index) {
+                if (value == "dialout") {
+                    return "外呼通话";
+                }
+                if (value == "normal") {
+                    return "普通来电";
+                }
+                if (value == "transfer") {
+                    return "转接电话";
+                }
+                if (value == "dialTransfer") {
+                    return "外呼转接";
+                }
+            }
+        },{
+            field: 'status',
+            title: '接听状态',
+            align: 'center',
+            sortable: true,
+            formatter: function (value, row, index) {
+                if (value == "dealing") {
+                    return "已接";
+                }
+                if (value == "notDeal") {
+                    return "振铃未接听";
+                }
+                if (value == "leak") {
+                    return "放弃";
+                }
+                if (value == "queueLeak") {
+                    return "排队放弃";
+                }
+                if (value == "blackList") {
+                    return "黑名单";
+                }
+                if (value == "voicemail") {
+                    return "留言";
+                }
+            }
+        },{
+            field: 'businessType',
+            title: '业务类型',
+            align: 'center',
+            sortable: true,
+            formatter: function (value, row, index) {
+                if (value == 1) {
+                    return "注册认证咨询";
+                }
+                if (value == 2) {
+                    return "产品使用操作咨询";
+                }
+                if (value == 3) {
+                    return "充值及提现到账咨询";
+                }
+                if (value == 4) {
+                    return "运营补贴咨询";
+                }
+                if (value ==5) {
+                    return "积分兑换咨询";
+                }
+                if (value == 6) {
+                    return "招商代理咨询";
+                }
+                if (value == 7) {
+                    return "投诉建议";
+                }
+                if (value == 8) {
+                    return "其它咨询";
+                }
+            }
+        },{
+            field: 'beginTime',
+            align: 'center',
+            title: '通话开始时间',
+            sortable: true,
+            formatter: function (value, row, index) {
+                return formatViewDate(new Date(value), "yyyy-MM-dd HH:mm:ss");
+            }
+        },{
+            field: 'endTime',
+            title: '通话结束时间',
+            align: 'center',
+            sortable: true,
+            formatter: function (value, row, index) {
+                return formatViewDate(new Date(value), "yyyy-MM-dd HH:mm:ss");
+            }
+        },{
+            field: 'createByName',
+            title: '处理坐席名称',
+            align: 'center',
+            sortable: true
+        },{
+            field: 'remark',
+            title: '通话备注',
+            align: 'center',
+            sortable: true
+        },
+        {
+            field : 'opt',
+            title : '可用操作',
+            align : 'center',
+            formatter : function(value, rec, index) {
+                return '<button type="button" data-target="#myModal" class="btn btn-primary  btn-xs" onclick="updateRemark(\''
+                    + rec.id
+                    + '\',\''
+                    + rec.callSheetId
+                    + '\',\''
+                    + rec.version+ '\')">修改备注&nbsp</button>';
+            }
+        }
+    ];
+
+    var listUrl = getRootPath() + '/callCenter/myCallLogList.do';
+    setTableInfo('table', columns, listUrl, getQueryParams, 'toolbar');
+    };
+
+    function getQueryParams() {
+
+        var  selectText = $("#createByName").find("option:selected").text();
+        if(selectText=="请选择"){
+            selectText="";
+        }
+        var json = {
+            'originCallNo': $('#originCallNo').val(),
+            'createByName':selectText ,
+        };
+        return json;
+    };
+
+
+
+    var  ccclId;
+    var ccclVersion;
+    var SheetId;
+    //修改备注
+    function updateRemark(id,callSheetId,version) {
+        ccclId=id;
+        SheetId=callSheetId;
+        ccclVersion=version;
+        $('#myModal').modal('show');
+    };
+
+
+    //提交修改的备注
+    function submitRemark() {
+        var json = {
+            'remark': $('#remark').val(),
+            'id':ccclId ,
+            'version':ccclVersion,
+            'businessType':$('#businessType').val(),
+            'callSheetId':SheetId
+        };
+        var  url =getRootPath() + '/callCenter/updateRemark.do';
+        $.ajax({
+            type:"POST",
+            contentType: "application/x-www-form-urlencoded;charset=utf-8",
+            url:url,
+            data:json,
+            success:function(data){
+                bootbox.alert({
+                    size:'small',
+                    message:data.msg,
+                });
+                window.location.href = getRootPath() +'/view/bonusAudit/MyCallLog.html';
+            }
+    });
+}
+
+
+</script>
+
+
+</body>
+</html>

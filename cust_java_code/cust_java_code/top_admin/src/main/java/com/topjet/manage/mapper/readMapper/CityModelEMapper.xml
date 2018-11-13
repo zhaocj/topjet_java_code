@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.CityModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.CityModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="adcode" property="adcode" jdbcType="INTEGER" />
+    <result column="citycode" property="citycode" jdbcType="VARCHAR" />
+    <result column="cityName" property="cityName" jdbcType="VARCHAR" />
+    <result column="cityFullName" property="cityFullName" jdbcType="VARCHAR" />
+    <result column="parentId" property="parentId" jdbcType="INTEGER" />
+    <result column="level" property="level" jdbcType="BIT" />
+    <result column="longitude" property="longitude" jdbcType="DECIMAL" />
+    <result column="latitude" property="latitude" jdbcType="DECIMAL" />
+    <result column="formatName" property="formatName" jdbcType="VARCHAR" />
+    <result column="flag" property="flag" jdbcType="BIT" />
+    <result column="zip" property="zip" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="deleted" property="deleted" jdbcType="TINYINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, adcode, citycode, cityName, cityFullName, parentId, level, longitude, latitude, 
+    formatName, flag, zip, createTime, updateTime, deleted
+  </sql>
+
+  <sql id="Criteria_where_clause">
+    <where>
+      <if test="adcode != null" >
+        and adcode = #{adcode,jdbcType=INTEGER}
+      </if>
+      <if test="citycode != null" >
+        and citycode = #{citycode,jdbcType=VARCHAR}
+      </if>
+      <if test="cityName != null" >
+        and cityName = #{cityName,jdbcType=VARCHAR}
+      </if>
+      <if test="cityFullName != null" >
+        and cityFullName = #{cityFullName,jdbcType=VARCHAR}
+      </if>
+      <if test="parentId != null" >
+        and parentId = #{parentId,jdbcType=INTEGER}
+      </if>
+      <if test="level != null" >
+        and level = #{level,jdbcType=TINYINT}
+      </if>
+      <if test="longitude != null" >
+        and longitude = #{longitude,jdbcType=DECIMAL}
+      </if>
+      <if test="latitude != null" >
+        and latitude = #{latitude,jdbcType=DECIMAL}
+      </if>
+      <if test="formatName != null" >
+        and formatName = #{formatName,jdbcType=VARCHAR}
+      </if>
+      <if test="flag != null" >
+        and flag = #{flag,jdbcType=TINYINT}
+      </if>
+      <if test="zip != null" >
+        and zip = #{zip,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null" >
+        and createTime = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="updateTime != null" >
+        and updateTime = #{updateTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="deleted != null" >
+        and deleted = #{deleted,jdbcType=TINYINT}
+      </if>
+    </where>
+  </sql>
+
+
+  <sql id="Base_where_clause">
+    where deleted = 0
+      <if test="cityName != null and cityName = ''" >
+        and cityName = #{cityName}
+      </if>
+      <if test="parentId != null and parentId = ''" >
+        and parentId = #{parentId}
+      </if>
+      <if test="level != null and level = ''" >
+        and level = #{level}
+      </if>
+      <if test="longitude != null and longitude = ''" >
+        and longitude = #{longitude}
+      </if>
+      <if test="latitude != null and latitude = ''" >
+        and latitude = #{latitude}
+      </if>
+      <if test="formatName != null and formatName = ''" >
+        and formatName = #{formatName}
+      </if>
+      <if test="flag != null and flag = ''" >
+        and flag = #{flag}
+      </if>
+      <if test="zip != null and zip = ''" >
+        and zip = #{zip}
+      </if>
+      <if test="createTime != null and createTime = ''" >
+        and createTime = #{createTime}
+      </if>
+      <if test="updateTime != null and updateTime = ''" >
+        and updateTime = #{updateTime}
+      </if>
+      <if test="deleted != null and deleted = ''" >
+        and deleted = #{deleted}
+      </if>
+  </sql>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from resourceDB.city
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="findCityById" resultType="com.topjet.manage.domain.model.CityModel" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from resourceDB.city
+    where deleted = 0 and  id = #{id}
+  </select>
+
+
+  <select id="selectListByParam" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from resourceDB.city
+    <include refid="Criteria_where_clause" />
+    order by id desc
+    limit
+    #{offset}, #{limit}
+  </select>
+
+  <!--&lt;!&ndash;城市列表页数&ndash;&gt;
+  <select id="getCityCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+    SELECT COUNT(DISTINCT id)
+    from resourceDB.city
+    <include refid="Criteria_where_clause" />
+  </select>-->
+  <!--根据级别获取省-->
+  <select id="getProvince" resultType="com.topjet.manage.domain.model.CityModel" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List" />
+    from resourceDB.city
+    where deleted = 0 and  level = #{level}
+  </select>
+  <!--根据parentid查询-->
+  <select id="findCity" resultType="com.topjet.manage.domain.model.CityModel" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List" />
+    from resourceDB.city
+    where deleted = 0 and  parentId = #{adcode}
+  </select>
+  <!--根据城市编号查询-->
+  <select id="findCityByCode" resultType="com.topjet.manage.domain.model.CityModel" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List" />
+    from resourceDB.city
+    where deleted = 0 and  adcode = #{parentId}
+  </select>
+  <!-- 查询level=1的数据 根据城市编号排序-->
+  <select id="findCityLevel1" resultType="com.topjet.manage.domain.model.CityModel"
+          parameterType="com.topjet.manage.domain.model.CityModel">
+    select
+    <include refid="Base_Column_List" />
+    from resourceDB.city
+    where deleted = 0 and  level = 1 ORDER BY adcode ASC
+  </select>
+  <select id="findCityLevel2" resultType="com.topjet.manage.domain.model.CityModel"
+          parameterType="com.topjet.manage.domain.model.CityModel">
+    select
+    <include refid="Base_Column_List" />
+    from resourceDB.city
+    where deleted = 0 and  level = 2 ORDER BY adcode ASC
+  </select>
+  <select id="findCityLevel3" resultType="com.topjet.manage.domain.model.CityModel"
+          parameterType="com.topjet.manage.domain.model.CityModel">
+    select
+    <include refid="Base_Column_List" />
+    from resourceDB.city
+    where deleted = 0 and  level = 3 ORDER BY adcode ASC
+  </select>
+  <select id="findCityList" resultType="com.topjet.manage.domain.model.CityModel"
+          parameterType="com.topjet.manage.domain.model.CityModel">
+    select
+    <include refid="Base_Column_List" />
+    from resourceDB.city
+    where deleted = 0  ORDER BY adcode ASC
+  </select>
+
+
+</mapper>

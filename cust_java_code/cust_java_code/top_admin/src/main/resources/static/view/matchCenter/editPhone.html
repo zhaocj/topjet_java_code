@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>交运配货网-后台管理</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="" rel="stylesheet">
+  <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="../../bootstrap/css/bootstrap-table.min.css" rel="stylesheet"/>
+  <link href="../../css/flat-ui.min.css" rel="stylesheet"/>
+  <link href="../../css/easyui.css" rel="stylesheet"/>
+  <link href="../../css/demo.css" rel="stylesheet"/>
+  <link href="../../css/font-awesome.min.css" rel="stylesheet"/>
+  <link href="../../css/jquery.mCustomScrollbar.css" rel="stylesheet"/>
+  <link href="../../css/bootstrap-datetimepicker.css" rel="stylesheet"/>
+  <link href="../../less/modules/buttons.less" rel="stylesheet"/>
+  <link rel="shortcut icon" href="../../img/faviconindex.ico"/>
+  <link href="../../bootstrap/formValidation/formValidation.css"/>
+
+  <script src="../../resource/jquery-1.11.3.min.js"></script>
+  <script src="../../js/common/utils.js"></script>
+  <script src="../../js/bootbox.min.js"></script>
+  <script type="text/javascript" src="../../bootstrap/formValidation/formValidation.js"></script>
+  <script type="text/javascript" src="../../bootstrap/formValidation/bootstrap.js"></script>
+  <script type="text/javascript" src="../../bootstrap/formValidation/validData.js"></script>
+  <script src="../../js/vendor/jquery.easyui.min.js"></script>
+  <script src="../../js/jquery.mCustomScrollbar.concat.min.js"></script>
+  <script src="../../js/flat-ui.min.js"></script>
+  <script src="../../js/application.js"></script>
+  <script src="../../js/bootstrap-datetimepicker.min.js"></script>
+  <script src="../../js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+  <script src="../../js/echarts.min.js"></script>
+  <script src="../../js/common/index.js"></script>
+  <script src="../../js/common/ajaxCall.js"></script>
+</head>
+<body >
+<div class="modal-body  fontsize-14">
+  <form id="myForm">
+    <div class="col-xs-6">
+      <div class="form-group">
+        <label>电话号码</label>
+        <input type="text" id="collocationName" name="mobile" maxlength="11" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"   class="form-control input-sm"  placeholder="请输入电话号码"  required>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="clearfix"></div>
+<div class="modal-footer margin-top-15">
+  <button type="button" id="myButton" onclick="submit()" class="btn btn-primary center-block">　提　交　</button>
+</div>
+<script type="text/javascript">
+    var param = window.location.search;
+    var id = param.split("=")[1].split("&")[0];
+    //var version =param.split("=")[2];
+    if(id=='undefined'){
+        id=null;
+    }
+  function submit() {
+      var bt = $('#myButton').button('loading');
+      if (!$.topjectIsValidate('myForm')) {
+          bt.button('reset');
+          return;
+      }
+      var json = {
+          'mobile': $("#collocationName").val(),
+          'id': id
+      };
+      var data = json;
+      var url = getRootPath() + '/collocationInfo/updateOrAdd.do';
+      $.ajaxDefaultCall(url, data, function () {
+          window.parent.location.href = getRootPath() + '/collocationInfo/getMatchCenterPhone.do';
+      });
+  }
+   $(function () {
+        $.topjectValidate('myForm');
+    })
+
+
+</script>
+</body>
+</html>

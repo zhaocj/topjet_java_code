@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>交运配货</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="../../resource/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../resource/bootstrap-table.css">
+    <link rel="stylesheet" type="text/css" href="../../css/demo.css">
+    <link rel="stylesheet/less" type="text/css" href="../../less/modules/buttons.less">
+
+    <script type="text/javascript" src="../../js/common/modal.js"></script>
+    <script type="text/javascript" src="../../js/common/utils.js"></script>
+    <script type="text/javascript" src="../../js/common/ajaxCall.js"></script>
+    <script type="text/javascript" src="../../js/common/dateformate.js"></script>
+
+    <script type="text/javascript" src="../../resource/bootstrap-table.js"></script>
+    <script type="text/javascript" src="../../resource/bootstrap-table-zh-CN.js"></script>
+    <script type="text/javascript" src="../../js/bootbox.min.js"></script>
+    <script type="text/javascript" src="../../js/common/jquery.cityselect.js"></script>
+</head>
+<body onresize="auto()" class="pdrBug">
+<div class="contentBox" style="padding:10px">
+    <div class="fixed-table-toolbar" >
+        <div class="navmenu" id="navTitle"><a href="#" onclick="javascript:history.back(-1); return false">轮播图管理</a> / app轮播图</div>
+        <input id="appType" type="hidden"  value="">
+        <div class="columns columns-left btn-group pull-right">
+            <button type="button" onclick="tableQuery()" class="btn btn-info btn-sm" >查询</button>
+        </div>
+        <div class="columns columns-left btn-group pull-right">
+            <button type="button" class="btn btn-primary btn-sm margin-left-10" onclick="add()">添加轮播图</button>
+        </div>
+    </div>
+</div>
+<table id='table' ></table>
+<script type="text/javascript">
+
+    $(function () {
+        var columns = [
+            {
+                field: 'createTime',
+                title: '创建时间',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    return formatViewDate(new Date(value), "yyyy-MM-dd HH:mm");
+                }
+            },
+            {
+                field: 'title',
+                title: '标题',
+                align: 'center'
+            },
+            {
+                field: 'link',
+                title: '链接',
+                align: 'center'
+//                formatter: function (value, row, index) {
+//                    if (value.length >= 20) {
+//                        var a = value.substring(0, 18) + "......";
+//                        var s = '<a style="cursor: pointer" title="'+value+'" data-parent="#accordion" >' + a + '</a>';
+//                        return s;
+//                    } else {
+//                        return value
+//                    }
+//                }
+            },
+            {
+                field: 'action',
+                title: '操作',
+                align: 'center',
+                formatter: function (value, row, index) {
+                    var s =['<button type="button" class="btn btn-primary btn-xs" onclick="edit(' + row.id + ')" >编辑</button>',
+                            '<button type="button" class="btn btn-danger  btn-xs" onclick="removeAdv('+row.id+')">刪除</button>'].join(' ');
+                    return s;
+                }
+            },
+        ];
+        var url = getRootPath() + '/appSlide/listAppSlide.do';
+        setTableInfo('table', columns, url, getQueryParams, 'toolbar');
+    });
+
+    function getQueryParams() {
+        if($('#appType').val()=="")
+        {
+          var navText="<a href=\"#\" onclick=\"javascript:history.back(-1); return false\">轮播图管理</a> /";
+            switch (location.search){
+                case"?appType=1":
+                    $('#appType').val("1");
+                    navText=navText+"app轮播图";
+                    break;
+                case"?appType=2":
+                    $('#appType').val("2");
+                    navText=navText+"560商城轮播图";
+                    break;
+            }
+            $('#navTitle').html(navText);
+        }
+        var json = {
+            'type': $('#appType').val()
+        };
+        return json;
+    };
+
+    function add(appType) {
+        window.location.href = getRootPath()+'/view/appslide/appSlideAdd.html?appType=' + $('#appType').val();
+    }
+    function edit(id) {
+        window.location.href = getRootPath() + '/appSlide/appSlideDetail.do?id=' + id;
+    };
+    function removeAdv(id) {
+        bootbox.confirm("确认删除?", function (result) {
+            if (result) {
+                var url = getRootPath() + '/appSlide/removeAppSlide.do';
+                var data = {'id': id};
+                $.ajaxDefaultCall(url, data,function(){tableRefresh();});
+            }
+        });
+    };
+    var apptype=$("#appType").val();
+    if(apptype != ""){
+        var navText="<a href=\"#\" onclick=\"javascript:history.back(-1); return false\">轮播图管理</a> /";
+        if(apptype==1){
+            navText=navText+"APP轮播图";
+        }else if(apptype==2){
+            navText=navText+"560商城轮播图";
+        }
+        $('#navTitle').html(navText);
+    }
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>交运配货网-后台管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="" rel="stylesheet">
+    <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="../../bootstrap/css/bootstrap-table.min.css" rel="stylesheet"/>
+    <link href="../../css/flat-ui.min.css" rel="stylesheet"/>
+    <link href="../../css/easyui.css" rel="stylesheet"/>
+    <link href="../../css/demo.css" rel="stylesheet"/>
+    <link href="../../css/font-awesome.min.css" rel="stylesheet"/>
+    <link href="../../css/jquery.mCustomScrollbar.css" rel="stylesheet"/>
+    <link href="../../css/bootstrap-datetimepicker.css" rel="stylesheet"/>
+    <link href="../../less/modules/buttons.less" rel="stylesheet"/>
+    <link rel="shortcut icon" href="../../img/faviconindex.ico"/>
+    <link href="../../bootstrap/formValidation/formValidation.css"/>
+
+    <script src="../../resource/jquery-1.11.3.min.js"></script>
+    <script src="../../js/common/utils.js"></script>
+    <script src="../../js/bootbox.min.js"></script>
+    <script type="text/javascript" src="../../bootstrap/formValidation/formValidation.js"></script>
+    <script type="text/javascript" src="../../bootstrap/formValidation/bootstrap.js"></script>
+    <script type="text/javascript" src="../../bootstrap/formValidation/validData.js"></script>
+    <script src="../../js/vendor/jquery.easyui.min.js"></script>
+    <script src="../../js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../../js/flat-ui.min.js"></script>
+    <script src="../../js/application.js"></script>
+    <script src="../../js/bootstrap-datetimepicker.min.js"></script>
+    <script src="../../js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="../../js/echarts.min.js"></script>
+    <script src="../../js/common/index.js"></script>
+    <script src="../../js/common/ajaxCall.js"></script>
+    <script src="../../resource/jquery.colorpicker.js"></script>
+    <script type="text/javascript" src="../../js/common/truckType.js"></script>
+</head>
+<body >
+<div class="modal-body  fontsize-14">
+    <form id="myForm">
+        <input type="hidden" id="iconDownUrl" name="iconDownUrl">
+        <input type="hidden" id="iconNormalUrl" name="iconNormalUrl">
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>导航名称</label>
+                <input type="text" id="text" name="text" onkeyup="this.value=this.value.substring(0, 20)"  class="form-control input-sm" required>
+            </div>
+        </div>
+        <!--<div class="col-xs-6">
+            <div class="form-group">
+                <label>类型</label>
+                <select id="appType" name="appType" style="width: 380px;"
+                        class="form-control" required>
+                    <option value="1">安卓司机版</option>
+                    <option value="2">安卓货主版</option>
+                    <option value="3">ios司机版</option>
+                    <option value="4">ios货主版</option>
+                </select>
+            </div>
+        </div>-->
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>开始时间</label>
+                <input size="16" type="text" value=""  id="beginDate" required
+                       name="beginDate"
+                       placeholder="默认不限" class="form-control input-sm">
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>结束时间</label>
+                <input size="16" type="text" value=""  id="endDate" required
+                       name="endDate"
+                       placeholder="默认不限" class="form-control input-sm">
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>文字默认颜色</label>
+                <input type="text" id="textNormalColor" name="textNormalColor" class="form-control input-sm"
+                       onkeyup="this.value=this.value.substring(0, 20)" required/>
+            </div>
+        </div>
+
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>文字选中颜色</label>
+                <input type="text" id="textDownColor" name="textDownColor" class="form-control input-sm"
+                       onkeyup="this.value=this.value.substring(0, 20)" required/>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label for="fileId1">导航默认图标</label>
+                <div class="input-group">
+                    <input id="fileId1" name="fileId1" type="file" onchange="readFile(this,'iconNormalUrl','fileImageId1')">
+                    <img id="fileImageId1"  width="56" height="56" style="margin-top: 10px;margin-left: 10px!important;" class="topjet-img-size" />
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label for="fileId2">导航选中图标</label>
+                <div class="input-group">
+                    <input id="fileId2" name="fileId2" type="file" onchange="readFile(this,'iconDownUrl','fileImageId2')">
+                    <img id="fileImageId2" width="56" height="56"  style="margin-top: 10px;margin-left: 10px!important;" class="topjet-img-size" />
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>请选择适应类型</label><br>
+                <div class="checkbox checkbox-inline">
+                    <input id="IOSOwnerFlag" value="4" type="checkbox">
+                    <label for="IOSOwnerFlag" style="padding-right: 10px;">IOS货主版</label>
+                    <input id="IOSDriverFlag" value="3"   type="checkbox">
+                    <label for="IOSDriverFlag" style="padding-right: 10px;">IOS司机版</label>
+                    <input id="AndiorOwnerFlag" value="2"   type="checkbox">
+                    <label for="AndiorOwnerFlag" style="padding-right: 10px;">安卓货主版</label>
+                    <input id="AndiorDriverFlag" value="1"   type="checkbox">
+                    <label for="AndiorDriverFlag">安卓司机版</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label>显示顺序</label>
+                <input type="text" id="orderNum" name="orderNum" class="form-control input-sm" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" required>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="clearfix"></div>
+<div class="modal-footer margin-top-15">
+    <button type="button" id="myButton" onclick="submit()" class="btn btn-primary center-block">　提　交　</button>
+</div>
+<script type="text/javascript" src="../../js/common/truckType.js"></script>
+<script type="text/javascript">
+    //页面加载的时候显示颜色
+    $(document).ready(function(){
+        //颜色插件
+        $("#textNormalColor").colorpicker({
+            fillcolor:true,
+            success:function(o,color){
+                $(o).css("textNormalColor",color);
+            }
+        });
+        $("#textDownColor").colorpicker({
+            fillcolor:true,
+            success:function(o,color){
+                $(o).css("textDownColor",color);
+            }
+        });
+    });
+
+    function readFile(str, fileIds, fileImageId) {
+        var file = str.files[0];
+        if (!/image\/\w+/.test(file.type)) {
+            bootbox.alert({
+                size: 'small',
+                message: "只能上传图片，请重新上传!",
+            });
+            return false;
+        }
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function (e) {
+            var imge = e.target.result;
+            $('#' + fileIds).val(imge);
+            $("#" + fileImageId).attr("src", this.result);
+        };
+    };
+
+    $("#beginDate,#endDate").datetimepicker({
+        format: "yyyy-mm-dd hh:ii",
+        todayBtn: true,
+        autoclose: true,
+        todayHighlight: true,
+        showMeridian: true,
+        pickerPosition: "bottom-left",
+        language: 'zh-CN',//中文，需要引用zh-CN.js包
+        startView: 2,//月视图
+        minView: 0//日期时间选择器所能够提供的最精确的时间选择视图
+    });
+
+
+
+    function submit() {
+        alert("--------------------");
+        debugger;
+        var bt = $('#myButton').button('loading');
+        var typeFlag = "";
+        $.each($('.checkbox-inline input'), function (indx, ele) {
+            if ($(this).is(":checked")) {
+                typeFlag += $(this).val();
+            }
+        });
+        if (typeFlag == "") {
+            bootbox.alert({
+                size: 'small',
+                message: "请选择适应类型!"
+            });
+            bt.button('reset');
+            return;
+        }
+
+        var beginDate = StringToDate($('#beginDate').val());
+        var endDate = StringToDate($('#endDate').val());
+        if (endDate < beginDate) {
+            bootbox.alert({
+                size: 'small',
+                message: "结束日期不能小于开始日期!",
+            });
+            bt.button('reset');
+            return false;
+        }
+        var jsonBeginDate = {};
+        var jsonEndDate = {};
+        if (!isNull(beginDate)) {
+            jsonBeginDate = {"beginDate": beginDate};
+        }
+        if (!isNull(endDate)) {
+            jsonEndDate = {"endDate": endDate};
+        }
+        var json = {
+            'text': $("#text").val(),
+            'appType': $("#appType").val(),
+            'textNormalColor': $("#textNormalColor").val(),
+            'textDownColor': $("#textDownColor").val(),
+            'iconDownUrl': $("#iconDownUrl").val(),
+            'iconNormalUrl': $("#iconNormalUrl").val(),
+            'orderNum': $("#orderNum").val(),
+            'typeFlag': typeFlag
+        };
+            var data = $.extend({}, json, jsonBeginDate, jsonEndDate);
+            var url = getRootPath() + '/appMenuNavigate/add.do';
+            $.ajaxDefaultCall(url, data, function () {
+                window.parent.location.href = getRootPath() + '/view/appMenuNavigate/listButtomProfile.html'
+            });
+        }
+    $(function () {
+        $.topjectValidate('myForm');
+    })
+</script>
+</body>
+</html>

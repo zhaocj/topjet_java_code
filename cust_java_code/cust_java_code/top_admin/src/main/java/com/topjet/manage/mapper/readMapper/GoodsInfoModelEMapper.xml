@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.topjet.manage.mapper.readMapper.GoodsInfoModelEMapper" >
+  <resultMap id="BaseResultMap" type="com.topjet.manage.domain.model.GoodsInfoModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="userId" property="userId" jdbcType="INTEGER" />
+    <result column="goodsStatus" property="goodsStatus" jdbcType="TINYINT" />
+    <result column="payStyle" property="payStyle" jdbcType="TINYINT" />
+    <result column="isCarpool" property="isCarpool" jdbcType="BIT" />
+    <result column="loadDateType" property="loadDateType" jdbcType="BIT" />
+    <result column="loadDate" property="loadDate" jdbcType="TIMESTAMP" />
+    <result column="category" property="category" jdbcType="VARCHAR" />
+    <result column="packType" property="packType" jdbcType="VARCHAR" />
+    <result column="loadType" property="loadType" jdbcType="VARCHAR" />
+    <result column="quantityType" property="quantityType" jdbcType="BIT" />
+    <result column="quantityMax" property="quantityMax" jdbcType="DECIMAL" />
+    <result column="quantityMin" property="quantityMin" jdbcType="DECIMAL" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="goodsNo" property="goodsNo" jdbcType="VARCHAR" />
+    <result column="sourceType" property="sourceType" jdbcType="BIT" />
+    <result column="isFreightFeeManaged" property="isFreightFeeManaged" jdbcType="BIT" />
+    <result column="isHidden" property="isHidden" jdbcType="BIT" />
+    <result column="isInner" property="isInner" jdbcType="BIT" />
+    <result column="goodsPushNum" property="goodsPushNum" jdbcType="INTEGER" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="version" property="version" jdbcType="TINYINT" />
+    <result column="deleted" property="deleted" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userId, goodsStatus, payStyle, isCarpool, loadDateType, loadDate, category, packType, 
+    loadType, quantityType, quantityMax, quantityMin, unit, goodsNo, sourceType, isFreightFeeManaged, 
+    isHidden, isInner, goodsPushNum, createTime, updateTime, version, deleted
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from orderDB.goodsInfo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from orderDB.goodsInfo
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+</mapper>
